@@ -52,7 +52,7 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
         <div class="card"><div class="section-title"><h2>Add leads</h2><span>Clinic | Dr. Name | Contact | Phone | Email | Website | City | Province | Source | Date | Employee name/email</span></div><textarea id="bulkLeads" placeholder="Northside Pet Clinic | Dr. Jennifer Lee | Jennifer | (587) 555-0192 | hello@northsidepet.ca | https://northsidepet.ca | Calgary | AB | Web list | 2026-07-13 | Demo Rep"></textarea><button class="btn blue" id="addLeadsBtn" style="margin-top:12px">Add leads</button></div>
         <div class="card"><div class="section-title"><h2>Add employee</h2><span>Creates an email/password login</span></div><label>Name</label><input id="empName" placeholder="Mike"><label>Email</label><input id="empEmail" placeholder="mike@vetinc.ca"><label>Password</label><input id="empCode" type="password" placeholder="Set temporary password"><button class="btn green" id="addEmployeeBtn" style="margin-top:12px">Add employee</button></div>
       </div>
-      <div class="card" style="margin-top:16px"><div class="section-title"><h2>Employees</h2><span id="employeeHelp">Set how many cold calls each employee gets today</span></div><div id="usersList"></div></div>
+      <div class="card" style="margin-top:16px"><div class="section-title"><h2>Employees</h2><span id="employeeHelp">Create employees, assign daily cold calls, and track success</span></div><div id="usersList"></div></div>
       <div class="card" style="margin-top:16px"><div class="section-title"><h2>All leads</h2><span>Admin view</span></div><div id="adminLeadsList"></div></div>
     </section>
   </main>
@@ -170,9 +170,32 @@ If it’s another PMS: “Got it — we’re adding more systems soon. Can I gra
 • Log every call.
 • You are booking a meeting with Jack — not selling the product.
 • If you can’t answer something: “Jack covers that on the call.”`;}
-function renderAdmin(){$('statTotal').textContent=state.leads.length; $('statHot').textContent=state.leads.filter(l=>['interested','booked','closed'].includes(l.status)).length; $('statUsers').textContent=state.users.filter(u=>u.role==='employee').length; $('usersList').innerHTML=state.users.map(u=>`<div class="table-row"><div><strong>${esc(u.name)}</strong><div class="muted">${esc(u.email||'No email')}</div></div><div>${esc(u.role)}</div><div>${u.role==='employee'?`<label style="margin:0 0 4px;font-size:10px">Daily calls</label><input id="quota-${u.id}" type="number" min="0" max="500" value="${u.daily_call_quota??50}" style="padding:8px 9px;border-radius:9px">`:(u.active?'Active':'Inactive')}</div><div>${u.role==='employee'?`<button class="btn blue small-btn" onclick="saveQuota('${u.id}')">Save</button>`:''}</div></div>`).join(''); $('adminLeadsList').innerHTML=state.leads.map(l=>`<div class="table-row"><div><strong>${esc(l.clinic_name)}</strong><div class="muted">${esc(l.dr_name||'')} · ${esc(l.phone||'')}</div></div><div><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status}</span></div><div>${esc(l.assigned_name||'Unassigned')}</div><button class="btn red small-btn" onclick="deleteLead('${l.id}')">Delete</button></div>`).join('')||'<div class="empty">No leads yet.</div>';}
+function employeeStats(user){
+  const leads=state.leads.filter(l=>l.assigned_to===user.id);
+  const todayLeads=leads.filter(l=>l.lead_date===today());
+  const touched=leads.filter(l=>l.status && l.status!=='new');
+  const wins=leads.filter(l=>['interested','booked','closed'].includes(l.status));
+  const booked=leads.filter(l=>['booked','closed'].includes(l.status));
+  const rate=touched.length?Math.round((wins.length/touched.length)*100):0;
+  return {assigned:leads.length,today:todayLeads.length,touched:touched.length,wins:wins.length,booked:booked.length,rate};
+}
+function renderAdmin(){
+  const employees=state.users.filter(u=>u.role==='employee');
+  const totalTouched=state.leads.filter(l=>l.status&&l.status!=='new').length;
+  const totalWins=state.leads.filter(l=>['interested','booked','closed'].includes(l.status)).length;
+  $('statTotal').textContent=state.leads.length;
+  $('statHot').textContent=totalWins;
+  $('statUsers').textContent=employees.length;
+  $('usersList').innerHTML=state.users.map(u=>{
+    const st=employeeStats(u);
+    const isEmp=u.role==='employee';
+    return `<div class="table-row"><div><strong>${esc(u.name)}</strong><div class="muted">${esc(u.email||'No email')}</div>${isEmp?`<div class="small">Today: <b>${st.today}</b> · Touched: <b>${st.touched}</b> · Wins: <b>${st.wins}</b> · Success: <b>${st.rate}%</b></div>`:''}</div><div>${esc(u.role)}</div><div>${isEmp?`<label style="margin:0 0 4px;font-size:10px">Daily calls</label><input id="quota-${u.id}" type="number" min="0" max="500" value="${u.daily_call_quota??50}" style="padding:8px 9px;border-radius:9px"><div class="small">Total assigned: ${st.assigned} · Booked/closed: ${st.booked}</div>`:(u.active?'Active':'Inactive')}</div><div>${isEmp?`<button class="btn blue small-btn" onclick="saveQuota('${u.id}')">Save quota</button><button class="btn green small-btn" onclick="assignCalls('${u.id}')" style="margin-top:6px">Assign calls</button>`:''}</div></div>`;
+  }).join('');
+  $('adminLeadsList').innerHTML=state.leads.map(l=>`<div class="table-row"><div><strong>${esc(l.clinic_name)}</strong><div class="muted">${esc(l.dr_name||'')} · ${esc(l.phone||'')}</div></div><div><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status}</span></div><div>${esc(l.assigned_name||'Unassigned')}</div><button class="btn red small-btn" onclick="deleteLead('${l.id}')">Delete</button></div>`).join('')||'<div class="empty">No leads yet.</div>';
+}
 async function saveQuota(employeeId){const el=$('quota-'+employeeId); const quota=parseInt(el.value||'0',10); await rpc('vetinc_team_admin_set_quota',params({p_employee_id:employeeId,p_daily_call_quota:quota})); await loadData(); render();}
-async function addEmployee(){const name=$('empName').value.trim(), email=$('empEmail').value.trim(), code=$('empCode').value.trim(); if(!name||!code)return alert('Name and access code required'); await rpc('vetinc_team_admin_upsert_user',params({p_name:name,p_email:email,p_role:'employee',p_access_code:code,p_active:true})); $('empName').value=$('empEmail').value=$('empCode').value=''; await loadData(); render();}
+async function assignCalls(employeeId){const el=$('quota-'+employeeId); const quota=parseInt(el.value||'0',10); const assigned=await rpc('vetinc_team_admin_assign_calls',params({p_employee_id:employeeId,p_call_count:quota,p_lead_date:today()})); await loadData(); render(); alert(`Assigned ${assigned||0} cold calls for today.`);}
+async function addEmployee(){const name=$('empName').value.trim(), email=$('empEmail').value.trim(), code=$('empCode').value.trim(); if(!name||!email||!code)return alert('Name, email, and password required'); await rpc('vetinc_team_admin_upsert_user',params({p_name:name,p_email:email,p_role:'employee',p_access_code:code,p_active:true})); $('empName').value=$('empEmail').value=$('empCode').value=''; await loadData(); render();}
 async function addLeads(){const text=$('bulkLeads').value.trim(); if(!text)return; const users=state.users; for(const line of text.split('\\n').filter(Boolean)){const p=line.split('|').map(x=>x.trim()); const assigned=users.find(u=>u.role==='employee'&&(u.name===p[10]||u.email===p[10])); await rpc('vetinc_team_admin_add_lead',params({p_clinic_name:p[0]||'',p_dr_name:p[1]||'',p_contact_name:p[2]||'',p_phone:p[3]||'',p_email:p[4]||'',p_website:p[5]||'',p_city:p[6]||'',p_province:p[7]||'',p_source:p[8]||'',p_notes:'',p_lead_date:p[9]||today(),p_assigned_to:assigned?.id||null}));} $('bulkLeads').value=''; await loadData(); render();}
 async function deleteLead(id){if(!confirm('Delete this lead?'))return; await rpc('vetinc_team_admin_delete_lead',params({p_lead_id:id})); await loadData(); render();}
 $('loginBtn').onclick=login; $('logoutBtn').onclick=()=>{sessionStorage.removeItem('vetinc_team_session'); location.reload();}; $('refreshBtn').onclick=async()=>{await loadData(); render();}; $('leadSearch').oninput=e=>{state.search=e.target.value; state.limit=50; renderLeads();}; $('addEmployeeBtn').onclick=addEmployee; $('addLeadsBtn').onclick=addLeads; document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab)); $('loginCode').addEventListener('keydown',e=>{if(e.key==='Enter')login();}); loadSession(); if(state.session) start();
