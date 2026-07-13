@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Vet INC Team Portal</title>
+<link rel="icon" type="image/png" href="assets/vetinc-logo.png" />
+<style>
+:root {
+  --navy:#050c11; --ink:#0f172a; --muted:#64748b; --soft:#f6f9fc; --card:#ffffff;
+  --line:#dbe5ef; --blue:#2563eb; --cyan:#0ea5e9; --green:#16a34a; --amber:#d97706; --red:#dc2626;
+  --blueSoft:#eaf3ff; --greenSoft:#ecfdf5; --amberSoft:#fff7ed; --redSoft:#fef2f2;
+}
+*{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#f7fbff,#eef5fb);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit} button{cursor:pointer} .hidden{display:none!important}
+.login{min-height:100vh;display:grid;place-items:center;padding:24px} .login-card{width:min(430px,100%);background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:22px;padding:34px;box-shadow:0 24px 80px rgba(15,23,42,.12)}
+.logo-row{display:flex;align-items:center;gap:12px;margin-bottom:24px} .logo-row img{height:42px} .brand-title{font-weight:900;font-size:21px;letter-spacing:-.04em} .brand-sub{color:var(--muted);font-size:13px;margin-top:3px}
+h1{font-size:28px;letter-spacing:-.04em;margin:0 0 8px} p{margin:0} .small{font-size:13px;color:var(--muted);line-height:1.5} label{display:block;font-size:12px;font-weight:800;color:#334155;margin:16px 0 6px;text-transform:uppercase;letter-spacing:.05em}
+input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:12px 13px;background:white;color:var(--ink)} textarea{min-height:90px;resize:vertical} input:focus,textarea:focus,select:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 4px rgba(37,99,235,.10)}
+.btn{border:0;border-radius:12px;padding:12px 16px;font-weight:800;background:var(--navy);color:white;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none} .btn:hover{filter:brightness(1.08)} .btn.full{width:100%;margin-top:18px} .btn.secondary{background:white;color:var(--ink);border:1px solid var(--line)} .btn.blue{background:var(--blue)} .btn.green{background:var(--green)} .btn.red{background:var(--red)} .btn.small-btn{padding:7px 10px;border-radius:9px;font-size:12px}
+.error{display:none;background:var(--redSoft);color:var(--red);border:1px solid #fecaca;padding:10px 12px;border-radius:12px;font-size:13px;margin-top:14px}
+.app{display:none} .app.active{display:block} .topbar{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.90);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)} .top-inner{max-width:1180px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:14px 18px} .top-left{display:flex;align-items:center;gap:11px} .top-left img{height:34px} .badge{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--blue);background:var(--blueSoft);border-radius:999px;padding:5px 9px}
+.tabs{background:white;border-bottom:1px solid var(--line)} .tabs-inner{max-width:1180px;margin:auto;display:flex;gap:6px;padding:0 18px;overflow:auto} .tab{border:0;background:transparent;padding:14px 12px;color:var(--muted);font-weight:800;border-bottom:3px solid transparent;white-space:nowrap} .tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.content{max-width:1180px;margin:auto;padding:22px 18px 70px} .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px} .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(15,23,42,.04)} .section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px} .section-title h2{font-size:18px;margin:0;letter-spacing:-.03em} .section-title span{font-size:13px;color:var(--muted)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px} .chip{border:1px solid var(--line);background:white;border-radius:999px;padding:7px 11px;font-size:12px;font-weight:800;color:var(--muted)} .chip.active{background:var(--navy);color:white;border-color:var(--navy)}
+.lead{background:white;border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:12px} .lead-top{display:flex;justify-content:space-between;gap:14px} .clinic{font-size:17px;font-weight:900;letter-spacing:-.03em} .doctor{font-size:14px;color:#334155;margin-top:3px;font-weight:700} .meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;color:var(--muted);font-size:13px} .note{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px;margin-top:11px;color:#334155;font-size:13px;line-height:1.45;white-space:pre-wrap} .status{display:inline-flex;border-radius:999px;padding:5px 9px;font-weight:900;font-size:11px;text-transform:uppercase;letter-spacing:.04em} .s-new{background:var(--blueSoft);color:var(--blue)} .s-called,.s-emailed,.s-no_answer,.s-left_voicemail,.s-follow_up{background:var(--amberSoft);color:var(--amber)} .s-interested,.s-booked,.s-closed{background:var(--greenSoft);color:var(--green)} .s-not_interested{background:var(--redSoft);color:var(--red)} .status-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px} .status-row button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 9px;font-size:12px;font-weight:800;color:#475569} .status-row button.active{background:var(--blue);border-color:var(--blue);color:white}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:16px} .stat{font-size:30px;font-weight:950;letter-spacing:-.05em} .table-row{display:grid;grid-template-columns:1fr 120px 130px 78px;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:11px 0;font-size:13px} .table-row:last-child{border-bottom:0} .muted{color:var(--muted)} .script{line-height:1.65;color:#334155;font-size:14px;white-space:pre-wrap} .script strong{color:#0f172a}
+.empty{text-align:center;color:var(--muted);padding:50px 20px;background:white;border:1px dashed #cbd5e1;border-radius:18px} code{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:2px 5px}
+@media(max-width:760px){.grid,.split{grid-template-columns:1fr}.lead-top{display:block}.table-row{grid-template-columns:1fr}.top-inner{align-items:flex-start}.hide-mobile{display:none}}
+</style>
+</head>
+<body>
+<div class="login" id="login">
+  <div class="login-card">
+    <div class="logo-row"><img src="assets/vetinc-logo.png" alt="Vet INC"><div><div class="brand-title">Vet INC</div><div class="brand-sub">Team Lead Portal</div></div></div>
+    <h1>Sign in</h1><p class="small">Employees see the clinic leads assigned to them for today. Admin can manage every lead and employee.</p>
+    <label>Your name</label><input id="loginName" placeholder="Jack" autocomplete="name">
+    <label>Access code</label><input id="loginCode" type="password" placeholder="Enter your code" autocomplete="current-password">
+    <div class="error" id="loginError">Could not sign in. Check the access code.</div>
+    <button class="btn full" id="loginBtn">Sign in</button>
+    <p class="small" style="margin-top:14px">Default admin: <code>vetinc-admin</code>. Demo employee: <code>vetinc-rep</code>.</p>
+  </div>
+</div>
+<div class="app" id="app">
+  <div class="topbar"><div class="top-inner"><div class="top-left"><img src="assets/vetinc-logo.png" alt="Vet INC"><div><div class="brand-title" style="font-size:16px">Vet INC Team Portal</div><div class="small" id="sessionName"></div></div><span class="badge" id="roleBadge">Employee</span></div><button class="btn secondary small-btn" id="logoutBtn">Logout</button></div></div>
+  <div class="tabs"><div class="tabs-inner"><button class="tab active" data-tab="leads">Today's leads</button><button class="tab" data-tab="script">Script</button><button class="tab" data-tab="admin" id="adminTab">Admin backend</button></div></div>
+  <main class="content">
+    <section id="tab-leads"><div class="section-title"><div><h2 id="leadHeader">Today's leads</h2><span id="leadCount"></span></div><button class="btn secondary small-btn" id="refreshBtn">Refresh</button></div><div class="filters" id="filters"></div><div id="leadsList"></div></section>
+    <section id="tab-script" class="hidden"><div class="card"><div class="section-title"><h2>Simple call script</h2><span>Keep it easy to follow</span></div><div class="script" id="scriptText"></div></div></section>
+    <section id="tab-admin" class="hidden">
+      <div class="grid" style="margin-bottom:16px"><div class="card"><div class="muted">Total leads</div><div class="stat" id="statTotal">0</div></div><div class="card"><div class="muted">Interested / booked</div><div class="stat" id="statHot">0</div></div><div class="card"><div class="muted">Employees</div><div class="stat" id="statUsers">0</div></div></div>
+      <div class="split">
+        <div class="card"><div class="section-title"><h2>Add leads</h2><span>Clinic | Dr. Name | Contact | Phone | Email | Website | City | Province | Source | Date | Employee name/email</span></div><textarea id="bulkLeads" placeholder="Northside Pet Clinic | Dr. Jennifer Lee | Jennifer | (587) 555-0192 | hello@northsidepet.ca | https://northsidepet.ca | Calgary | AB | Web list | 2026-07-13 | Demo Rep"></textarea><button class="btn blue" id="addLeadsBtn" style="margin-top:12px">Add leads</button></div>
+        <div class="card"><div class="section-title"><h2>Add employee</h2><span>Creates a login code</span></div><label>Name</label><input id="empName" placeholder="Mike"><label>Email</label><input id="empEmail" placeholder="mike@example.com"><label>Access code</label><input id="empCode" placeholder="mike-vetinc"><button class="btn green" id="addEmployeeBtn" style="margin-top:12px">Add employee</button></div>
+      </div>
+      <div class="card" style="margin-top:16px"><div class="section-title"><h2>Employees</h2><span id="employeeHelp"></span></div><div id="usersList"></div></div>
+      <div class="card" style="margin-top:16px"><div class="section-title"><h2>All leads</h2><span>Admin view</span></div><div id="adminLeadsList"></div></div>
+    </section>
+  </main>
+</div>
+<script>
+const SB_URL='https://rnqhhzatlxmyvccdvqkr.supabase.co';
+const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJucWhoemF0bHhteXZjY2R2cWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMTQ5ODUsImV4cCI6MjA5MDU5MDk4NX0.zokle21pVEPG5bIOFiyZIWYkYIwhkolWNOhJ7Cbub30';
+const today=()=>new Date().toISOString().slice(0,10);
+const statuses=['new','called','no_answer','left_voicemail','emailed','interested','not_interested','follow_up','booked','closed'];
+const statusLabels={new:'New',called:'Called',no_answer:'No answer',left_voicemail:'Left voicemail',emailed:'Emailed',interested:'Interested',not_interested:'Not interested',follow_up:'Follow up',booked:'Booked',closed:'Closed'};
+let state={session:null, users:[], leads:[], filter:'all', tab:'leads'};
+const $=id=>document.getElementById(id); const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function rpc(fn, body){const r=await fetch(`${SB_URL}/rest/v1/rpc/${fn}`,{method:'POST',headers:{apikey:SB_ANON,Authorization:`Bearer ${SB_ANON}`,'Content-Type':'application/json'},body:JSON.stringify(body)}); const txt=await r.text(); if(!r.ok) throw new Error(txt||r.statusText); return txt?JSON.parse(txt):null;}
+function saveSession(){sessionStorage.setItem('vetinc_team_session',JSON.stringify(state.session));} function loadSession(){try{state.session=JSON.parse(sessionStorage.getItem('vetinc_team_session')||'null')}catch{}}
+function params(extra={}){return Object.assign({p_user_id:state.session.id,p_code:state.session.code},extra)}
+async function login(){$('loginError').style.display='none'; const code=$('loginCode').value.trim(); const name=$('loginName').value.trim(); if(!code)return; try{const res=await rpc('vetinc_team_login',{p_name:name,p_code:code}); if(!res?.length) throw new Error('bad login'); state.session={...res[0], code}; saveSession(); await start();}catch(e){console.error(e); $('loginError').style.display='block';}}
+async function start(){if(!state.session)return; $('login').classList.add('hidden'); $('app').classList.add('active'); $('sessionName').textContent=state.session.name; $('roleBadge').textContent=state.session.role==='admin'?'Admin':'Employee'; $('adminTab').style.display=state.session.role==='admin'?'':'none'; await loadData(); render();}
+async function loadData(){state.leads=await rpc('vetinc_team_get_leads',params({p_date:today()})); if(state.session.role==='admin') state.users=await rpc('vetinc_team_get_users',params());}
+function switchTab(tab){state.tab=tab; document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab)); ['leads','script','admin'].forEach(t=>$('tab-'+t).classList.toggle('hidden',t!==tab)); render();}
+function render(){renderFilters(); renderLeads(); renderScript(); if(state.session.role==='admin') renderAdmin();}
+function renderFilters(){$('filters').innerHTML=['all',...statuses].map(s=>`<button class="chip ${state.filter===s?'active':''}" onclick="setFilter('${s}')">${s==='all'?'All':statusLabels[s]}</button>`).join('');}
+function setFilter(f){state.filter=f; render();}
+function filteredLeads(){let l=state.leads; if(state.filter!=='all') l=l.filter(x=>x.status===state.filter); return l;}
+function statusClass(s){return 's-'+(s||'new');}
+function renderLeads(){const leads=filteredLeads(); $('leadHeader').textContent=state.session.role==='admin'?'All leads':`Today's leads`; $('leadCount').textContent=`${leads.length} lead${leads.length===1?'':'s'}`; $('leadsList').innerHTML=leads.length?leads.map(leadCard).join(''):'<div class="empty">No leads here yet.</div>';}
+function leadCard(l){const phone=(l.phone||'').replace(/[^\d+]/g,''); return `<div class="lead"><div class="lead-top"><div><div class="clinic">${esc(l.clinic_name)}</div><div class="doctor">${esc(l.dr_name||'No doctor name yet')}</div><div class="meta"><span>Contact: ${esc(l.contact_name||'—')}</span><span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span><span>${esc(l.lead_date)}</span>${l.assigned_name?`<span>Assigned: ${esc(l.assigned_name)}</span>`:''}</div><div class="meta">${l.phone?`<span>📞 ${esc(l.phone)}</span>`:''}${l.email?`<span>✉️ ${esc(l.email)}</span>`:''}${l.website?`<a href="${esc(l.website)}" target="_blank">Website</a>`:''}</div></div><div><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status}</span></div></div>${l.notes?`<div class="note">${esc(l.notes)}</div>`:''}<div class="status-row">${statuses.map(s=>`<button class="${l.status===s?'active':''}" onclick="updateLead('${l.id}','${s}')">${statusLabels[s]}</button>`).join('')}${phone?`<a class="btn green small-btn" href="tel:${phone}">Call</a>`:''}</div><label>Notes</label><textarea id="notes-${l.id}" placeholder="Add call notes...">${esc(l.notes||'')}</textarea><button class="btn secondary small-btn" onclick="saveNotes('${l.id}')" style="margin-top:8px">Save notes</button></div>`;}
+async function updateLead(id,status){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:status,p_notes:lead?.notes||''})); await loadData(); render();}
+async function saveNotes(id){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:lead?.status||'new',p_notes:$('notes-'+id).value})); await loadData(); render();}
+function renderScript(){$('scriptText').innerHTML=`<strong>Open simple:</strong>
+Hi, is Dr. [Name] available? This is [Your Name] with Vet INC. I’ll be quick.
+
+<strong>Reason for the call:</strong>
+We help clinics keep their fee schedule up to date so they stop losing revenue on old prices.
+
+<strong>Ask:</strong>
+When was the last time the clinic reviewed the full fee schedule?
+
+<strong>If interested:</strong>
+Great. I can book a short call with Jack so he can show what we look for. It takes about 15 minutes.
+
+<strong>If busy:</strong>
+No problem. What is the best email for Dr. [Name], and I’ll send a short note.`;}
+function renderAdmin(){$('statTotal').textContent=state.leads.length; $('statHot').textContent=state.leads.filter(l=>['interested','booked','closed'].includes(l.status)).length; $('statUsers').textContent=state.users.filter(u=>u.role==='employee').length; $('usersList').innerHTML=state.users.map(u=>`<div class="table-row"><div><strong>${esc(u.name)}</strong><div class="muted">${esc(u.email||'No email')}</div></div><div>${esc(u.role)}</div><div>${u.active?'Active':'Inactive'}</div><div></div></div>`).join(''); $('adminLeadsList').innerHTML=state.leads.map(l=>`<div class="table-row"><div><strong>${esc(l.clinic_name)}</strong><div class="muted">${esc(l.dr_name||'')} · ${esc(l.phone||'')}</div></div><div><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status}</span></div><div>${esc(l.assigned_name||'Unassigned')}</div><button class="btn red small-btn" onclick="deleteLead('${l.id}')">Delete</button></div>`).join('')||'<div class="empty">No leads yet.</div>';}
+async function addEmployee(){const name=$('empName').value.trim(), email=$('empEmail').value.trim(), code=$('empCode').value.trim(); if(!name||!code)return alert('Name and access code required'); await rpc('vetinc_team_admin_upsert_user',params({p_name:name,p_email:email,p_role:'employee',p_access_code:code,p_active:true})); $('empName').value=$('empEmail').value=$('empCode').value=''; await loadData(); render();}
+async function addLeads(){const text=$('bulkLeads').value.trim(); if(!text)return; const users=state.users; for(const line of text.split('\\n').filter(Boolean)){const p=line.split('|').map(x=>x.trim()); const assigned=users.find(u=>u.role==='employee'&&(u.name===p[10]||u.email===p[10])); await rpc('vetinc_team_admin_add_lead',params({p_clinic_name:p[0]||'',p_dr_name:p[1]||'',p_contact_name:p[2]||'',p_phone:p[3]||'',p_email:p[4]||'',p_website:p[5]||'',p_city:p[6]||'',p_province:p[7]||'',p_source:p[8]||'',p_notes:'',p_lead_date:p[9]||today(),p_assigned_to:assigned?.id||null}));} $('bulkLeads').value=''; await loadData(); render();}
+async function deleteLead(id){if(!confirm('Delete this lead?'))return; await rpc('vetinc_team_admin_delete_lead',params({p_lead_id:id})); await loadData(); render();}
+$('loginBtn').onclick=login; $('logoutBtn').onclick=()=>{sessionStorage.removeItem('vetinc_team_session'); location.reload();}; $('refreshBtn').onclick=async()=>{await loadData(); render();}; $('addEmployeeBtn').onclick=addEmployee; $('addLeadsBtn').onclick=addLeads; document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab)); $('loginCode').addEventListener('keydown',e=>{if(e.key==='Enter')login();}); loadSession(); if(state.session) start();
+</script>
+</body>
+</html>
