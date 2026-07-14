@@ -89,6 +89,34 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
 @media(max-width:900px){.cmd-layout{grid-template-columns:1fr}.cmd-stats-row{grid-template-columns:repeat(2,1fr)}.kpi-row{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:600px){.kpi-row{grid-template-columns:repeat(2,1fr)}.rep-add-fields{grid-template-columns:1fr 1fr}.rep-add-fields .rep-add-btn-wrap{grid-column:1/-1}}
 
+
+.call-detail-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:end;margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:14px;background:#f8fafc}
+.call-detail-grid label{margin:0 0 5px;font-size:11px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:.05em}
+.call-detail-grid select{padding:9px 10px;border:1px solid #cbd5e1;border-radius:10px;background:white;font-size:13px}
+.call-detail-save{white-space:nowrap}
+.detail-pill{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);background:#f8fafc;border-radius:999px;padding:4px 9px;font-size:12px;color:#334155;margin:6px 6px 0 0}
+.detail-pill.reason{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
+@media(max-width:720px){.call-detail-grid{grid-template-columns:1fr}.call-detail-save{width:100%}}
+
+
+.owner-calendar-grid{display:grid;grid-template-columns:320px 1fr;gap:16px;align-items:start}
+.owner-day-card{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;position:sticky;top:88px}
+.owner-date-big{font-size:54px;font-weight:950;letter-spacing:-.07em;line-height:.9;color:var(--navy)}
+.owner-date-label{font-size:13px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-top:8px}
+.agenda-list{display:flex;flex-direction:column;gap:12px}
+.agenda-card{background:white;border:1px solid var(--line);border-radius:18px;padding:16px;display:grid;grid-template-columns:92px 1fr auto;gap:14px;align-items:center;box-shadow:0 10px 28px rgba(15,23,42,.04)}
+.agenda-time{font-size:18px;font-weight:950;color:var(--blue);letter-spacing:-.03em}
+.agenda-date{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.agenda-title{font-size:16px;font-weight:950;letter-spacing:-.025em;color:var(--ink)}
+.agenda-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px;font-size:12px;color:var(--muted)}
+.agenda-meta span{background:var(--soft);border-radius:999px;padding:4px 9px}
+.agenda-status{border-radius:999px;padding:5px 10px;font-size:12px;font-weight:900;background:var(--greenSoft);color:var(--green);white-space:nowrap}
+.agenda-empty{background:white;border:1px dashed #cbd5e1;border-radius:18px;padding:28px;text-align:center;color:var(--muted)}
+.scheduled-field{margin:10px 0 12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.scheduled-field label{margin:0 0 6px;font-size:11px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:.05em}
+.scheduled-field input{padding:9px 10px;border:1px solid #cbd5e1;border-radius:10px;font-size:13px}
+@media(max-width:900px){.owner-calendar-grid{grid-template-columns:1fr}.owner-day-card{position:static}.agenda-card{grid-template-columns:1fr}.agenda-status{justify-self:start}}
+
 </style>
 </head>
 <body>
@@ -111,49 +139,29 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
     <section id="tab-calendar" class="hidden">
       <div class="cmd-hero">
         <div>
-          <div class="cmd-hero-eyebrow">Booking Command Center</div>
-          <h2 class="cmd-hero-h">Jack's calendar</h2>
-          <p class="cmd-hero-sub">Live scheduling page — reps book qualified leads directly here after a successful pitch.</p>
+          <div class="cmd-hero-eyebrow">Jack's live schedule</div>
+          <h2 class="cmd-hero-h">Booked calls calendar</h2>
+          <p class="cmd-hero-sub">This is where you see the calls reps have booked for you. Reps set the scheduled time after using Calendly.</p>
         </div>
-        <a class="btn blue" href="https://calendly.com/wildejack1010/30min" target="_blank" rel="noopener" style="white-space:nowrap;flex-shrink:0">↗ Open full page</a>
+        <a class="btn blue" href="https://calendly.com/wildejack1010/30min" target="_blank" rel="noopener" style="white-space:nowrap;flex-shrink:0">↗ Open Calendly</a>
       </div>
       <div class="cmd-stats-row">
+        <div class="cmd-stat-card"><div class="cmd-stat-val" id="calStatToday">—</div><div class="cmd-stat-lbl">Today</div></div>
+        <div class="cmd-stat-card"><div class="cmd-stat-val" id="calStatUpcoming">—</div><div class="cmd-stat-lbl">Upcoming</div></div>
         <div class="cmd-stat-card"><div class="cmd-stat-val" id="calStatBooked">—</div><div class="cmd-stat-lbl">Booked &amp; Closed</div></div>
-        <div class="cmd-stat-card"><div class="cmd-stat-val" id="calStatWins">—</div><div class="cmd-stat-lbl">Total Wins</div></div>
         <div class="cmd-stat-card"><div class="cmd-stat-val" id="calStatReps">—</div><div class="cmd-stat-lbl">Active Reps</div></div>
-        <div class="cmd-stat-card"><div class="cmd-stat-val" id="calStatTouched">—</div><div class="cmd-stat-lbl">Calls Touched</div></div>
       </div>
-      <div class="cmd-layout">
-        <div class="card cmd-embed-card">
-          <iframe src="https://calendly.com/wildejack1010/30min" title="Jack Wilde calendar" class="cmd-iframe"></iframe>
+      <div class="owner-calendar-grid">
+        <div class="owner-day-card">
+          <div class="cmd-hero-eyebrow">Today</div>
+          <div class="owner-date-big" id="ownerDateNum">--</div>
+          <div class="owner-date-label" id="ownerDateLabel">Loading</div>
+          <p class="cmd-link-desc" style="margin-top:16px">Booked calls appear here after a rep records the scheduled time on the lead card.</p>
+          <a class="cmd-link-pill" href="https://calendly.com/wildejack1010/30min" target="_blank" rel="noopener">calendly.com/wildejack1010/30min</a>
         </div>
-        <div class="cmd-sidebar">
-          <div class="card cmd-side-card">
-            <div class="cmd-side-icon">📋</div>
-            <h3 class="cmd-side-h">After a qualified call</h3>
-            <ol class="cmd-steps">
-              <li>Mark lead <b>Interested</b></li>
-              <li>Click <b>Book call</b> on the lead card</li>
-              <li>Pick a slot with Jack's calendar</li>
-              <li>Set status to <b>Booked</b></li>
-              <li>Save your call notes</li>
-            </ol>
-          </div>
-          <div class="card cmd-side-card">
-            <div class="cmd-side-icon">⏰</div>
-            <h3 class="cmd-side-h">Best call windows</h3>
-            <div class="cmd-chip-col">
-              <span class="cmd-time-chip">7:30 – 8:30 AM local</span>
-              <span class="cmd-time-chip">12:00 – 1:00 PM local</span>
-              <span class="cmd-time-chip">5:00 – 6:00 PM local</span>
-            </div>
-          </div>
-          <div class="card cmd-side-card">
-            <div class="cmd-side-icon">🔗</div>
-            <h3 class="cmd-side-h">Direct booking link</h3>
-            <p class="cmd-link-desc">Send this if they want to self-book:</p>
-            <a class="cmd-link-pill" href="https://calendly.com/wildejack1010/30min" target="_blank" rel="noopener">calendly.com/wildejack1010/30min</a>
-          </div>
+        <div>
+          <div class="section-title"><div><h2>Upcoming calls</h2><span id="agendaCount">0 scheduled</span></div></div>
+          <div class="agenda-list" id="agendaList"></div>
         </div>
       </div>
     </section>
@@ -194,6 +202,10 @@ const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 const today=()=>new Date().toISOString().slice(0,10);
 const statuses=['new','called','no_answer','left_voicemail','emailed','interested','not_interested','follow_up','booked','closed'];
 const statusLabels={new:'New',called:'Called',no_answer:'No answer',left_voicemail:'Left voicemail',emailed:'Emailed',interested:'Interested',not_interested:'Not interested',follow_up:'Follow up',booked:'Booked',closed:'Closed'};
+const callStages=['','receptionist','gatekeeper_pushback','voicemail','owner_reached','qualified','pitch_started','meeting_offered','booked','follow_up_needed'];
+const callStageLabels={'':'Not marked yet',receptionist:'Reached receptionist',gatekeeper_pushback:'Reception pushback',voicemail:'Left voicemail',owner_reached:'Owner reached',qualified:'Qualified owner',pitch_started:'Pitch started',meeting_offered:'Meeting offered',booked:'Meeting booked',follow_up_needed:'Follow-up needed'};
+const rejectionReasons=['','not_owner','happy_current','too_busy','not_interested','no_budget','corporate_owned','uses_competitor','send_email','bad_timing','other'];
+const rejectionReasonLabels={'':'No turn-down reason',not_owner:'Not decision maker',happy_current:'Happy with current pricing',too_busy:'Too busy',not_interested:'Not interested',no_budget:'No budget',corporate_owned:'Corporate/group owned',uses_competitor:'Uses another service',send_email:'Asked to send email only',bad_timing:'Bad timing',other:'Other / see notes'};
 const JACK_CALENDAR='https://calendly.com/wildejack1010/30min';
 let state={session:null, users:[], leads:[], filter:'all', tab:'leads', search:'', limit:50};
 const $=id=>document.getElementById(id); const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -211,9 +223,17 @@ function filteredLeads(){let l=state.leads; if(state.filter!=='all') l=l.filter(
 function statusClass(s){return 's-'+(s||'new');}
 function renderLeads(){const all=filteredLeads(); const leads=all.slice(0,state.limit); $('leadHeader').textContent=state.session.role==='admin'?'All leads':`Today's leads`; $('leadCount').textContent=`${all.length} lead${all.length===1?'':'s'}`; $('leadsList').innerHTML=leads.length?leads.map(leadCard).join(''):'<div class="empty">No leads here yet.</div>'; $('leadMore').innerHTML=all.length>leads.length?`Showing ${leads.length} of ${all.length}. <button class="btn secondary small-btn" onclick="showMoreLeads()">Show 50 more</button>`:'';}
 function showMoreLeads(){state.limit+=50; renderLeads();}
-function leadCard(l){const phone=(l.phone||'').replace(/[^\d+]/g,''); return `<div class="lead"><div class="lead-top"><div><div class="clinic">${esc(l.clinic_name)}</div><div class="doctor">${esc(l.dr_name||'No doctor name yet')}</div><div class="meta"><span>Contact: ${esc(l.contact_name||'—')}</span><span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span><span>${esc(l.lead_date)}</span>${l.assigned_name?`<span>Assigned: ${esc(l.assigned_name)}</span>`:''}</div><div class="meta">${l.phone?`<span>📞 ${esc(l.phone)}</span>`:''}${l.email?`<span>✉️ ${esc(l.email)}</span>`:''}${l.website?`<a href="${esc(l.website)}" target="_blank">Website</a>`:''}</div></div><div><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status}</span></div></div>${l.notes?`<div class="note">${esc(l.notes)}</div>`:''}<div class="status-row">${statuses.map(s=>`<button class="${l.status===s?'active':''}" onclick="updateLead('${l.id}','${s}')">${statusLabels[s]}</button>`).join('')}${phone?`<a class="btn green small-btn" href="tel:${phone}">Call</a>`:''}<button class="btn blue small-btn" onclick="openBooking('${l.id}')">Book call</button></div><label>Notes</label><textarea id="notes-${l.id}" placeholder="Add call notes...">${esc(l.notes||'')}</textarea><button class="btn secondary small-btn" onclick="saveNotes('${l.id}')" style="margin-top:8px">Save notes</button></div>`;}
-async function updateLead(id,status){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:status,p_notes:lead?.notes||''})); await loadData(); render();}
-async function saveNotes(id){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:lead?.status||'new',p_notes:$('notes-'+id).value})); await loadData(); render();}
+function callDetailControls(l){
+  const stage=l.call_stage||'';
+  const reason=l.rejection_reason||'';
+  const stagePill=stage?`<span class="detail-pill">Call point: ${esc(callStageLabels[stage]||stage)}</span>`:'';
+  const reasonPill=reason?`<span class="detail-pill reason">Turn-down: ${esc(rejectionReasonLabels[reason]||reason)}</span>`:'';
+  return `${stagePill}${reasonPill}<div class="scheduled-field"><label>Scheduled call time for Jack</label><input id="sched-${l.id}" type="datetime-local" value="${fmtScheduleInput(l.scheduled_call_at)}"></div><div class="call-detail-grid"><div><label>Where did they get on the call?</label><select id="stage-${l.id}">${callStages.map(x=>`<option value="${x}" ${stage===x?'selected':''}>${callStageLabels[x]}</option>`).join('')}</select></div><div><label>If turned down, why?</label><select id="reason-${l.id}">${rejectionReasons.map(x=>`<option value="${x}" ${reason===x?'selected':''}>${rejectionReasonLabels[x]}</option>`).join('')}</select></div><button class="btn blue small-btn call-detail-save" onclick="saveCallDetails('${l.id}')">Save call details</button></div>`;
+}
+function leadCard(l){const phone=(l.phone||'').replace(/[^\d+]/g,''); return `<div class="lead"><div class="lead-top"><div><div class="clinic">${esc(l.clinic_name)}</div><div class="doctor">${esc(l.dr_name||'No doctor name yet')}</div><div class="meta"><span>Contact: ${esc(l.contact_name||'—')}</span><span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span><span>${esc(l.lead_date)}</span>${l.assigned_name?`<span>Assigned: ${esc(l.assigned_name)}</span>`:''}</div><div class="meta">${l.phone?`<span>📞 ${esc(l.phone)}</span>`:''}${l.email?`<span>✉️ ${esc(l.email)}</span>`:''}${l.website?`<a href="${esc(l.website)}" target="_blank">Website</a>`:''}</div></div><div><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status}</span></div></div>${l.notes?`<div class="note">${esc(l.notes)}</div>`:''}<div class="status-row">${statuses.map(s=>`<button class="${l.status===s?'active':''}" onclick="updateLead('${l.id}','${s}')">${statusLabels[s]}</button>`).join('')}${phone?`<a class="btn green small-btn" href="tel:${phone}">Call</a>`:''}<button class="btn blue small-btn" onclick="openBooking('${l.id}')">Book call</button></div>${callDetailControls(l)}<label>Notes</label><textarea id="notes-${l.id}" placeholder="Add call notes...">${esc(l.notes||'')}</textarea><button class="btn secondary small-btn" onclick="saveNotes('${l.id}')" style="margin-top:8px">Save notes</button></div>`;}
+async function updateLead(id,status){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:status,p_notes:$('notes-'+id)?.value??lead?.notes??'',p_call_stage:$('stage-'+id)?.value??lead?.call_stage??'',p_rejection_reason:$('reason-'+id)?.value??lead?.rejection_reason??'',p_scheduled_call_at:$('sched-'+id)?.value?new Date($('sched-'+id).value).toISOString():lead?.scheduled_call_at||null})); await loadData(); render();}
+async function saveNotes(id){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:lead?.status||'new',p_notes:$('notes-'+id).value,p_call_stage:$('stage-'+id)?.value??lead?.call_stage??'',p_rejection_reason:$('reason-'+id)?.value??lead?.rejection_reason??'',p_scheduled_call_at:$('sched-'+id)?.value?new Date($('sched-'+id).value).toISOString():lead?.scheduled_call_at||null})); await loadData(); render();}
+async function saveCallDetails(id){const lead=state.leads.find(l=>l.id===id); const sched=$('sched-'+id)?.value; await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:sched?'booked':(lead?.status||'new'),p_notes:$('notes-'+id)?.value??lead?.notes??'',p_call_stage:sched?'booked':$('stage-'+id).value,p_rejection_reason:$('reason-'+id).value,p_scheduled_call_at:sched?new Date(sched).toISOString():null})); await loadData(); render();}
 function calendlyUrlForLead(l){
   const params=new URLSearchParams();
   const name=(l.dr_name||l.contact_name||l.clinic_name||'').trim();
@@ -333,15 +353,30 @@ function employeeStats(user){
   const rate=touched.length?Math.round((wins.length/touched.length)*100):0;
   return {assigned:leads.length,today:todayLeads.length,touched:touched.length,wins:wins.length,booked:booked.length,rate};
 }
+function fmtScheduleInput(v){if(!v)return ''; const d=new Date(v); if(Number.isNaN(d.getTime()))return ''; const pad=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;}
+function fmtAgendaDate(v){const d=new Date(v); return d.toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'});}
+function fmtAgendaTime(v){const d=new Date(v); return d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});}
+function renderOwnerCalendar(employees){
+  const now=new Date();
+  const todayKey=now.toISOString().slice(0,10);
+  $('ownerDateNum').textContent=now.getDate();
+  $('ownerDateLabel').textContent=now.toLocaleDateString([], {weekday:'long', month:'long', year:'numeric'});
+  const scheduled=state.leads.filter(l=>l.scheduled_call_at).sort((a,b)=>new Date(a.scheduled_call_at)-new Date(b.scheduled_call_at));
+  const upcoming=scheduled.filter(l=>new Date(l.scheduled_call_at)>=new Date(now.getTime()-60*60*1000));
+  const today=scheduled.filter(l=>String(l.scheduled_call_at).slice(0,10)===todayKey);
+  const booked=state.leads.filter(l=>['booked','closed'].includes(l.status)).length;
+  const csMap={calStatToday:today.length,calStatUpcoming:upcoming.length,calStatBooked:booked,calStatReps:employees.length};
+  Object.keys(csMap).forEach(id=>{const el=$(id);if(el)el.textContent=csMap[id];});
+  $('agendaCount').textContent=`${upcoming.length} scheduled`;
+  $('agendaList').innerHTML=upcoming.length?upcoming.slice(0,25).map(l=>`<div class="agenda-card"><div><div class="agenda-time">${fmtAgendaTime(l.scheduled_call_at)}</div><div class="agenda-date">${fmtAgendaDate(l.scheduled_call_at)}</div></div><div><div class="agenda-title">${esc(l.clinic_name||'Vet INC call')}</div><div class="agenda-meta">${l.dr_name?`<span>${esc(l.dr_name)}</span>`:''}${l.phone?`<span>${esc(l.phone)}</span>`:''}${l.assigned_name?`<span>Rep: ${esc(l.assigned_name)}</span>`:''}${l.rejection_reason?`<span>${esc(rejectionReasonLabels[l.rejection_reason]||l.rejection_reason)}</span>`:''}</div></div><div class="agenda-status">${statusLabels[l.status]||'Booked'}</div></div>`).join(''):`<div class="agenda-empty"><strong>No scheduled calls yet.</strong><br>When reps book a call, they should enter the date/time on the lead card and mark it Booked.</div>`;
+}
 function renderAdmin(){
   const employees=state.users.filter(u=>u.role==='employee');
   const totalTouched=state.leads.filter(l=>l.status&&l.status!=='new').length;
   const totalWins=state.leads.filter(l=>['interested','booked','closed'].includes(l.status)).length;
   const totalBooked=state.leads.filter(l=>['booked','closed'].includes(l.status)).length;
   const teamRate=totalTouched?Math.round((totalWins/totalTouched)*100):0;
-  // Calendar command center stats
-  const csMap={calStatBooked:totalBooked,calStatWins:totalWins,calStatReps:employees.length,calStatTouched:totalTouched};
-  Object.keys(csMap).forEach(id=>{const el=$(id);if(el)el.textContent=csMap[id];});
+  renderOwnerCalendar(employees);
   // KPI row
   $('kpiRow').innerHTML=
     `<div class="kpi-card"><div class="kpi-val">${employees.length}</div><div class="kpi-lbl">Active Reps</div></div>`+
