@@ -31,6 +31,64 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
 .booking-modal{position:fixed;inset:0;background:rgba(12,22,36,.58);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}
 .booking-modal.open{display:flex}.booking-panel{width:min(1040px,96vw);height:min(820px,92vh);background:#fff;border-radius:22px;box-shadow:0 26px 80px rgba(12,22,36,.32);overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column}.booking-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#fff,#f8fbff)}.booking-head h2{margin:0;font-size:18px}.booking-head p{margin:4px 0 0;color:var(--muted);font-size:13px}.booking-actions{display:flex;gap:8px;flex-wrap:wrap}.booking-frame{width:100%;height:100%;border:0;flex:1}.booking-fallback{padding:14px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
 
+/* === Calendar Command Center === */
+.cmd-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.cmd-hero-eyebrow{font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.cmd-hero-h{font-size:24px;font-weight:900;letter-spacing:-.04em;margin:0 0 4px}
+.cmd-hero-sub{font-size:13px;color:var(--muted);margin:0}
+.cmd-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.cmd-stat-card{background:white;border:1px solid var(--line);border-radius:16px;padding:16px 14px;text-align:center}
+.cmd-stat-val{font-size:28px;font-weight:950;letter-spacing:-.05em;color:var(--ink)}
+.cmd-stat-lbl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:3px}
+.cmd-layout{display:grid;grid-template-columns:1fr 270px;gap:16px;align-items:start}
+.cmd-embed-card{padding:0;overflow:hidden}
+.cmd-iframe{width:100%;height:680px;border:0;display:block}
+.cmd-sidebar{display:flex;flex-direction:column;gap:12px}
+.cmd-side-card{padding:16px}
+.cmd-side-icon{font-size:18px;margin-bottom:8px}
+.cmd-side-h{font-size:14px;font-weight:900;margin:0 0 10px;letter-spacing:-.02em}
+.cmd-steps{margin:0;padding-left:18px;font-size:13px;color:#334155;line-height:1.8}
+.cmd-chip-col{display:flex;flex-direction:column;gap:6px}
+.cmd-time-chip{background:var(--blueSoft);color:var(--blue);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:700;display:block}
+.cmd-link-desc{font-size:12px;color:var(--muted);margin:0 0 8px}
+.cmd-link-pill{display:block;background:var(--soft);border:1px solid var(--line);border-radius:9px;padding:8px 11px;font-size:12px;font-weight:700;color:var(--blue);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cmd-link-pill:hover{background:var(--blueSoft)}
+/* === Reps Dashboard === */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.kpi-card{background:white;border:1px solid var(--line);border-radius:16px;padding:16px 14px}
+.kpi-val{font-size:28px;font-weight:950;letter-spacing:-.05em}
+.kpi-lbl{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+.kpi-blue .kpi-val{color:var(--blue)}.kpi-green .kpi-val{color:var(--green)}.kpi-amber .kpi-val{color:var(--amber)}
+.rep-add-card{padding:14px 16px;margin-bottom:16px}
+.rep-add-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-size:14px;font-weight:900;color:var(--blue);user-select:none}
+.rep-add-form{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+.rep-add-fields{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end}
+.rep-add-field label{display:block;font-size:11px;font-weight:800;color:#334155;text-transform:uppercase;letter-spacing:.05em;margin:0 0 5px}
+.rep-add-btn-wrap{display:flex;align-items:flex-end}
+.rep-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+.rep-card{background:white;border:1px solid var(--line);border-radius:18px;padding:18px}
+.rep-card-head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.rep-avatar{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--navy),#1e3a5f);color:white;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;flex-shrink:0}
+.rep-name{font-weight:900;font-size:15px;letter-spacing:-.02em}
+.rep-email{font-size:12px;color:var(--muted);margin-top:1px}
+.rep-rate-badge{margin-left:auto;font-weight:900;font-size:12px;border-radius:999px;padding:4px 10px;flex-shrink:0}
+.rep-rate-badge.rc-green{background:var(--greenSoft);color:var(--green)}
+.rep-rate-badge.rc-amber{background:var(--amberSoft);color:var(--amber)}
+.rep-rate-badge.rc-muted{background:#f1f5f9;color:var(--muted)}
+.rep-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.rep-chip{background:var(--soft);border-radius:10px;padding:8px 4px;text-align:center}
+.rep-chip-val{font-size:20px;font-weight:950;letter-spacing:-.04em;display:block}
+.rep-chip-lbl{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.rep-chip.rc-wins{background:var(--greenSoft)}.rep-chip.rc-wins .rep-chip-val{color:var(--green)}
+.rep-chip.rc-booked{background:var(--blueSoft)}.rep-chip.rc-booked .rep-chip-val{color:var(--blue)}
+.rep-progress{background:#f1f5f9;border-radius:999px;height:5px;margin-bottom:12px;overflow:hidden}
+.rep-progress-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .4s}
+.rep-quota-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.rep-quota-label{font-size:12px;color:var(--muted);font-weight:600;white-space:nowrap}
+.rep-quota-row input{width:74px;padding:7px 9px;border:1px solid #cbd5e1;border-radius:9px;font-size:13px;font-weight:700}
+@media(max-width:900px){.cmd-layout{grid-template-columns:1fr}.cmd-stats-row{grid-template-columns:repeat(2,1fr)}.kpi-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.kpi-row{grid-template-columns:repeat(2,1fr)}.rep-add-fields{grid-template-columns:1fr 1fr}.rep-add-fields .rep-add-btn-wrap{grid-column:1/-1}}
+
 </style>
 </head>
 <body>
@@ -50,16 +108,71 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
   <div class="topbar"><div class="top-inner"><div class="top-left"><img src="assets/vetinc-logo.png" alt="Vet INC"><div><div class="brand-title" style="font-size:16px">Team Portal</div><div class="small" id="sessionName"></div></div><span class="badge" id="roleBadge">Employee</span></div><button class="btn secondary small-btn" id="logoutBtn">Logout</button></div></div>
   <div class="tabs"><div class="tabs-inner" id="tabsInner"><button class="tab active employee-tab" data-tab="leads">Today's leads</button><button class="tab employee-tab" data-tab="script">Script</button><button class="tab active admin-tab hidden" data-tab="calendar">Calendar</button><button class="tab admin-tab hidden" data-tab="admin">Reps</button></div></div>
   <main class="content">
-    <section id="tab-calendar" class="hidden"><div class="card"><div class="section-title"><div><h2>Jack's calendar</h2><span>Live booking page reps use for scheduled calls</span></div><a class="btn secondary small-btn" href="https://calendly.com/wildejack1010/30min" target="_blank" rel="noopener">Open full calendar</a></div><iframe class="booking-frame" style="height:720px;border:1px solid var(--line);border-radius:16px" src="https://calendly.com/wildejack1010/30min" title="Jack Wilde calendar"></iframe></div></section>
+    <section id="tab-calendar" class="hidden">
+      <div class="cmd-hero">
+        <div>
+          <div class="cmd-hero-eyebrow">Booking Command Center</div>
+          <h2 class="cmd-hero-h">Jack's calendar</h2>
+          <p class="cmd-hero-sub">Live scheduling page — reps book qualified leads directly here after a successful pitch.</p>
+        </div>
+        <a class="btn blue" href="https://calendly.com/wildejack1010/30min" target="_blank" rel="noopener" style="white-space:nowrap;flex-shrink:0">↗ Open full page</a>
+      </div>
+      <div class="cmd-stats-row">
+        <div class="cmd-stat-card"><div class="cmd-stat-val" id="calStatBooked">—</div><div class="cmd-stat-lbl">Booked &amp; Closed</div></div>
+        <div class="cmd-stat-card"><div class="cmd-stat-val" id="calStatWins">—</div><div class="cmd-stat-lbl">Total Wins</div></div>
+        <div class="cmd-stat-card"><div class="cmd-stat-val" id="calStatReps">—</div><div class="cmd-stat-lbl">Active Reps</div></div>
+        <div class="cmd-stat-card"><div class="cmd-stat-val" id="calStatTouched">—</div><div class="cmd-stat-lbl">Calls Touched</div></div>
+      </div>
+      <div class="cmd-layout">
+        <div class="card cmd-embed-card">
+          <iframe src="https://calendly.com/wildejack1010/30min" title="Jack Wilde calendar" class="cmd-iframe"></iframe>
+        </div>
+        <div class="cmd-sidebar">
+          <div class="card cmd-side-card">
+            <div class="cmd-side-icon">📋</div>
+            <h3 class="cmd-side-h">After a qualified call</h3>
+            <ol class="cmd-steps">
+              <li>Mark lead <b>Interested</b></li>
+              <li>Click <b>Book call</b> on the lead card</li>
+              <li>Pick a slot with Jack's calendar</li>
+              <li>Set status to <b>Booked</b></li>
+              <li>Save your call notes</li>
+            </ol>
+          </div>
+          <div class="card cmd-side-card">
+            <div class="cmd-side-icon">⏰</div>
+            <h3 class="cmd-side-h">Best call windows</h3>
+            <div class="cmd-chip-col">
+              <span class="cmd-time-chip">7:30 – 8:30 AM local</span>
+              <span class="cmd-time-chip">12:00 – 1:00 PM local</span>
+              <span class="cmd-time-chip">5:00 – 6:00 PM local</span>
+            </div>
+          </div>
+          <div class="card cmd-side-card">
+            <div class="cmd-side-icon">🔗</div>
+            <h3 class="cmd-side-h">Direct booking link</h3>
+            <p class="cmd-link-desc">Send this if they want to self-book:</p>
+            <a class="cmd-link-pill" href="https://calendly.com/wildejack1010/30min" target="_blank" rel="noopener">calendly.com/wildejack1010/30min</a>
+          </div>
+        </div>
+      </div>
+    </section>
     <section id="tab-leads"><div class="section-title"><div><h2 id="leadHeader">Today's leads</h2><span id="leadCount"></span></div><button class="btn secondary small-btn" id="refreshBtn">Refresh</button></div><input id="leadSearch" placeholder="Search clinic, doctor, city, phone, email..." style="margin-bottom:12px"><div class="filters" id="filters"></div><div id="leadsList"></div><div id="leadMore" class="small" style="text-align:center;margin-top:10px"></div></section>
     <section id="tab-script" class="hidden"><div class="card"><div class="section-title"><h2>Simple call script</h2><span>Keep it easy to follow</span></div><div class="script" id="scriptText"></div></div></section>
     <section id="tab-admin" class="hidden">
-      <div class="grid" style="margin-bottom:16px"><div class="card"><div class="muted">Reps</div><div class="stat" id="statUsers">0</div></div><div class="card"><div class="muted">Calls touched</div><div class="stat" id="statTouched">0</div></div><div class="card"><div class="muted">Wins</div><div class="stat" id="statWins">0</div></div></div>
-      <div class="split">
-        <div class="card"><div class="section-title"><h2>Add rep</h2><span>Creates an email/password login</span></div><label>Name</label><input id="empName" placeholder="Mike"><label>Email</label><input id="empEmail" placeholder="mike@vetinc.ca"><label>Password</label><input id="empCode" type="password" placeholder="Set temporary password"><button class="btn green" id="addEmployeeBtn" style="margin-top:12px">Add rep</button></div>
-        <div class="card"><div class="section-title"><h2>Progress summary</h2><span>Quick view of the team</span></div><div id="teamSummary" class="script"></div></div>
+      <div class="kpi-row" id="kpiRow"></div>
+      <div class="card rep-add-card">
+        <div class="rep-add-toggle" onclick="toggleAddRep()"><span>+ Add new rep</span><span id="addRepArrow" style="color:var(--muted)">▸</span></div>
+        <div id="addRepForm" class="hidden rep-add-form">
+          <div class="rep-add-fields">
+            <div class="rep-add-field"><label>Name</label><input id="empName" placeholder="Mike"></div>
+            <div class="rep-add-field"><label>Email</label><input id="empEmail" placeholder="mike@vetinc.ca"></div>
+            <div class="rep-add-field"><label>Password</label><input id="empCode" type="password" placeholder="Temp password"></div>
+            <div class="rep-add-field rep-add-btn-wrap"><button class="btn green full" id="addEmployeeBtn">Add rep</button></div>
+          </div>
+        </div>
       </div>
-      <div class="card" style="margin-top:16px"><div class="section-title"><h2>Reps</h2><span id="employeeHelp">Create reps, assign daily cold calls, and track success</span></div><div id="usersList"></div></div>
+      <div id="usersList" class="rep-grid"></div>
     </section>
   </main>
 </div>
@@ -224,22 +337,37 @@ function renderAdmin(){
   const employees=state.users.filter(u=>u.role==='employee');
   const totalTouched=state.leads.filter(l=>l.status&&l.status!=='new').length;
   const totalWins=state.leads.filter(l=>['interested','booked','closed'].includes(l.status)).length;
-  $('statUsers').textContent=employees.length;
-  $('statTouched').textContent=totalTouched;
-  $('statWins').textContent=totalWins;
-  const booked=state.leads.filter(l=>['booked','closed'].includes(l.status)).length;
-  $('teamSummary').innerHTML=`<strong>${employees.length}</strong> active reps<br><strong>${totalTouched}</strong> calls touched<br><strong>${totalWins}</strong> interested/booked/closed<br><strong>${booked}</strong> booked or closed`;
-  $('usersList').innerHTML=employees.map(u=>{
+  const totalBooked=state.leads.filter(l=>['booked','closed'].includes(l.status)).length;
+  const teamRate=totalTouched?Math.round((totalWins/totalTouched)*100):0;
+  // Calendar command center stats
+  const csMap={calStatBooked:totalBooked,calStatWins:totalWins,calStatReps:employees.length,calStatTouched:totalTouched};
+  Object.keys(csMap).forEach(id=>{const el=$(id);if(el)el.textContent=csMap[id];});
+  // KPI row
+  $('kpiRow').innerHTML=
+    `<div class="kpi-card"><div class="kpi-val">${employees.length}</div><div class="kpi-lbl">Active Reps</div></div>`+
+    `<div class="kpi-card kpi-amber"><div class="kpi-val">${totalTouched}</div><div class="kpi-lbl">Calls Touched</div></div>`+
+    `<div class="kpi-card kpi-green"><div class="kpi-val">${totalWins}</div><div class="kpi-lbl">Wins</div></div>`+
+    `<div class="kpi-card kpi-blue"><div class="kpi-val">${totalBooked}</div><div class="kpi-lbl">Booked / Closed</div></div>`+
+    `<div class="kpi-card ${teamRate>=50?'kpi-green':teamRate>=20?'kpi-amber':''}"><div class="kpi-val">${teamRate}%</div><div class="kpi-lbl">Success Rate</div></div>`;
+  // Rep cards
+  $('usersList').innerHTML=employees.length?employees.map(u=>{
     const st=employeeStats(u);
-    const isEmp=u.role==='employee';
-    return `<div class="table-row"><div><strong>${esc(u.name)}</strong><div class="muted">${esc(u.email||'No email')}</div>${isEmp?`<div class="small">Today: <b>${st.today}</b> · Touched: <b>${st.touched}</b> · Wins: <b>${st.wins}</b> · Success: <b>${st.rate}%</b></div>`:''}</div><div>${esc(u.role)}</div><div>${isEmp?`<label style="margin:0 0 4px;font-size:10px">Daily calls</label><input id="quota-${u.id}" type="number" min="0" max="500" value="${u.daily_call_quota??50}" style="padding:8px 9px;border-radius:9px"><div class="small">Total assigned: ${st.assigned} · Booked/closed: ${st.booked}</div>`:(u.active?'Active':'Inactive')}</div><div>${isEmp?`<button class="btn blue small-btn" onclick="saveQuota('${u.id}')">Save quota</button><button class="btn green small-btn" onclick="assignCalls('${u.id}')" style="margin-top:6px">Assign calls</button>`:''}</div></div>`;
-  }).join('');
+    const init=(u.name||'?')[0].toUpperCase();
+    const badgeCls=st.rate>=50?'rc-green':st.rate>=20?'rc-amber':'rc-muted';
+    return `<div class="rep-card">`+
+      `<div class="rep-card-head"><div class="rep-avatar">${esc(init)}</div><div><div class="rep-name">${esc(u.name)}</div><div class="rep-email">${esc(u.email||'No email')}</div></div><span class="rep-rate-badge ${badgeCls}">${st.rate}%</span></div>`+
+      `<div class="rep-chips"><div class="rep-chip"><span class="rep-chip-val">${st.assigned}</span><span class="rep-chip-lbl">Assigned</span></div><div class="rep-chip"><span class="rep-chip-val">${st.touched}</span><span class="rep-chip-lbl">Touched</span></div><div class="rep-chip rc-wins"><span class="rep-chip-val">${st.wins}</span><span class="rep-chip-lbl">Wins</span></div><div class="rep-chip rc-booked"><span class="rep-chip-val">${st.booked}</span><span class="rep-chip-lbl">Booked</span></div></div>`+
+      `<div class="rep-progress"><div class="rep-progress-bar" style="width:${Math.min(st.rate,100)}%"></div></div>`+
+      `<div class="rep-quota-row"><span class="rep-quota-label">Daily quota</span><input id="quota-${u.id}" type="number" min="0" max="500" value="${u.daily_call_quota??50}"><button class="btn blue small-btn" onclick="saveQuota('${u.id}')">Save</button><button class="btn green small-btn" onclick="assignCalls('${u.id}')">Assign calls</button></div>`+
+      `</div>`;
+  }).join(''):'<div class="empty">No reps yet. Add one above.</div>';
 }
 async function saveQuota(employeeId){const el=$('quota-'+employeeId); const quota=parseInt(el.value||'0',10); await rpc('vetinc_team_admin_set_quota',params({p_employee_id:employeeId,p_daily_call_quota:quota})); await loadData(); render();}
 async function assignCalls(employeeId){const el=$('quota-'+employeeId); const quota=parseInt(el.value||'0',10); const assigned=await rpc('vetinc_team_admin_assign_calls',params({p_employee_id:employeeId,p_call_count:quota,p_lead_date:today()})); await loadData(); render(); alert(`Assigned ${assigned||0} cold calls for today.`);}
 async function addEmployee(){const name=$('empName').value.trim(), email=$('empEmail').value.trim(), code=$('empCode').value.trim(); if(!name||!email||!code)return alert('Name, email, and password required'); await rpc('vetinc_team_admin_upsert_user',params({p_name:name,p_email:email,p_role:'employee',p_access_code:code,p_active:true})); $('empName').value=$('empEmail').value=$('empCode').value=''; await loadData(); render();}
 async function addLeads(){const text=$('bulkLeads').value.trim(); if(!text)return; const users=state.users; for(const line of text.split('\\n').filter(Boolean)){const p=line.split('|').map(x=>x.trim()); const assigned=users.find(u=>u.role==='employee'&&(u.name===p[10]||u.email===p[10])); await rpc('vetinc_team_admin_add_lead',params({p_clinic_name:p[0]||'',p_dr_name:p[1]||'',p_contact_name:p[2]||'',p_phone:p[3]||'',p_email:p[4]||'',p_website:p[5]||'',p_city:p[6]||'',p_province:p[7]||'',p_source:p[8]||'',p_notes:'',p_lead_date:p[9]||today(),p_assigned_to:assigned?.id||null}));} $('bulkLeads').value=''; await loadData(); render();}
 async function deleteLead(id){if(!confirm('Delete this lead?'))return; await rpc('vetinc_team_admin_delete_lead',params({p_lead_id:id})); await loadData(); render();}
+function toggleAddRep(){const form=$('addRepForm');const arrow=$('addRepArrow');form.classList.toggle('hidden');arrow.textContent=form.classList.contains('hidden')?'▸':'▾';}
 $('loginBtn').onclick=login; $('adminLoginBtn').onclick=()=>{$('loginName').value='jack@vetinc.ca'; $('loginCode').focus();}; $('logoutBtn').onclick=()=>{sessionStorage.removeItem('vetinc_team_session'); location.reload();}; $('refreshBtn').onclick=async()=>{await loadData(); render();}; $('leadSearch').oninput=e=>{state.search=e.target.value; state.limit=50; renderLeads();}; $('addEmployeeBtn').onclick=addEmployee; document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab)); $('loginCode').addEventListener('keydown',e=>{if(e.key==='Enter')login();}); loadSession(); if(state.session) start();
 </script>
 </body>
