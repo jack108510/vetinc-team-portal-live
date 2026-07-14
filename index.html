@@ -27,6 +27,10 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
 .split{display:grid;grid-template-columns:1.1fr .9fr;gap:16px} .stat{font-size:30px;font-weight:950;letter-spacing:-.05em} .table-row{display:grid;grid-template-columns:1fr 120px 130px 78px;gap:10px;align-items:center;border-bottom:1px solid var(--line);padding:11px 0;font-size:13px} .table-row:last-child{border-bottom:0} .muted{color:var(--muted)} .script{line-height:1.65;color:#334155;font-size:14px;white-space:pre-wrap} .script strong{color:#0f172a}
 .empty{text-align:center;color:var(--muted);padding:50px 20px;background:white;border:1px dashed #cbd5e1;border-radius:18px} code{background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:2px 5px}
 @media(max-width:760px){.grid,.split{grid-template-columns:1fr}.lead-top{display:block}.table-row{grid-template-columns:1fr}.top-inner{align-items:flex-start}.hide-mobile{display:none}}
+
+.booking-modal{position:fixed;inset:0;background:rgba(12,22,36,.58);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:50;padding:18px}
+.booking-modal.open{display:flex}.booking-panel{width:min(1040px,96vw);height:min(820px,92vh);background:#fff;border-radius:22px;box-shadow:0 26px 80px rgba(12,22,36,.32);overflow:hidden;border:1px solid var(--line);display:flex;flex-direction:column}.booking-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,#fff,#f8fbff)}.booking-head h2{margin:0;font-size:18px}.booking-head p{margin:4px 0 0;color:var(--muted);font-size:13px}.booking-actions{display:flex;gap:8px;flex-wrap:wrap}.booking-frame{width:100%;height:100%;border:0;flex:1}.booking-fallback{padding:14px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+
 </style>
 </head>
 <body>
@@ -57,12 +61,25 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
     </section>
   </main>
 </div>
+
+<div id="bookingModal" class="booking-modal" role="dialog" aria-modal="true" aria-label="Book call with Jack">
+  <div class="booking-panel">
+    <div class="booking-head">
+      <div><h2 id="bookingTitle">Book call with Jack</h2><p id="bookingSub">Use Jack’s live calendar to schedule the 20-minute meeting.</p></div>
+      <div class="booking-actions"><a id="bookingOpen" class="btn secondary small-btn" target="_blank" rel="noopener">Open calendar</a><button class="btn red small-btn" onclick="closeBooking()">Close</button></div>
+    </div>
+    <iframe id="bookingFrame" class="booking-frame" title="Jack Wilde booking calendar"></iframe>
+    <div class="booking-fallback">After booking, set the lead status to <b>Booked</b> and save any notes.</div>
+  </div>
+</div>
+
 <script>
 const SB_URL='https://rnqhhzatlxmyvccdvqkr.supabase.co';
 const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJucWhoemF0bHhteXZjY2R2cWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMTQ5ODUsImV4cCI6MjA5MDU5MDk4NX0.zokle21pVEPG5bIOFiyZIWYkYIwhkolWNOhJ7Cbub30';
 const today=()=>new Date().toISOString().slice(0,10);
 const statuses=['new','called','no_answer','left_voicemail','emailed','interested','not_interested','follow_up','booked','closed'];
 const statusLabels={new:'New',called:'Called',no_answer:'No answer',left_voicemail:'Left voicemail',emailed:'Emailed',interested:'Interested',not_interested:'Not interested',follow_up:'Follow up',booked:'Booked',closed:'Closed'};
+const JACK_CALENDAR='https://calendly.com/wildejack1010/30min';
 let state={session:null, users:[], leads:[], filter:'all', tab:'leads', search:'', limit:50};
 const $=id=>document.getElementById(id); const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 async function rpc(fn, body){const r=await fetch(`${SB_URL}/rest/v1/rpc/${fn}`,{method:'POST',headers:{apikey:SB_ANON,Authorization:`Bearer ${SB_ANON}`,'Content-Type':'application/json'},body:JSON.stringify(body)}); const txt=await r.text(); if(!r.ok) throw new Error(txt||r.statusText); return txt?JSON.parse(txt):null;}
@@ -79,9 +96,31 @@ function filteredLeads(){let l=state.leads; if(state.filter!=='all') l=l.filter(
 function statusClass(s){return 's-'+(s||'new');}
 function renderLeads(){const all=filteredLeads(); const leads=all.slice(0,state.limit); $('leadHeader').textContent=state.session.role==='admin'?'All leads':`Today's leads`; $('leadCount').textContent=`${all.length} lead${all.length===1?'':'s'}`; $('leadsList').innerHTML=leads.length?leads.map(leadCard).join(''):'<div class="empty">No leads here yet.</div>'; $('leadMore').innerHTML=all.length>leads.length?`Showing ${leads.length} of ${all.length}. <button class="btn secondary small-btn" onclick="showMoreLeads()">Show 50 more</button>`:'';}
 function showMoreLeads(){state.limit+=50; renderLeads();}
-function leadCard(l){const phone=(l.phone||'').replace(/[^\d+]/g,''); return `<div class="lead"><div class="lead-top"><div><div class="clinic">${esc(l.clinic_name)}</div><div class="doctor">${esc(l.dr_name||'No doctor name yet')}</div><div class="meta"><span>Contact: ${esc(l.contact_name||'—')}</span><span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span><span>${esc(l.lead_date)}</span>${l.assigned_name?`<span>Assigned: ${esc(l.assigned_name)}</span>`:''}</div><div class="meta">${l.phone?`<span>📞 ${esc(l.phone)}</span>`:''}${l.email?`<span>✉️ ${esc(l.email)}</span>`:''}${l.website?`<a href="${esc(l.website)}" target="_blank">Website</a>`:''}</div></div><div><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status}</span></div></div>${l.notes?`<div class="note">${esc(l.notes)}</div>`:''}<div class="status-row">${statuses.map(s=>`<button class="${l.status===s?'active':''}" onclick="updateLead('${l.id}','${s}')">${statusLabels[s]}</button>`).join('')}${phone?`<a class="btn green small-btn" href="tel:${phone}">Call</a>`:''}</div><label>Notes</label><textarea id="notes-${l.id}" placeholder="Add call notes...">${esc(l.notes||'')}</textarea><button class="btn secondary small-btn" onclick="saveNotes('${l.id}')" style="margin-top:8px">Save notes</button></div>`;}
+function leadCard(l){const phone=(l.phone||'').replace(/[^\d+]/g,''); return `<div class="lead"><div class="lead-top"><div><div class="clinic">${esc(l.clinic_name)}</div><div class="doctor">${esc(l.dr_name||'No doctor name yet')}</div><div class="meta"><span>Contact: ${esc(l.contact_name||'—')}</span><span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span><span>${esc(l.lead_date)}</span>${l.assigned_name?`<span>Assigned: ${esc(l.assigned_name)}</span>`:''}</div><div class="meta">${l.phone?`<span>📞 ${esc(l.phone)}</span>`:''}${l.email?`<span>✉️ ${esc(l.email)}</span>`:''}${l.website?`<a href="${esc(l.website)}" target="_blank">Website</a>`:''}</div></div><div><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status}</span></div></div>${l.notes?`<div class="note">${esc(l.notes)}</div>`:''}<div class="status-row">${statuses.map(s=>`<button class="${l.status===s?'active':''}" onclick="updateLead('${l.id}','${s}')">${statusLabels[s]}</button>`).join('')}${phone?`<a class="btn green small-btn" href="tel:${phone}">Call</a>`:''}<button class="btn blue small-btn" onclick="openBooking('${l.id}')">Book call</button></div><label>Notes</label><textarea id="notes-${l.id}" placeholder="Add call notes...">${esc(l.notes||'')}</textarea><button class="btn secondary small-btn" onclick="saveNotes('${l.id}')" style="margin-top:8px">Save notes</button></div>`;}
 async function updateLead(id,status){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:status,p_notes:lead?.notes||''})); await loadData(); render();}
 async function saveNotes(id){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:lead?.status||'new',p_notes:$('notes-'+id).value})); await loadData(); render();}
+function calendlyUrlForLead(l){
+  const params=new URLSearchParams();
+  const name=(l.dr_name||l.contact_name||l.clinic_name||'').trim();
+  if(name) params.set('name', name);
+  if(l.email) params.set('email', l.email);
+  const note=[`Clinic: ${l.clinic_name||''}`, l.phone?`Phone: ${l.phone}`:'', l.website?`Website: ${l.website}`:'', l.city?`Location: ${l.city}${l.province?', '+l.province:''}`:''].filter(Boolean).join(' | ');
+  if(note) params.set('a1', note);
+  return JACK_CALENDAR+(params.toString()?`?${params}`:'');
+}
+function openBooking(id){
+  const l=state.leads.find(x=>x.id===id); if(!l)return;
+  const url=calendlyUrlForLead(l);
+  $('bookingTitle').textContent=`Book call: ${l.clinic_name||'Vet INC lead'}`;
+  $('bookingSub').textContent=`Schedule Jack’s 20-minute call${l.dr_name?' with '+l.dr_name:''}.`;
+  $('bookingOpen').href=url;
+  $('bookingFrame').src=url;
+  $('bookingModal').classList.add('open');
+}
+function closeBooking(){
+  $('bookingModal').classList.remove('open');
+  $('bookingFrame').src='about:blank';
+}
 function renderScript(){$('scriptText').innerHTML=`<strong>Your one job</strong>
 Get the owner on a 20-minute meeting with Jack.
 You are not selling the product. You are getting them curious enough to show up.
