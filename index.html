@@ -117,6 +117,11 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
 .scheduled-field input{padding:9px 10px;border:1px solid #cbd5e1;border-radius:10px;font-size:13px}
 @media(max-width:900px){.owner-calendar-grid{grid-template-columns:1fr}.owner-day-card{position:static}.agenda-card{grid-template-columns:1fr}.agenda-status{justify-self:start}}
 
+
+.callback-box{margin:10px 0 12px;padding:12px;border:1px solid #bfdbfe;border-radius:14px;background:#eff6ff}
+.callback-row{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:#1e3a8a;margin-bottom:10px}
+.callback-row input{width:auto}.callback-fields{display:grid;grid-template-columns:220px 1fr;gap:10px}.callback-fields input{padding:9px 10px;border:1px solid #cbd5e1;border-radius:10px;font-size:13px}.callback-fields select{padding:9px 10px;border:1px solid #cbd5e1;border-radius:10px;background:white;font-size:13px}.callback-fields.hidden{display:none}.detail-pill.callback{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}.rep-chip.rc-callback{background:#eff6ff}.rep-chip.rc-callback .rep-chip-val{color:#1d4ed8}@media(max-width:720px){.callback-fields{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -202,10 +207,12 @@ const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJl
 const today=()=>new Date().toISOString().slice(0,10);
 const statuses=['new','called','no_answer','left_voicemail','emailed','interested','not_interested','follow_up','booked','closed'];
 const statusLabels={new:'New',called:'Called',no_answer:'No answer',left_voicemail:'Left voicemail',emailed:'Emailed',interested:'Interested',not_interested:'Not interested',follow_up:'Follow up',booked:'Booked',closed:'Closed'};
-const callStages=['','receptionist','gatekeeper_pushback','voicemail','owner_reached','qualified','pitch_started','meeting_offered','booked','follow_up_needed'];
-const callStageLabels={'':'Not marked yet',receptionist:'Reached receptionist',gatekeeper_pushback:'Reception pushback',voicemail:'Left voicemail',owner_reached:'Owner reached',qualified:'Qualified owner',pitch_started:'Pitch started',meeting_offered:'Meeting offered',booked:'Meeting booked',follow_up_needed:'Follow-up needed'};
-const rejectionReasons=['','not_owner','happy_current','too_busy','not_interested','no_budget','corporate_owned','uses_competitor','send_email','bad_timing','other'];
-const rejectionReasonLabels={'':'No turn-down reason',not_owner:'Not decision maker',happy_current:'Happy with current pricing',too_busy:'Too busy',not_interested:'Not interested',no_budget:'No budget',corporate_owned:'Corporate/group owned',uses_competitor:'Uses another service',send_email:'Asked to send email only',bad_timing:'Bad timing',other:'Other / see notes'};
+const callStages=['','no_answer','left_voicemail','receptionist_only','gatekeeper_pushback','owner_unavailable','owner_reached','qualified','pitch_started','meeting_offered','booked','not_a_fit','do_not_call'];
+const callStageLabels={'':'Not marked yet',no_answer:'No answer',left_voicemail:'Left voicemail',receptionist_only:'Only reached receptionist',gatekeeper_pushback:'Reception/gatekeeper pushback',owner_unavailable:'Owner unavailable',owner_reached:'Owner reached',qualified:'Qualified owner',pitch_started:'Pitch started',meeting_offered:'Meeting offered',booked:'Meeting booked',not_a_fit:'Not a fit',do_not_call:'Do not call again'};
+const rejectionReasons=['','not_owner','happy_current','too_busy','not_interested','no_budget','corporate_owned','uses_competitor','send_email','bad_timing','wrong_number','closed_clinic','other'];
+const rejectionReasonLabels={'':'No turn-down reason',not_owner:'Not decision maker',happy_current:'Happy with current pricing',too_busy:'Too busy',not_interested:'Not interested',no_budget:'No budget',corporate_owned:'Corporate/group owned',uses_competitor:'Uses another service',send_email:'Asked to send email only',bad_timing:'Bad timing / call back later',wrong_number:'Wrong number',closed_clinic:'Clinic closed',other:'Other / see notes'};
+const callbackReasons=['','owner_busy','owner_out','asked_callback','send_info_then_call','left_voicemail','receptionist_followup','bad_timing'];
+const callbackReasonLabels={'':'Choose callback reason',owner_busy:'Owner busy',owner_out:'Owner out / not in clinic',asked_callback:'Asked us to call back',send_info_then_call:'Send info then call back',left_voicemail:'Left voicemail — try again',receptionist_followup:'Receptionist said follow up',bad_timing:'Bad timing'};
 const JACK_CALENDAR='https://calendly.com/wildejack1010/30min';
 let state={session:null, users:[], leads:[], filter:'all', tab:'leads', search:'', limit:50};
 const $=id=>document.getElementById(id); const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -227,14 +234,18 @@ function showMoreLeads(){state.limit+=50; renderLeads();}
 function callDetailControls(l){
   const stage=l.call_stage||'';
   const reason=l.rejection_reason||'';
+  const cb=!!l.callback_needed;
+  const cbReason=l.callback_reason||'';
   const stagePill=stage?`<span class="detail-pill">Call point: ${esc(callStageLabels[stage]||stage)}</span>`:'';
   const reasonPill=reason?`<span class="detail-pill reason">Turn-down: ${esc(rejectionReasonLabels[reason]||reason)}</span>`:'';
-  return `${stagePill}${reasonPill}<div class="scheduled-field"><label>Scheduled call time for Jack</label><input id="sched-${l.id}" type="datetime-local" value="${fmtScheduleInput(l.scheduled_call_at)}"></div><div class="call-detail-grid"><div><label>Where did they get on the call?</label><select id="stage-${l.id}">${callStages.map(x=>`<option value="${x}" ${stage===x?'selected':''}>${callStageLabels[x]}</option>`).join('')}</select></div><div><label>If turned down, why?</label><select id="reason-${l.id}">${rejectionReasons.map(x=>`<option value="${x}" ${reason===x?'selected':''}>${rejectionReasonLabels[x]}</option>`).join('')}</select></div><button class="btn blue small-btn call-detail-save" onclick="saveCallDetails('${l.id}')">Save call details</button></div>`;
+  const cbPill=cb?`<span class="detail-pill callback">Callback${l.callback_at?': '+fmtAgendaDate(l.callback_at)+' '+fmtAgendaTime(l.callback_at):' needed'}</span>`:'';
+  return `${stagePill}${reasonPill}${cbPill}<div class="scheduled-field"><label>Booked call time for Jack</label><input id="sched-${l.id}" type="datetime-local" value="${fmtScheduleInput(l.scheduled_call_at)}"></div><div class="call-detail-grid"><div><label>Where did they get to?</label><select id="stage-${l.id}">${callStages.map(x=>`<option value="${x}" ${stage===x?'selected':''}>${callStageLabels[x]}</option>`).join('')}</select></div><div><label>If no / turned down, why?</label><select id="reason-${l.id}">${rejectionReasons.map(x=>`<option value="${x}" ${reason===x?'selected':''}>${rejectionReasonLabels[x]}</option>`).join('')}</select></div><button class="btn blue small-btn call-detail-save" onclick="saveCallDetails('${l.id}')">Save outcome</button></div><div class="callback-box"><label class="callback-row"><input id="cb-${l.id}" type="checkbox" ${cb?'checked':''} onchange="callbackFieldsVisible('${l.id}')"> Needs callback / try again</label><div id="cb-fields-${l.id}" class="callback-fields ${cb?'':'hidden'}"><input id="cbtime-${l.id}" type="datetime-local" value="${fmtScheduleInput(l.callback_at)}"><select id="cbreason-${l.id}">${callbackReasons.map(x=>`<option value="${x}" ${cbReason===x?'selected':''}>${callbackReasonLabels[x]}</option>`).join('')}</select></div></div>`;
 }
 function leadCard(l){const phone=(l.phone||'').replace(/[^\d+]/g,''); return `<div class="lead"><div class="lead-top"><div><div class="clinic">${esc(l.clinic_name)}</div><div class="doctor">${esc(l.dr_name||'No doctor name yet')}</div><div class="meta"><span>Contact: ${esc(l.contact_name||'—')}</span><span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span><span>${esc(l.lead_date)}</span>${l.assigned_name?`<span>Assigned: ${esc(l.assigned_name)}</span>`:''}</div><div class="meta">${l.phone?`<span>📞 ${esc(l.phone)}</span>`:''}${l.email?`<span>✉️ ${esc(l.email)}</span>`:''}${l.website?`<a href="${esc(l.website)}" target="_blank">Website</a>`:''}</div></div><div><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status}</span></div></div>${l.notes?`<div class="note">${esc(l.notes)}</div>`:''}<div class="status-row">${statuses.map(s=>`<button class="${l.status===s?'active':''}" onclick="updateLead('${l.id}','${s}')">${statusLabels[s]}</button>`).join('')}${phone?`<a class="btn green small-btn" href="tel:${phone}">Call</a>`:''}<button class="btn blue small-btn" onclick="openBooking('${l.id}')">Book call</button></div>${callDetailControls(l)}<label>Notes</label><textarea id="notes-${l.id}" placeholder="Add call notes...">${esc(l.notes||'')}</textarea><button class="btn secondary small-btn" onclick="saveNotes('${l.id}')" style="margin-top:8px">Save notes</button></div>`;}
-async function updateLead(id,status){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:status,p_notes:$('notes-'+id)?.value??lead?.notes??'',p_call_stage:$('stage-'+id)?.value??lead?.call_stage??'',p_rejection_reason:$('reason-'+id)?.value??lead?.rejection_reason??'',p_scheduled_call_at:$('sched-'+id)?.value?new Date($('sched-'+id).value).toISOString():lead?.scheduled_call_at||null})); await loadData(); render();}
-async function saveNotes(id){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:lead?.status||'new',p_notes:$('notes-'+id).value,p_call_stage:$('stage-'+id)?.value??lead?.call_stage??'',p_rejection_reason:$('reason-'+id)?.value??lead?.rejection_reason??'',p_scheduled_call_at:$('sched-'+id)?.value?new Date($('sched-'+id).value).toISOString():lead?.scheduled_call_at||null})); await loadData(); render();}
-async function saveCallDetails(id){const lead=state.leads.find(l=>l.id===id); const sched=$('sched-'+id)?.value; await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:sched?'booked':(lead?.status||'new'),p_notes:$('notes-'+id)?.value??lead?.notes??'',p_call_stage:sched?'booked':$('stage-'+id).value,p_rejection_reason:$('reason-'+id).value,p_scheduled_call_at:sched?new Date(sched).toISOString():null})); await loadData(); render();}
+function leadPayload(id,statusOverride=null){const lead=state.leads.find(l=>l.id===id); const sched=$('sched-'+id)?.value; const cb=$('cb-'+id)?.checked||false; const cbtime=$('cbtime-'+id)?.value; return {p_lead_id:id,p_status:statusOverride??(sched?'booked':(lead?.status||'new')),p_notes:$('notes-'+id)?.value??lead?.notes??'',p_call_stage:sched?'booked':($('stage-'+id)?.value??lead?.call_stage??''),p_rejection_reason:$('reason-'+id)?.value??lead?.rejection_reason??'',p_scheduled_call_at:sched?new Date(sched).toISOString():lead?.scheduled_call_at||null,p_callback_needed:cb,p_callback_at:cb&&cbtime?new Date(cbtime).toISOString():null,p_callback_reason:cb?($('cbreason-'+id)?.value||''):''};}
+async function updateLead(id,status){await rpc('vetinc_team_update_lead',params(leadPayload(id,status))); await loadData(); render();}
+async function saveNotes(id){await rpc('vetinc_team_update_lead',params(leadPayload(id))); await loadData(); render();}
+async function saveCallDetails(id){await rpc('vetinc_team_update_lead',params(leadPayload(id))); await loadData(); render();}
 function calendlyUrlForLead(l){
   const params=new URLSearchParams();
   const name=(l.dr_name||l.contact_name||l.clinic_name||'').trim();
@@ -351,10 +362,12 @@ function employeeStats(user){
   const touched=leads.filter(l=>l.status && l.status!=='new');
   const wins=leads.filter(l=>['interested','booked','closed'].includes(l.status));
   const booked=leads.filter(l=>['booked','closed'].includes(l.status));
+  const callbacks=leads.filter(l=>l.callback_needed);
   const rate=touched.length?Math.round((wins.length/touched.length)*100):0;
-  return {assigned:leads.length,today:todayLeads.length,touched:touched.length,wins:wins.length,booked:booked.length,rate};
+  return {assigned:leads.length,today:todayLeads.length,touched:touched.length,wins:wins.length,booked:booked.length,callbacks:callbacks.length,rate};
 }
 function fmtScheduleInput(v){if(!v)return ''; const d=new Date(v); if(Number.isNaN(d.getTime()))return ''; const pad=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;}
+function callbackFieldsVisible(id){const cb=$('cb-'+id), f=$('cb-fields-'+id); if(cb&&f) f.classList.toggle('hidden',!cb.checked);}
 function fmtAgendaDate(v){const d=new Date(v); return d.toLocaleDateString([], {weekday:'short', month:'short', day:'numeric'});}
 function fmtAgendaTime(v){const d=new Date(v); return d.toLocaleTimeString([], {hour:'numeric', minute:'2-digit'});}
 function renderOwnerCalendar(employees){
@@ -376,6 +389,7 @@ function renderAdmin(){
   const totalTouched=state.leads.filter(l=>l.status&&l.status!=='new').length;
   const totalWins=state.leads.filter(l=>['interested','booked','closed'].includes(l.status)).length;
   const totalBooked=state.leads.filter(l=>['booked','closed'].includes(l.status)).length;
+  const totalCallbacks=state.leads.filter(l=>l.callback_needed).length;
   const teamRate=totalTouched?Math.round((totalWins/totalTouched)*100):0;
   renderOwnerCalendar(employees);
   // KPI row
@@ -384,6 +398,7 @@ function renderAdmin(){
     `<div class="kpi-card kpi-amber"><div class="kpi-val">${totalTouched}</div><div class="kpi-lbl">Calls Touched</div></div>`+
     `<div class="kpi-card kpi-green"><div class="kpi-val">${totalWins}</div><div class="kpi-lbl">Wins</div></div>`+
     `<div class="kpi-card kpi-blue"><div class="kpi-val">${totalBooked}</div><div class="kpi-lbl">Booked / Closed</div></div>`+
+    `<div class="kpi-card kpi-blue"><div class="kpi-val">${totalCallbacks}</div><div class="kpi-lbl">Callbacks</div></div>`+
     `<div class="kpi-card ${teamRate>=50?'kpi-green':teamRate>=20?'kpi-amber':''}"><div class="kpi-val">${teamRate}%</div><div class="kpi-lbl">Success Rate</div></div>`;
   // Rep cards
   $('usersList').innerHTML=employees.length?employees.map(u=>{
@@ -392,7 +407,7 @@ function renderAdmin(){
     const badgeCls=st.rate>=50?'rc-green':st.rate>=20?'rc-amber':'rc-muted';
     return `<div class="rep-card">`+
       `<div class="rep-card-head"><div class="rep-avatar">${esc(init)}</div><div><div class="rep-name">${esc(u.name)}</div><div class="rep-email">${esc(u.email||'No email')}</div></div><span class="rep-rate-badge ${badgeCls}">${st.rate}%</span></div>`+
-      `<div class="rep-chips"><div class="rep-chip"><span class="rep-chip-val">${st.assigned}</span><span class="rep-chip-lbl">Assigned</span></div><div class="rep-chip"><span class="rep-chip-val">${st.touched}</span><span class="rep-chip-lbl">Touched</span></div><div class="rep-chip rc-wins"><span class="rep-chip-val">${st.wins}</span><span class="rep-chip-lbl">Wins</span></div><div class="rep-chip rc-booked"><span class="rep-chip-val">${st.booked}</span><span class="rep-chip-lbl">Booked</span></div></div>`+
+      `<div class="rep-chips"><div class="rep-chip"><span class="rep-chip-val">${st.assigned}</span><span class="rep-chip-lbl">Assigned</span></div><div class="rep-chip"><span class="rep-chip-val">${st.touched}</span><span class="rep-chip-lbl">Touched</span></div><div class="rep-chip rc-wins"><span class="rep-chip-val">${st.wins}</span><span class="rep-chip-lbl">Wins</span></div><div class="rep-chip rc-booked"><span class="rep-chip-val">${st.booked}</span><span class="rep-chip-lbl">Booked</span></div><div class="rep-chip rc-callback"><span class="rep-chip-val">${st.callbacks}</span><span class="rep-chip-lbl">Callbacks</span></div></div>`+
       `<div class="rep-progress"><div class="rep-progress-bar" style="width:${Math.min(st.rate,100)}%"></div></div>`+
       `<div class="rep-quota-row"><span class="rep-quota-label">Daily leads</span><input id="quota-${u.id}" type="number" min="0" max="50" value="${Math.min(u.daily_call_quota??50,50)}"><button class="btn blue small-btn" onclick="saveQuota('${u.id}')">Save daily leads</button></div>`+
       `</div>`;
