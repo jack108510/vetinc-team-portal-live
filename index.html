@@ -42,6 +42,8 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
     <label>Password</label><input id="loginCode" type="password" placeholder="Enter password" autocomplete="current-password">
     <div class="error" id="loginError">Could not sign in. Check your email and password.</div>
     <button class="btn full" id="loginBtn">Sign in</button>
+    <button class="btn secondary full" id="adminLoginBtn" type="button" style="margin-top:10px">Admin login</button>
+    <p class="small" style="margin-top:10px">Admin shortcut fills the admin email. Enter your password to continue.</p>
   </div>
 </div>
 <div class="app" id="app">
@@ -237,7 +239,7 @@ async function assignCalls(employeeId){const el=$('quota-'+employeeId); const qu
 async function addEmployee(){const name=$('empName').value.trim(), email=$('empEmail').value.trim(), code=$('empCode').value.trim(); if(!name||!email||!code)return alert('Name, email, and password required'); await rpc('vetinc_team_admin_upsert_user',params({p_name:name,p_email:email,p_role:'employee',p_access_code:code,p_active:true})); $('empName').value=$('empEmail').value=$('empCode').value=''; await loadData(); render();}
 async function addLeads(){const text=$('bulkLeads').value.trim(); if(!text)return; const users=state.users; for(const line of text.split('\\n').filter(Boolean)){const p=line.split('|').map(x=>x.trim()); const assigned=users.find(u=>u.role==='employee'&&(u.name===p[10]||u.email===p[10])); await rpc('vetinc_team_admin_add_lead',params({p_clinic_name:p[0]||'',p_dr_name:p[1]||'',p_contact_name:p[2]||'',p_phone:p[3]||'',p_email:p[4]||'',p_website:p[5]||'',p_city:p[6]||'',p_province:p[7]||'',p_source:p[8]||'',p_notes:'',p_lead_date:p[9]||today(),p_assigned_to:assigned?.id||null}));} $('bulkLeads').value=''; await loadData(); render();}
 async function deleteLead(id){if(!confirm('Delete this lead?'))return; await rpc('vetinc_team_admin_delete_lead',params({p_lead_id:id})); await loadData(); render();}
-$('loginBtn').onclick=login; $('logoutBtn').onclick=()=>{sessionStorage.removeItem('vetinc_team_session'); location.reload();}; $('refreshBtn').onclick=async()=>{await loadData(); render();}; $('leadSearch').oninput=e=>{state.search=e.target.value; state.limit=50; renderLeads();}; $('addEmployeeBtn').onclick=addEmployee; $('addLeadsBtn').onclick=addLeads; document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab)); $('loginCode').addEventListener('keydown',e=>{if(e.key==='Enter')login();}); loadSession(); if(state.session) start();
+$('loginBtn').onclick=login; $('adminLoginBtn').onclick=()=>{$('loginName').value='jack@vetinc.ca'; $('loginCode').focus();}; $('logoutBtn').onclick=()=>{sessionStorage.removeItem('vetinc_team_session'); location.reload();}; $('refreshBtn').onclick=async()=>{await loadData(); render();}; $('leadSearch').oninput=e=>{state.search=e.target.value; state.limit=50; renderLeads();}; $('addEmployeeBtn').onclick=addEmployee; $('addLeadsBtn').onclick=addLeads; document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab)); $('loginCode').addEventListener('keydown',e=>{if(e.key==='Enter')login();}); loadSession(); if(state.session) start();
 </script>
 </body>
 </html>
