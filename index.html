@@ -205,10 +205,10 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
   </div>
 </div>
 
-<div id="wrapModal" class="wrap-modal" role="dialog" aria-modal="true" aria-label="End call wrap-up">
+<div id="wrapModal" class="wrap-modal" role="dialog" aria-modal="true" aria-label="Call ended wrap-up">
   <div class="wrap-panel">
     <div class="wrap-head">
-      <div><h2>End call</h2><p class="small" id="wrapLeadName">Log where the call got to.</p></div>
+      <div><h2>Call ended</h2><p class="small" id="wrapLeadName">Log where the call got to.</p></div>
       <button class="btn secondary small-btn" onclick="closeWrapUp()">Close</button>
     </div>
     <div class="wrap-grid">
@@ -287,7 +287,7 @@ function callScriptForLead(l){
 }
 function renderCallWorkspace(l){
   const phone=cleanPhone(l); const url=calendlyUrlForLead(l);
-  $('callWorkspace').innerHTML=`<button class="btn secondary small-btn call-back" onclick="backToLeads()">← Back to leads</button><div class="call-shell"><div class="call-main"><h2 class="call-title">${esc(leadName(l))}</h2><div class="call-meta">${l.dr_name?`<span>Owner/Dr: ${esc(l.dr_name)}</span>`:''}${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}${l.phone?`<span>Phone: ${esc(l.phone)}</span>`:''}${l.email?`<span>Email: ${esc(l.email)}</span>`:''}${l.website?`<a href="${esc(l.website)}" target="_blank">Website</a>`:''}<span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span></div><div class="script-block">${callScriptForLead(l)}</div><div class="end-call-actions">${phone?`<a class="btn green" href="tel:${phone}">Call now</a>`:''}<button class="btn red" onclick="openWrapUp('${l.id}')">End call</button></div></div><aside class="call-side"><div class="booking-box"><h3>Book call with Jack</h3><p>Use Jack’s live calendar, then record the scheduled time here so it appears on Jack’s Calendar tab.</p><a class="btn blue full" href="${esc(url)}" target="_blank" rel="noopener">Open calendar</a><button class="btn secondary full" onclick="openBooking('${l.id}')">Open embedded calendar</button><label>Booked call time</label><input id="sched-${l.id}" type="datetime-local" value="${fmtScheduleInput(l.scheduled_call_at)}"><button class="btn green full" onclick="saveBooking('${l.id}')">Save booking</button></div><div class="side-actions"><button class="btn red full" onclick="openWrapUp('${l.id}')">End call / log outcome</button></div></aside></div>`;
+  $('callWorkspace').innerHTML=`<button class="btn secondary small-btn call-back" onclick="backToLeads()">← Back to leads</button><div class="call-shell"><div class="call-main"><h2 class="call-title">${esc(leadName(l))}</h2><div class="call-meta">${l.dr_name?`<span>Owner/Dr: ${esc(l.dr_name)}</span>`:''}${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}${l.phone?`<span>Phone: ${esc(l.phone)}</span>`:''}${l.email?`<span>Email: ${esc(l.email)}</span>`:''}${l.website?`<a href="${esc(l.website)}" target="_blank">Website</a>`:''}<span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span></div><div class="script-block">${callScriptForLead(l)}</div></div><aside class="call-side"><div class="booking-box"><h3>Book call with Jack</h3><p>Use Jack’s live calendar to book the meeting. When the call is done, click Call ended and log the result.</p><a class="btn blue full" href="${esc(url)}" target="_blank" rel="noopener">Open Calendar</a><button class="btn red full" onclick="openWrapUp('${l.id}')">Call ended</button></div></aside></div>`;
 }
 function fillSelect(id, items, labels, value){$(id).innerHTML=items.map(x=>`<option value="${x}" ${value===x?'selected':''}>${labels[x]}</option>`).join('');}
 function openWrapUp(id){const l=state.leads.find(x=>x.id===id); if(!l)return; state.wrapLeadId=id; $('wrapLeadName').textContent=leadName(l); fillSelect('wrapStage',callStages,callStageLabels,l.call_stage||''); fillSelect('wrapReason',rejectionReasons,rejectionReasonLabels,l.rejection_reason||''); fillSelect('wrapCallbackReason',callbackReasons,callbackReasonLabels,l.callback_reason||''); $('wrapCallback').checked=!!l.callback_needed; $('wrapCallbackAt').value=fmtScheduleInput(l.callback_at); $('wrapNotes').value=l.notes||''; toggleWrapCallback(); $('wrapModal').classList.add('open');}
