@@ -122,6 +122,10 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
 .callback-row{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;color:#1e3a8a;margin-bottom:10px}
 .callback-row input{width:auto}.callback-fields{display:grid;grid-template-columns:220px 1fr;gap:10px}.callback-fields input{padding:9px 10px;border:1px solid #cbd5e1;border-radius:10px;font-size:13px}.callback-fields select{padding:9px 10px;border:1px solid #cbd5e1;border-radius:10px;background:white;font-size:13px}.callback-fields.hidden{display:none}.detail-pill.callback{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}.rep-chip.rc-callback{background:#eff6ff}.rep-chip.rc-callback .rep-chip-val{color:#1d4ed8}@media(max-width:720px){.callback-fields{grid-template-columns:1fr}}
 
+
+/* Rep call workflow */
+.lead-queue{display:grid;gap:10px}.queue-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;background:white;border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:0 8px 22px rgba(15,23,42,.035)}.queue-name{font-size:16px;font-weight:950;letter-spacing:-.03em}.queue-sub{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:5px}.queue-flags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.queue-flag{font-size:11px;font-weight:900;border-radius:999px;padding:4px 8px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}.queue-flag.callback{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}.queue-flag.booked{background:#dcfce7;color:#166534;border-color:#bbf7d0}.call-shell{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px}.call-main,.call-side{background:white;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 10px 30px rgba(15,23,42,.04)}.call-side{position:sticky;top:96px;align-self:start}.call-back{margin-bottom:14px}.call-title{font-size:25px;font-weight:950;letter-spacing:-.05em;margin:0}.call-meta{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}.call-meta span,.call-meta a{font-size:13px;border:1px solid #e2e8f0;background:#f8fafc;color:#334155;border-radius:999px;padding:6px 9px;text-decoration:none}.script-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:16px;line-height:1.65;color:#334155;font-size:15px;white-space:pre-wrap}.script-block strong{color:#0f172a}.booking-box{display:grid;gap:10px}.booking-box h3{margin:0;font-size:17px}.booking-box p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.booking-box input{padding:11px;border:1px solid #cbd5e1;border-radius:12px}.side-actions{display:grid;gap:8px;margin-top:12px}.end-call-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}.wrap-modal{position:fixed;inset:0;background:rgba(15,23,42,.62);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}.wrap-modal.open{display:flex}.wrap-panel{width:min(760px,100%);max-height:92vh;overflow:auto;background:white;border-radius:22px;border:1px solid var(--line);box-shadow:0 30px 90px rgba(2,6,23,.35);padding:20px}.wrap-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wrap-panel select,.wrap-panel textarea,.wrap-panel input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:12px;background:white}.wrap-panel textarea{min-height:130px;resize:vertical}.wrap-check{display:flex;align-items:center;gap:8px;font-weight:900;color:#1e3a8a;margin:12px 0}.wrap-check input{width:auto}.wrap-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}.wrap-head h2{margin:0}.wrap-callback{background:#eff6ff;border:1px solid #bfdbfe;border-radius:16px;padding:12px;margin:12px 0}.wrap-callback.hidden{display:none}@media(max-width:900px){.call-shell{grid-template-columns:1fr}.call-side{position:static}.queue-row{grid-template-columns:1fr}.wrap-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -170,7 +174,7 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
         </div>
       </div>
     </section>
-    <section id="tab-leads"><div class="section-title"><div><h2 id="leadHeader">Today's leads</h2><span id="leadCount"></span></div><button class="btn secondary small-btn" id="refreshBtn">Refresh</button></div><input id="leadSearch" placeholder="Search clinic, doctor, city, phone, email..." style="margin-bottom:12px"><div class="filters" id="filters"></div><div id="leadsList"></div><div id="leadMore" class="small" style="text-align:center;margin-top:10px"></div></section>
+    <section id="tab-leads"><div id="leadQueueView"><div class="section-title"><div><h2 id="leadHeader">Today's leads</h2><span id="leadCount"></span></div><button class="btn secondary small-btn" id="refreshBtn">Refresh</button></div><input id="leadSearch" placeholder="Search clinic, doctor, city, phone, email..." style="margin-bottom:12px"><div class="filters" id="filters"></div><div id="leadsList" class="lead-queue"></div><div id="leadMore" class="small" style="text-align:center;margin-top:10px"></div></div><div id="callWorkspace" class="hidden"></div></section>
     <section id="tab-script" class="hidden"><div class="card"><div class="section-title"><h2>Simple call script</h2><span>Keep it easy to follow</span></div><div class="script" id="scriptText"></div></div></section>
     <section id="tab-admin" class="hidden">
       <div class="kpi-row" id="kpiRow"></div>
@@ -201,6 +205,28 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
   </div>
 </div>
 
+<div id="wrapModal" class="wrap-modal" role="dialog" aria-modal="true" aria-label="End call wrap-up">
+  <div class="wrap-panel">
+    <div class="wrap-head">
+      <div><h2>End call</h2><p class="small" id="wrapLeadName">Log where the call got to.</p></div>
+      <button class="btn secondary small-btn" onclick="closeWrapUp()">Close</button>
+    </div>
+    <div class="wrap-grid">
+      <div><label>Where did we get to?</label><select id="wrapStage"></select></div>
+      <div><label>If no / turned down, why?</label><select id="wrapReason"></select></div>
+    </div>
+    <label class="wrap-check"><input id="wrapCallback" type="checkbox" onchange="toggleWrapCallback()"> Needs callback / try again</label>
+    <div id="wrapCallbackFields" class="wrap-callback hidden">
+      <div class="wrap-grid">
+        <div><label>Callback date/time</label><input id="wrapCallbackAt" type="datetime-local"></div>
+        <div><label>Callback reason</label><select id="wrapCallbackReason"></select></div>
+      </div>
+    </div>
+    <label>Notes</label><textarea id="wrapNotes" placeholder="What happened on the call?"></textarea>
+    <div class="end-call-actions"><button class="btn green" onclick="saveWrapUp()">Save outcome</button><button class="btn secondary" onclick="closeWrapUp()">Cancel</button></div>
+  </div>
+</div>
+
 <script>
 const SB_URL='https://rnqhhzatlxmyvccdvqkr.supabase.co';
 const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJucWhoemF0bHhteXZjY2R2cWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMTQ5ODUsImV4cCI6MjA5MDU5MDk4NX0.zokle21pVEPG5bIOFiyZIWYkYIwhkolWNOhJ7Cbub30';
@@ -214,7 +240,7 @@ const rejectionReasonLabels={'':'No turn-down reason',not_owner:'Not decision ma
 const callbackReasons=['','owner_busy','owner_out','asked_callback','send_info_then_call','left_voicemail','receptionist_followup','bad_timing'];
 const callbackReasonLabels={'':'Choose callback reason',owner_busy:'Owner busy',owner_out:'Owner out / not in clinic',asked_callback:'Asked us to call back',send_info_then_call:'Send info then call back',left_voicemail:'Left voicemail — try again',receptionist_followup:'Receptionist said follow up',bad_timing:'Bad timing'};
 const JACK_CALENDAR='https://calendly.com/wildejack1010/30min';
-let state={session:null, users:[], leads:[], filter:'all', tab:'leads', search:'', limit:50};
+let state={session:null, users:[], leads:[], filter:'all', tab:'leads', search:'', limit:50, activeLeadId:null, wrapLeadId:null};
 const $=id=>document.getElementById(id); const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 async function rpc(fn, body){const r=await fetch(`${SB_URL}/rest/v1/rpc/${fn}`,{method:'POST',headers:{apikey:SB_ANON,Authorization:`Bearer ${SB_ANON}`,'Content-Type':'application/json'},body:JSON.stringify(body)}); const txt=await r.text(); if(!r.ok) throw new Error(txt||r.statusText); return txt?JSON.parse(txt):null;}
 function saveSession(){sessionStorage.setItem('vetinc_team_session',JSON.stringify(state.session));} function loadSession(){try{state.session=JSON.parse(sessionStorage.getItem('vetinc_team_session')||'null')}catch{}}
@@ -226,26 +252,55 @@ async function loadData(){state.leads=await rpc('vetinc_team_get_leads',params({
 function switchTab(tab){state.tab=tab; document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',!b.classList.contains('hidden')&&b.dataset.tab===tab)); ['calendar','leads','script','admin'].forEach(t=>$('tab-'+t).classList.toggle('hidden',t!==tab)); render();}
 function render(){if(state.session.role==='admin'){renderAdmin();}else{renderFilters(); renderLeads(); renderScript();}}
 function renderFilters(){$('filters').innerHTML=['all',...statuses].map(s=>`<button class="chip ${state.filter===s?'active':''}" onclick="setFilter('${s}')">${s==='all'?'All':statusLabels[s]}</button>`).join('');}
-function setFilter(f){state.filter=f; state.limit=50; render();}
+function setFilter(f){state.filter=f; state.limit=50; state.activeLeadId=null; render();}
 function filteredLeads(){let l=state.leads; if(state.filter!=='all') l=l.filter(x=>x.status===state.filter); const q=(state.search||'').toLowerCase().trim(); if(q) l=l.filter(x=>[x.clinic_name,x.dr_name,x.contact_name,x.phone,x.email,x.city,x.province,x.source,x.notes].some(v=>String(v||'').toLowerCase().includes(q))); return l;}
 function statusClass(s){return 's-'+(s||'new');}
-function renderLeads(){const all=filteredLeads(); const leads=all.slice(0,state.limit); $('leadHeader').textContent=state.session.role==='admin'?'All leads':`Today's leads`; $('leadCount').textContent=`${all.length} lead${all.length===1?'':'s'}`; $('leadsList').innerHTML=leads.length?leads.map(leadCard).join(''):'<div class="empty">No leads here yet.</div>'; $('leadMore').innerHTML=all.length>leads.length?`Showing ${leads.length} of ${all.length}. <button class="btn secondary small-btn" onclick="showMoreLeads()">Show 50 more</button>`:'';}
-function showMoreLeads(){state.limit+=50; renderLeads();}
-function callDetailControls(l){
-  const stage=l.call_stage||'';
-  const reason=l.rejection_reason||'';
-  const cb=!!l.callback_needed;
-  const cbReason=l.callback_reason||'';
-  const stagePill=stage?`<span class="detail-pill">Call point: ${esc(callStageLabels[stage]||stage)}</span>`:'';
-  const reasonPill=reason?`<span class="detail-pill reason">Turn-down: ${esc(rejectionReasonLabels[reason]||reason)}</span>`:'';
-  const cbPill=cb?`<span class="detail-pill callback">Callback${l.callback_at?': '+fmtAgendaDate(l.callback_at)+' '+fmtAgendaTime(l.callback_at):' needed'}</span>`:'';
-  return `${stagePill}${reasonPill}${cbPill}<div class="scheduled-field"><label>Booked call time for Jack</label><input id="sched-${l.id}" type="datetime-local" value="${fmtScheduleInput(l.scheduled_call_at)}"></div><div class="call-detail-grid"><div><label>Where did they get to?</label><select id="stage-${l.id}">${callStages.map(x=>`<option value="${x}" ${stage===x?'selected':''}>${callStageLabels[x]}</option>`).join('')}</select></div><div><label>If no / turned down, why?</label><select id="reason-${l.id}">${rejectionReasons.map(x=>`<option value="${x}" ${reason===x?'selected':''}>${rejectionReasonLabels[x]}</option>`).join('')}</select></div><button class="btn blue small-btn call-detail-save" onclick="saveCallDetails('${l.id}')">Save outcome</button></div><div class="callback-box"><label class="callback-row"><input id="cb-${l.id}" type="checkbox" ${cb?'checked':''} onchange="callbackFieldsVisible('${l.id}')"> Needs callback / try again</label><div id="cb-fields-${l.id}" class="callback-fields ${cb?'':'hidden'}"><input id="cbtime-${l.id}" type="datetime-local" value="${fmtScheduleInput(l.callback_at)}"><select id="cbreason-${l.id}">${callbackReasons.map(x=>`<option value="${x}" ${cbReason===x?'selected':''}>${callbackReasonLabels[x]}</option>`).join('')}</select></div></div>`;
+function leadName(l){return l.clinic_name||l.dr_name||l.contact_name||'Vet INC lead';}
+function cleanPhone(l){return (l.phone||'').replace(/[^\d+]/g,'');}
+function renderLeads(){
+  const active=state.activeLeadId?state.leads.find(l=>l.id===state.activeLeadId):null;
+  $('leadQueueView').classList.toggle('hidden',!!active);
+  $('callWorkspace').classList.toggle('hidden',!active);
+  if(active){renderCallWorkspace(active); return;}
+  const all=filteredLeads(); const leads=all.slice(0,state.limit);
+  $('leadHeader').textContent=`Today's leads`; $('leadCount').textContent=`${all.length} lead${all.length===1?'':'s'}`;
+  $('leadsList').innerHTML=leads.length?leads.map(queueRow).join(''):'<div class="empty">No leads here yet.</div>';
+  $('leadMore').innerHTML=all.length>leads.length?`Showing ${leads.length} of ${all.length}. <button class="btn secondary small-btn" onclick="showMoreLeads()">Show 50 more</button>`:'';
 }
-function leadCard(l){const phone=(l.phone||'').replace(/[^\d+]/g,''); return `<div class="lead"><div class="lead-top"><div><div class="clinic">${esc(l.clinic_name)}</div><div class="doctor">${esc(l.dr_name||'No doctor name yet')}</div><div class="meta"><span>Contact: ${esc(l.contact_name||'—')}</span><span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span><span>${esc(l.lead_date)}</span>${l.assigned_name?`<span>Assigned: ${esc(l.assigned_name)}</span>`:''}</div><div class="meta">${l.phone?`<span>📞 ${esc(l.phone)}</span>`:''}${l.email?`<span>✉️ ${esc(l.email)}</span>`:''}${l.website?`<a href="${esc(l.website)}" target="_blank">Website</a>`:''}</div></div><div><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status}</span></div></div>${l.notes?`<div class="note">${esc(l.notes)}</div>`:''}<div class="status-row">${statuses.map(s=>`<button class="${l.status===s?'active':''}" onclick="updateLead('${l.id}','${s}')">${statusLabels[s]}</button>`).join('')}${phone?`<a class="btn green small-btn" href="tel:${phone}">Call</a>`:''}<button class="btn blue small-btn" onclick="openBooking('${l.id}')">Book call</button></div>${callDetailControls(l)}<label>Notes</label><textarea id="notes-${l.id}" placeholder="Add call notes...">${esc(l.notes||'')}</textarea><button class="btn secondary small-btn" onclick="saveNotes('${l.id}')" style="margin-top:8px">Save notes</button></div>`;}
-function leadPayload(id,statusOverride=null){const lead=state.leads.find(l=>l.id===id); const sched=$('sched-'+id)?.value; const cb=$('cb-'+id)?.checked||false; const cbtime=$('cbtime-'+id)?.value; return {p_lead_id:id,p_status:statusOverride??(sched?'booked':(lead?.status||'new')),p_notes:$('notes-'+id)?.value??lead?.notes??'',p_call_stage:sched?'booked':($('stage-'+id)?.value??lead?.call_stage??''),p_rejection_reason:$('reason-'+id)?.value??lead?.rejection_reason??'',p_scheduled_call_at:sched?new Date(sched).toISOString():lead?.scheduled_call_at||null,p_callback_needed:cb,p_callback_at:cb&&cbtime?new Date(cbtime).toISOString():null,p_callback_reason:cb?($('cbreason-'+id)?.value||''):''};}
-async function updateLead(id,status){await rpc('vetinc_team_update_lead',params(leadPayload(id,status))); await loadData(); render();}
-async function saveNotes(id){await rpc('vetinc_team_update_lead',params(leadPayload(id))); await loadData(); render();}
-async function saveCallDetails(id){await rpc('vetinc_team_update_lead',params(leadPayload(id))); await loadData(); render();}
+function showMoreLeads(){state.limit+=50; renderLeads();}
+function queueRow(l){
+  const flags=[]; if(l.callback_needed) flags.push('<span class="queue-flag callback">Callback</span>'); if(l.scheduled_call_at||['booked','closed'].includes(l.status)) flags.push('<span class="queue-flag booked">Booked</span>'); if(l.call_stage) flags.push(`<span class="queue-flag">${esc(callStageLabels[l.call_stage]||l.call_stage)}</span>`);
+  return `<div class="queue-row"><div><div class="queue-name">${esc(leadName(l))}</div><div class="queue-sub"><span>${esc(l.dr_name||l.contact_name||'No owner name yet')}</span><span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status||'New'}</span></div>${flags.length?`<div class="queue-flags">${flags.join('')}</div>`:''}</div><button class="btn blue small-btn" onclick="startCall('${l.id}')">Start call</button></div>`;
+}
+function startCall(id){state.activeLeadId=id; updateLead(id,'called').catch(console.error); renderLeads();}
+function backToLeads(){state.activeLeadId=null; renderLeads();}
+function personalize(text,l){
+  const doctor=(l.dr_name||l.contact_name||'the owner').trim();
+  const last=(l.dr_name||'').split(/\s+/).filter(Boolean).slice(-1)[0]||doctor;
+  const clinic=l.clinic_name||'your clinic';
+  return text.replaceAll('[OWNER]',esc(doctor)).replaceAll('[LAST NAME]',esc(last)).replaceAll('[CLINIC]',esc(clinic)).replaceAll('[REP]',esc(state.session?.name||'I'));
+}
+function callScriptForLead(l){
+  const owner=l.dr_name||l.contact_name;
+  const ownerLine=owner?`Ask for ${owner}. If reception asks why, keep it simple.`:`Ask for the owner or practice manager first. Get their name if reception will not transfer.`;
+  return personalize(`<strong>Goal</strong>\nBook a 20-minute call with Jack. Do not try to sell the whole product on this call.\n\n<strong>Before dialing</strong>\n${ownerLine}\nClinic: [CLINIC]\n\n<strong>Reception opener</strong>\n“Hey — quick question for [LAST NAME], is [OWNER] around?”\n\n<strong>If they ask what it is about</strong>\n“It’s about managing the clinic’s fee schedule — quick item, just need a couple minutes with [OWNER].”\n\n<strong>If they ask if it is a sales call</strong>\n“It’s an introduction. We make software that helps vet clinics manage pricing automatically. I’m just trying to see if it’s worth getting Jack, our founder, on a quick 20-minute call.”\n\n<strong>If owner gets on</strong>\n“Hi [OWNER], this is [REP] with Vet INC. We help clinics keep their fee schedule managed and updated without it living on the owner’s plate. I’m not calling to pitch you for 20 minutes — I’m calling to see if it makes sense to put you on Jack’s calendar so he can show you what we built.”\n\n<strong>Close</strong>\n“Would tomorrow morning or tomorrow afternoon be better for a quick 20-minute call with Jack?”\n\n<strong>If unavailable</strong>\n“No worries — when is [OWNER] usually easiest to reach?”\nThen mark callback before ending the call.`,l);
+}
+function renderCallWorkspace(l){
+  const phone=cleanPhone(l); const url=calendlyUrlForLead(l);
+  $('callWorkspace').innerHTML=`<button class="btn secondary small-btn call-back" onclick="backToLeads()">← Back to leads</button><div class="call-shell"><div class="call-main"><h2 class="call-title">${esc(leadName(l))}</h2><div class="call-meta">${l.dr_name?`<span>Owner/Dr: ${esc(l.dr_name)}</span>`:''}${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}${l.phone?`<span>Phone: ${esc(l.phone)}</span>`:''}${l.email?`<span>Email: ${esc(l.email)}</span>`:''}${l.website?`<a href="${esc(l.website)}" target="_blank">Website</a>`:''}<span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span></div><div class="script-block">${callScriptForLead(l)}</div><div class="end-call-actions">${phone?`<a class="btn green" href="tel:${phone}">Call now</a>`:''}<button class="btn red" onclick="openWrapUp('${l.id}')">End call</button></div></div><aside class="call-side"><div class="booking-box"><h3>Book call with Jack</h3><p>Use Jack’s live calendar, then record the scheduled time here so it appears on Jack’s Calendar tab.</p><a class="btn blue full" href="${esc(url)}" target="_blank" rel="noopener">Open calendar</a><button class="btn secondary full" onclick="openBooking('${l.id}')">Open embedded calendar</button><label>Booked call time</label><input id="sched-${l.id}" type="datetime-local" value="${fmtScheduleInput(l.scheduled_call_at)}"><button class="btn green full" onclick="saveBooking('${l.id}')">Save booking</button></div><div class="side-actions"><button class="btn red full" onclick="openWrapUp('${l.id}')">End call / log outcome</button></div></aside></div>`;
+}
+function fillSelect(id, items, labels, value){$(id).innerHTML=items.map(x=>`<option value="${x}" ${value===x?'selected':''}>${labels[x]}</option>`).join('');}
+function openWrapUp(id){const l=state.leads.find(x=>x.id===id); if(!l)return; state.wrapLeadId=id; $('wrapLeadName').textContent=leadName(l); fillSelect('wrapStage',callStages,callStageLabels,l.call_stage||''); fillSelect('wrapReason',rejectionReasons,rejectionReasonLabels,l.rejection_reason||''); fillSelect('wrapCallbackReason',callbackReasons,callbackReasonLabels,l.callback_reason||''); $('wrapCallback').checked=!!l.callback_needed; $('wrapCallbackAt').value=fmtScheduleInput(l.callback_at); $('wrapNotes').value=l.notes||''; toggleWrapCallback(); $('wrapModal').classList.add('open');}
+function closeWrapUp(){state.wrapLeadId=null; $('wrapModal').classList.remove('open');}
+function toggleWrapCallback(){$('wrapCallbackFields').classList.toggle('hidden',!$('wrapCallback').checked);}
+function wrapStatus(stage, cb){if(stage==='booked')return 'booked'; if(stage==='do_not_call'||stage==='not_a_fit')return 'not_interested'; if(cb)return 'follow_up'; if(['no_answer','left_voicemail'].includes(stage))return stage; if(stage==='owner_reached'||stage==='qualified'||stage==='pitch_started'||stage==='meeting_offered')return 'interested'; return 'called';}
+function activeLeadPayload(id,statusOverride=null){const lead=state.leads.find(l=>l.id===id); const sched=$('sched-'+id)?.value; return {p_lead_id:id,p_status:statusOverride??(sched?'booked':(lead?.status||'called')),p_notes:lead?.notes||'',p_call_stage:sched?'booked':(lead?.call_stage||''),p_rejection_reason:lead?.rejection_reason||'',p_scheduled_call_at:sched?new Date(sched).toISOString():lead?.scheduled_call_at||null,p_callback_needed:!!lead?.callback_needed,p_callback_at:lead?.callback_at||null,p_callback_reason:lead?.callback_reason||''};}
+async function saveBooking(id){const payload=activeLeadPayload(id,'booked'); payload.p_call_stage='booked'; await rpc('vetinc_team_update_lead',params(payload)); await loadData(); renderLeads(); alert('Booking saved.');}
+function wrapPayload(){const id=state.wrapLeadId; const lead=state.leads.find(l=>l.id===id); const stage=$('wrapStage').value; const cb=$('wrapCallback').checked; const cbtime=$('wrapCallbackAt').value; const sched=$('sched-'+id)?.value; return {p_lead_id:id,p_status:wrapStatus(stage,cb),p_notes:$('wrapNotes').value,p_call_stage:stage,p_rejection_reason:$('wrapReason').value,p_scheduled_call_at:sched?new Date(sched).toISOString():lead?.scheduled_call_at||null,p_callback_needed:cb,p_callback_at:cb&&cbtime?new Date(cbtime).toISOString():null,p_callback_reason:cb?($('wrapCallbackReason').value||''):''};}
+async function saveWrapUp(){await rpc('vetinc_team_update_lead',params(wrapPayload())); closeWrapUp(); state.activeLeadId=null; await loadData(); render();}
+async function updateLead(id,status){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:status,p_notes:lead?.notes||'',p_call_stage:lead?.call_stage||'',p_rejection_reason:lead?.rejection_reason||'',p_scheduled_call_at:lead?.scheduled_call_at||null,p_callback_needed:!!lead?.callback_needed,p_callback_at:lead?.callback_at||null,p_callback_reason:lead?.callback_reason||''})); await loadData();}
+async function saveNotes(id){}
+async function saveCallDetails(id){}
 function calendlyUrlForLead(l){
   const params=new URLSearchParams();
   const name=(l.dr_name||l.contact_name||l.clinic_name||'').trim();
