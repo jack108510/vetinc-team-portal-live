@@ -282,8 +282,23 @@ function personalize(text,l){
 }
 function callScriptForLead(l){
   const owner=l.dr_name||l.contact_name;
-  const ownerLine=owner?`Ask for ${owner}. If reception asks why, keep it simple.`:`Ask for the owner or practice manager first. Get their name if reception will not transfer.`;
-  return personalize(`<strong>Goal</strong>\nBook a 20-minute call with Jack. Do not try to sell the whole product on this call.\n\n<strong>Before dialing</strong>\n${ownerLine}\nClinic: [CLINIC]\n\n<strong>Reception opener</strong>\n“Hey — quick question for [LAST NAME], is [OWNER] around?”\n\n<strong>If they ask what it is about</strong>\n“It’s about managing the clinic’s fee schedule — quick item, just need a couple minutes with [OWNER].”\n\n<strong>If they ask if it is a sales call</strong>\n“It’s an introduction. We make software that helps vet clinics manage pricing automatically. I’m just trying to see if it’s worth getting Jack, our founder, on a quick 20-minute call.”\n\n<strong>If owner gets on</strong>\n“Hi [OWNER], this is [REP] with Vet INC. We help clinics keep their fee schedule managed and updated without it living on the owner’s plate. I’m not calling to pitch you for 20 minutes — I’m calling to see if it makes sense to put you on Jack’s calendar so he can show you what we built.”\n\n<strong>Close</strong>\n“Would tomorrow morning or tomorrow afternoon be better for a quick 20-minute call with Jack?”\n\n<strong>If unavailable</strong>\n“No worries — when is [OWNER] usually easiest to reach?”\nThen mark callback before ending the call.`,l);
+  const hasOwner=!!owner;
+  const prep=hasOwner
+    ? `Owner/contact listed: ${owner}. Ask for them directly. If reception asks why, keep it simple.`
+    : `No owner is listed yet. Before calling, open the clinic website and find who is listed as the owner, medical director, practice manager, lead veterinarian, or hospital director. Check the About, Team, Doctors, Leadership, Contact, and Our Story pages. If you find a name, use that person in the call. If the website does not list anyone, ask reception who the owner or practice manager is.`;
+  const opener=hasOwner
+    ? `“Hey — quick question for [LAST NAME], is [OWNER] around?”`
+    : `“Hey — quick question, who is the owner or practice manager there?”`;
+  const askWhy=hasOwner
+    ? `“It’s about managing the clinic’s fee schedule — quick item, just need a couple minutes with [OWNER].”`
+    : `“It’s about managing the clinic’s fee schedule — I’m trying to make sure I get it to the right person.”`;
+  const ownerTalk=hasOwner
+    ? `“Hi [OWNER], this is [REP] with Vet INC. We help clinics keep their fee schedule managed and updated without it living on the owner’s plate. I’m not calling to pitch you for 20 minutes — I’m calling to see if it makes sense to put you on Jack’s calendar so he can show you what we built.”`
+    : `Once you get the owner/practice manager name, use it:\n“Hi [OWNER NAME], this is [REP] with Vet INC. We help clinics keep their fee schedule managed and updated without it living on the owner’s plate. I’m not calling to pitch you for 20 minutes — I’m calling to see if it makes sense to put you on Jack’s calendar so he can show you what we built.”`;
+  const unavailable=hasOwner
+    ? `“No worries — when is [OWNER] usually easiest to reach?”`
+    : `“No worries — when is the owner or practice manager usually easiest to reach?”`;
+  return personalize(`<strong>Goal</strong>\nBook a 20-minute call with Jack. Do not try to sell the whole product on this call.\n\n<strong>Before dialing</strong>\n${prep}\nClinic: [CLINIC]\n\n<strong>Reception opener</strong>\n${opener}\n\n<strong>If they ask what it is about</strong>\n${askWhy}\n\n<strong>If they ask if it is a sales call</strong>\n“It’s an introduction. We make software that helps vet clinics manage pricing automatically. I’m just trying to see if it’s worth getting Jack, our founder, on a quick 20-minute call.”\n\n<strong>If owner gets on</strong>\n${ownerTalk}\n\n<strong>Close</strong>\n“Would tomorrow morning or tomorrow afternoon be better for a quick 20-minute call with Jack?”\n\n<strong>If unavailable</strong>\n${unavailable}\nThen mark callback before ending the call.`,l);
 }
 function renderCallWorkspace(l){
   const phone=cleanPhone(l); const url=calendlyUrlForLead(l);
