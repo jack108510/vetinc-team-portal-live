@@ -54,7 +54,7 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
 .cmd-link-pill{display:block;background:var(--soft);border:1px solid var(--line);border-radius:9px;padding:8px 11px;font-size:12px;font-weight:700;color:var(--blue);text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cmd-link-pill:hover{background:var(--blueSoft)}
 /* === Reps Dashboard === */
-.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:18px}
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px}
 .kpi-card{background:white;border:1px solid var(--line);border-radius:16px;padding:16px 14px}
 .kpi-val{font-size:28px;font-weight:950;letter-spacing:-.05em}
 .kpi-lbl{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
@@ -124,7 +124,7 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
 
 
 /* Rep call workflow */
-.lead-queue{display:grid;gap:10px}.queue-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;background:white;border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:0 8px 22px rgba(15,23,42,.035)}.queue-name{font-size:16px;font-weight:950;letter-spacing:-.03em}.queue-sub{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:5px}.queue-flags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.queue-flag{font-size:11px;font-weight:900;border-radius:999px;padding:4px 8px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}.queue-flag.callback{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}.queue-flag.booked{background:#dcfce7;color:#166534;border-color:#bbf7d0}.call-shell{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px}.call-main,.call-side{background:white;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 10px 30px rgba(15,23,42,.04)}.call-side{position:sticky;top:96px;align-self:start}.call-back{margin-bottom:14px}.call-title{font-size:25px;font-weight:950;letter-spacing:-.05em;margin:0}.call-meta{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}.call-meta span,.call-meta a{font-size:13px;border:1px solid #e2e8f0;background:#f8fafc;color:#334155;border-radius:999px;padding:6px 9px;text-decoration:none}.script-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:16px;line-height:1.65;color:#334155;font-size:15px;white-space:pre-wrap}.script-block strong{color:#0f172a}.booking-box{display:grid;gap:10px}.booking-box h3{margin:0;font-size:17px}.booking-box p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.booking-box input{padding:11px;border:1px solid #cbd5e1;border-radius:12px}.side-actions{display:grid;gap:8px;margin-top:12px}.end-call-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}.wrap-modal{position:fixed;inset:0;background:rgba(15,23,42,.62);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}.wrap-modal.open{display:flex}.wrap-panel{width:min(760px,100%);max-height:92vh;overflow:auto;background:white;border-radius:22px;border:1px solid var(--line);box-shadow:0 30px 90px rgba(2,6,23,.35);padding:20px}.wrap-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wrap-panel select,.wrap-panel textarea,.wrap-panel input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:12px;background:white}.wrap-panel textarea{min-height:130px;resize:vertical}.wrap-check{display:flex;align-items:center;gap:8px;font-weight:900;color:#1e3a8a;margin:12px 0}.wrap-check input{width:auto}.wrap-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}.wrap-head h2{margin:0}.wrap-callback{background:#eff6ff;border:1px solid #bfdbfe;border-radius:16px;padding:12px;margin:12px 0}.wrap-callback.hidden{display:none}@media(max-width:900px){.call-shell{grid-template-columns:1fr}.call-side{position:static}.queue-row{grid-template-columns:1fr}.wrap-grid{grid-template-columns:1fr}}
+.lead-queue{display:grid;gap:10px}.queue-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;background:white;border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:0 8px 22px rgba(15,23,42,.035)}.queue-name{font-size:16px;font-weight:950;letter-spacing:-.03em}.queue-sub{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:5px}.queue-flags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.queue-flag{font-size:11px;font-weight:900;border-radius:999px;padding:4px 8px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}.queue-flag.callback{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}.queue-flag.booked{background:#dcfce7;color:#166534;border-color:#bbf7d0}.call-shell{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px}.call-main,.call-side{background:white;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 10px 30px rgba(15,23,42,.04)}.call-side{position:sticky;top:96px;align-self:start}.call-back{margin-bottom:14px}.call-title{font-size:25px;font-weight:950;letter-spacing:-.05em;margin:0}.call-meta{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}.call-meta span,.call-meta a{font-size:13px;border:1px solid #e2e8f0;background:#f8fafc;color:#334155;border-radius:999px;padding:6px 9px;text-decoration:none}.script-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:16px;line-height:1.65;color:#334155;font-size:15px;white-space:pre-wrap}.script-block strong{color:#0f172a}.booking-box{display:grid;gap:10px}.booking-box h3{margin:0;font-size:17px}.booking-box p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.booking-box input{padding:11px;border:1px solid #cbd5e1;border-radius:12px}.side-actions{display:grid;gap:8px;margin-top:12px}.end-call-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}.wrap-modal{position:fixed;inset:0;background:rgba(15,23,42,.62);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}.wrap-modal.open{display:flex}.wrap-panel{width:min(760px,100%);max-height:92vh;overflow:auto;background:white;border-radius:22px;border:1px solid var(--line);box-shadow:0 30px 90px rgba(2,6,23,.35);padding:20px}.wrap-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wrap-panel select,.wrap-panel textarea,.wrap-panel input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:12px;background:white}.wrap-panel textarea{min-height:130px;resize:vertical}.wrap-check{display:flex;align-items:center;gap:8px;font-weight:900;color:#1e3a8a;margin:12px 0}.wrap-check input{width:auto}.wrap-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}.wrap-head h2{margin:0}.wrap-callback{background:#eff6ff;border:1px solid #bfdbfe;border-radius:16px;padding:12px;margin:12px 0}.save-status{font-size:13px;font-weight:800;margin-top:8px;color:var(--muted)}.save-status.error{color:var(--red)}.save-status.ok{color:var(--green)}.wrap-callback.hidden{display:none}@media(max-width:900px){.call-shell{grid-template-columns:1fr}.call-side{position:static}.queue-row{grid-template-columns:1fr}.wrap-grid{grid-template-columns:1fr}}
 
 </style>
 </head>
@@ -194,17 +194,6 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
   </main>
 </div>
 
-<div id="bookingModal" class="booking-modal" role="dialog" aria-modal="true" aria-label="Book call with Jack">
-  <div class="booking-panel">
-    <div class="booking-head">
-      <div><h2 id="bookingTitle">Book call with Jack</h2><p id="bookingSub">Use Jack’s live calendar to schedule the 20-minute meeting.</p></div>
-      <div class="booking-actions"><a id="bookingOpen" class="btn secondary small-btn" target="_blank" rel="noopener">Open calendar</a><button class="btn red small-btn" onclick="closeBooking()">Close</button></div>
-    </div>
-    <iframe id="bookingFrame" class="booking-frame" title="Jack Wilde booking calendar"></iframe>
-    <div class="booking-fallback">After booking, set the lead status to <b>Booked</b> and save any notes.</div>
-  </div>
-</div>
-
 <div id="wrapModal" class="wrap-modal" role="dialog" aria-modal="true" aria-label="Call ended wrap-up">
   <div class="wrap-panel">
     <div class="wrap-head">
@@ -223,7 +212,7 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
       </div>
     </div>
     <label>Notes</label><textarea id="wrapNotes" placeholder="What happened on the call?"></textarea>
-    <div class="end-call-actions"><button class="btn green" onclick="saveWrapUp()">Save outcome</button><button class="btn secondary" onclick="closeWrapUp()">Cancel</button></div>
+    <div class="end-call-actions"><button id="wrapSaveBtn" class="btn green" onclick="saveWrapUp()">Save outcome</button><button class="btn secondary" onclick="closeWrapUp()">Cancel</button></div><div id="wrapSaveStatus" class="save-status"></div>
   </div>
 </div>
 
@@ -243,10 +232,19 @@ const JACK_CALENDAR='https://calendly.com/wildejack1010/30min';
 let state={session:null, users:[], leads:[], filter:'all', tab:'leads', search:'', limit:50, activeLeadId:null, wrapLeadId:null};
 const $=id=>document.getElementById(id); const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 async function rpc(fn, body){const r=await fetch(`${SB_URL}/rest/v1/rpc/${fn}`,{method:'POST',headers:{apikey:SB_ANON,Authorization:`Bearer ${SB_ANON}`,'Content-Type':'application/json'},body:JSON.stringify(body)}); const txt=await r.text(); if(!r.ok) throw new Error(txt||r.statusText); return txt?JSON.parse(txt):null;}
-function saveSession(){sessionStorage.setItem('vetinc_team_session',JSON.stringify(state.session));} function loadSession(){try{state.session=JSON.parse(sessionStorage.getItem('vetinc_team_session')||'null')}catch{}}
+function saveSession(){sessionStorage.removeItem('vetinc_team_session');} function loadSession(){state.session=null;}
 function params(extra={}){return Object.assign({p_user_id:state.session.id,p_code:state.session.code},extra)}
 function adminParams(extra={}){return Object.assign({p_admin_id:state.session.id,p_admin_code:state.session.code},extra)}
-async function login(){$('loginError').style.display='none'; const code=$('loginCode').value.trim(); const email=$('loginName').value.trim(); if(!email||!code)return; try{const res=await rpc('vetinc_team_login',{p_name:email,p_code:code}); if(!res?.length) throw new Error('bad login'); state.session={...res[0], code}; saveSession(); await start();}catch(e){console.error(e); $('loginError').style.display='block';}}
+async function login(){
+  $('loginError').style.display='none';
+  const code=$('loginCode').value.trim(); const email=$('loginName').value.trim(); if(!email||!code)return;
+  const btn=$('loginBtn'); const old=btn.textContent;
+  try{
+    btn.disabled=true; btn.textContent='Signing in...';
+    const res=await rpc('vetinc_team_login',{p_name:email,p_code:code}); if(!res?.length) throw new Error('bad login'); state.session={...res[0], code}; saveSession(); await start();
+  }catch(e){console.error(e); $('loginError').style.display='block';}
+  finally{btn.disabled=false; btn.textContent=old;}
+}
 async function start(){if(!state.session)return; $('login').classList.add('hidden'); $('app').classList.add('active'); $('sessionName').textContent=state.session.name; $('roleBadge').textContent=state.session.role==='admin'?'Admin':'Employee'; const isAdmin=state.session.role==='admin'; document.querySelectorAll('.admin-tab').forEach(b=>b.classList.toggle('hidden',!isAdmin)); document.querySelectorAll('.employee-tab').forEach(b=>b.classList.toggle('hidden',isAdmin)); switchTab(isAdmin?'calendar':'leads'); await loadData(); render();}
 async function loadData(){state.leads=await rpc('vetinc_team_get_leads',params({p_date:today()})); if(state.session.role==='admin') state.users=await rpc('vetinc_team_get_users',params());}
 function switchTab(tab){state.tab=tab; document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',!b.classList.contains('hidden')&&b.dataset.tab===tab)); ['calendar','leads','script','admin'].forEach(t=>$('tab-'+t).classList.toggle('hidden',t!==tab)); render();}
@@ -270,22 +268,35 @@ function renderLeads(){
 function showMoreLeads(){state.limit+=50; renderLeads();}
 function queueRow(l){
   const flags=[]; if(l.callback_needed) flags.push('<span class="queue-flag callback">Callback</span>'); if(l.scheduled_call_at||['booked','closed'].includes(l.status)) flags.push('<span class="queue-flag booked">Booked</span>'); if(l.call_stage) flags.push(`<span class="queue-flag">${esc(callStageLabels[l.call_stage]||l.call_stage)}</span>`);
-  return `<div class="queue-row"><div><div class="queue-name">${esc(leadName(l))}</div><div class="queue-sub"><span>${esc(l.dr_name||l.contact_name||'No owner name yet')}</span><span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status||'New'}</span></div>${flags.length?`<div class="queue-flags">${flags.join('')}</div>`:''}</div><button class="btn blue small-btn" onclick="startCall('${l.id}')">Start call</button></div>`;
+  return `<div class="queue-row"><div><div class="queue-name">${esc(leadName(l))}</div><div class="queue-sub"><span>${esc(l.dr_name||'No doctor listed')}</span>${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}<span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status||'New'}</span></div>${flags.length?`<div class="queue-flags">${flags.join('')}</div>`:''}</div><button class="btn blue small-btn" onclick="startCall('${l.id}')">Start call</button></div>`;
 }
-function startCall(id){state.activeLeadId=id; updateLead(id,'called').catch(console.error); renderLeads();}
+async function startCall(id){
+  const lead=state.leads.find(l=>l.id===id);
+  const nextStatus=lead?.status&&lead.status!=='new'?lead.status:'called';
+  try{
+    await updateLead(id,nextStatus);
+    state.activeLeadId=id;
+    renderLeads();
+  }catch(e){
+    console.error(e);
+    alert('Could not start/save this call. Check connection and try again.');
+  }
+}
 function backToLeads(){state.activeLeadId=null; renderLeads();}
 function doctorDisplay(l){
-  const raw=(l.dr_name||l.contact_name||'').trim();
+  const raw=(l.dr_name||'').trim();
   if(!raw) return '';
   let name=raw.replace(/^dr\.?\s+/i,'').trim();
   const parts=name.split(/\s+/).filter(Boolean);
   const last=parts.length?parts[parts.length-1]:name;
   return `Dr. ${last}`;
 }
+function ownerDisplay(l){
+  return doctorDisplay(l)||(l.contact_name||'').trim();
+}
 function firstNameOnly(){return (state.session?.name||'').split(/\s+/).filter(Boolean)[0]||state.session?.name||'I';}
 function personalize(text,l){
-  const doctor=doctorDisplay(l);
-  const owner=doctor||'the owner';
+  const owner=ownerDisplay(l)||'the owner';
   const clinic=l.clinic_name||'your clinic';
   const rep=firstNameOnly();
   return text
@@ -296,7 +307,7 @@ function personalize(text,l){
     .replaceAll('[REP]',esc(rep));
 }
 function callScriptForLead(l){
-  const owner=doctorDisplay(l);
+  const owner=ownerDisplay(l);
   const hasOwner=!!owner;
   const opener=hasOwner
     ? `Hey — quick question for [LAST NAME], is [OWNER] around?`
@@ -315,13 +326,43 @@ function openWrapUp(id){const l=state.leads.find(x=>x.id===id); if(!l)return; st
 function closeWrapUp(){state.wrapLeadId=null; $('wrapModal').classList.remove('open');}
 function toggleWrapCallback(){$('wrapCallbackFields').classList.toggle('hidden',!$('wrapCallback').checked);}
 function wrapStatus(stage, cb){if(stage==='booked')return 'booked'; if(stage==='do_not_call'||stage==='not_a_fit')return 'not_interested'; if(cb)return 'follow_up'; if(['no_answer','left_voicemail'].includes(stage))return stage; if(stage==='owner_reached'||stage==='qualified'||stage==='pitch_started'||stage==='meeting_offered')return 'interested'; return 'called';}
-function activeLeadPayload(id,statusOverride=null){const lead=state.leads.find(l=>l.id===id); const sched=$('sched-'+id)?.value; return {p_lead_id:id,p_status:statusOverride??(sched?'booked':(lead?.status||'called')),p_notes:lead?.notes||'',p_call_stage:sched?'booked':(lead?.call_stage||''),p_rejection_reason:lead?.rejection_reason||'',p_scheduled_call_at:sched?new Date(sched).toISOString():lead?.scheduled_call_at||null,p_callback_needed:!!lead?.callback_needed,p_callback_at:lead?.callback_at||null,p_callback_reason:lead?.callback_reason||''};}
-async function saveBooking(id){const payload=activeLeadPayload(id,'booked'); payload.p_call_stage='booked'; await rpc('vetinc_team_update_lead',params(payload)); await loadData(); renderLeads(); alert('Booking saved.');}
-function wrapPayload(){const id=state.wrapLeadId; const lead=state.leads.find(l=>l.id===id); const stage=$('wrapStage').value; const cb=$('wrapCallback').checked; const cbtime=$('wrapCallbackAt').value; const sched=$('sched-'+id)?.value; return {p_lead_id:id,p_status:wrapStatus(stage,cb),p_notes:$('wrapNotes').value,p_call_stage:stage,p_rejection_reason:$('wrapReason').value,p_scheduled_call_at:sched?new Date(sched).toISOString():lead?.scheduled_call_at||null,p_callback_needed:cb,p_callback_at:cb&&cbtime?new Date(cbtime).toISOString():null,p_callback_reason:cb?($('wrapCallbackReason').value||''):''};}
-async function saveWrapUp(){await rpc('vetinc_team_update_lead',params(wrapPayload())); closeWrapUp(); state.activeLeadId=null; await loadData(); render();}
-async function updateLead(id,status){const lead=state.leads.find(l=>l.id===id); await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:status,p_notes:lead?.notes||'',p_call_stage:lead?.call_stage||'',p_rejection_reason:lead?.rejection_reason||'',p_scheduled_call_at:lead?.scheduled_call_at||null,p_callback_needed:!!lead?.callback_needed,p_callback_at:lead?.callback_at||null,p_callback_reason:lead?.callback_reason||''})); await loadData();}
-async function saveNotes(id){}
-async function saveCallDetails(id){}
+function wrapPayload(){
+  const id=state.wrapLeadId;
+  const lead=state.leads.find(l=>l.id===id);
+  const stage=$('wrapStage').value;
+  const cb=$('wrapCallback').checked;
+  const cbtime=$('wrapCallbackAt').value;
+  const cbreason=$('wrapCallbackReason').value;
+  if(cb && !cbtime) throw new Error('Pick a callback date/time before saving.');
+  if(cb && !cbreason) throw new Error('Pick a callback reason before saving.');
+  return {p_lead_id:id,p_status:wrapStatus(stage,cb),p_notes:$('wrapNotes').value,p_call_stage:stage,p_rejection_reason:$('wrapReason').value,p_scheduled_call_at:lead?.scheduled_call_at||null,p_callback_needed:cb,p_callback_at:cb&&cbtime?new Date(cbtime).toISOString():null,p_callback_reason:cb?cbreason:''};
+}
+function setWrapStatus(msg,kind=''){
+  const el=$('wrapSaveStatus'); if(!el)return;
+  el.textContent=msg||''; el.className='save-status '+kind;
+}
+async function saveWrapUp(){
+  const btn=$('wrapSaveBtn');
+  try{
+    setWrapStatus('', '');
+    const payload=wrapPayload();
+    if(btn){btn.disabled=true; btn.textContent='Saving...';}
+    await rpc('vetinc_team_update_lead',params(payload));
+    setWrapStatus('Saved ✓','ok');
+    closeWrapUp(); state.activeLeadId=null; await loadData(); render();
+  }catch(e){
+    console.error(e);
+    setWrapStatus(e.message||'Could not save. Try again.','error');
+    alert(e.message||'Could not save. Try again.');
+  }finally{
+    if(btn){btn.disabled=false; btn.textContent='Save outcome';}
+  }
+}
+async function updateLead(id,status){
+  const lead=state.leads.find(l=>l.id===id);
+  await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:status,p_notes:lead?.notes||'',p_call_stage:lead?.call_stage||'',p_rejection_reason:lead?.rejection_reason||'',p_scheduled_call_at:lead?.scheduled_call_at||null,p_callback_needed:!!lead?.callback_needed,p_callback_at:lead?.callback_at||null,p_callback_reason:lead?.callback_reason||''}));
+  await loadData();
+}
 function calendlyUrlForLead(l){
   const params=new URLSearchParams();
   const name=(l.dr_name||l.contact_name||l.clinic_name||'').trim();
@@ -331,116 +372,18 @@ function calendlyUrlForLead(l){
   if(note) params.set('a1', note);
   return JACK_CALENDAR+(params.toString()?`?${params}`:'');
 }
-function openBooking(id){
-  const l=state.leads.find(x=>x.id===id); if(!l)return;
-  const url=calendlyUrlForLead(l);
-  $('bookingTitle').textContent=`Book call: ${l.clinic_name||'Vet INC lead'}`;
-  $('bookingSub').textContent=`Schedule Jack’s 20-minute call${l.dr_name?' with '+l.dr_name:''}.`;
-  $('bookingOpen').href=url;
-  $('bookingFrame').src=url;
-  $('bookingModal').classList.add('open');
+function renderScript(){
+  if($('scriptText')) $('scriptText').innerHTML='<strong>Official Vet INC setter script</strong>\nOpen a lead and click Start call to see the personalized script for that clinic. The call page uses the official PDF script, formats doctor names as Dr. LastName, and includes the website lookup instructions when no doctor is listed.';
 }
-function closeBooking(){
-  $('bookingModal').classList.remove('open');
-  $('bookingFrame').src='about:blank';
-}
-function renderScript(){$('scriptText').innerHTML=`<strong>Your one job</strong>
-Get the owner on a 20-minute meeting with Jack.
-You are not selling the product. You are getting them curious enough to show up.
-
-<strong>What Vet INC does</strong>
-Software that manages veterinary fee schedules automatically. It connects to their PMS, tracks pricing, and handles updates. It takes pricing off the owner’s plate.
-
-<strong>The meeting</strong>
-A 20-minute call with Jack, our founder. Not a hard pitch. Not a full analysis. A conversation about making their job easier.
-
-<strong>Before every call</strong>
-• Have the owner / Dr. name ready before dialing.
-• Know the clinic’s timezone.
-• Best call windows: 7:30–8:30 AM, 12:00–1:00 PM, 5:00–6:00 PM local time.
-• One goal with reception: get the owner on the line.
-• Always get the receptionist’s name.
-• Log every call.
-• Close with two time options. Never ask “when works for you?”
-
-<strong>Receptionist opener</strong>
-“Hey — quick question for Dr. [LAST NAME], is she around?”
-
-<strong>If they ask what it’s about</strong>
-“It’s about managing the clinic’s fee schedule — quick item, just need a couple minutes with her.”
-
-<strong>If they ask for more</strong>
-“Yeah — [YOUR NAME] from Vet INC. We make software that helps vet clinics manage their pricing automatically. It takes it off the owner’s plate. I just want to get two minutes with Dr. [LAST NAME] to introduce it. Website’s vetinc.ca if you want to check us out.”
-
-<strong>If they ask if it’s a sales call</strong>
-“It’s an introduction, honestly. We make software that simplifies how clinics handle pricing. I just want to see if it’s worth getting Jack, our founder, on a quick call with Dr. [LAST NAME] to walk her through it.”
-
-<strong>If the owner is unavailable</strong>
-“No worries at all — is she generally easier to reach mornings or afternoons?”
-Then get the receptionist’s name and best callback time.
-
-<strong>If they say “just send an email”</strong>
-“Will do — does Dr. [LAST NAME] check that inbox herself, or is there a more direct address?”
-Always try to get a direct email. Confirm you’ll follow up by phone too.
-
-<strong>Voicemail</strong>
-“Hey Dr. [LAST NAME], [YOUR NAME] here from Vet INC. We make software that takes the headache out of managing pricing for vet clinics — connects right to your PMS and handles it automatically. Jack, our founder, would love to grab 20 minutes to show you how it works. Reach me at [PHONE NUMBER] or grab a time directly at calendly.com/wildejack1010/30min. That’s vetinc dot c-a. Thanks so much.”
-
-<strong>When you reach the owner</strong>
-“I’ll be quick. We make software for vet clinics that takes the headache out of managing pricing — connects to your PMS and handles it automatically. Before I say anything else, can I ask — how do you currently handle fee updates at the clinic?”
-
-<strong>Two qualification questions</strong>
-1. “What practice management system are you on? AVImark, Cornerstone, something else?”
-2. “Is managing your pricing something that takes a lot of time, or is it pretty straightforward for you?”
-
-AVImark or Cornerstone + pricing is a pain = qualified. Book them.
-If it’s another PMS: “Got it — we’re adding more systems soon. Can I grab your details and have Jack follow up when yours is supported?”
-
-<strong>Position the meeting</strong>
-“That’s exactly the problem we built this for. Jack put this together after dealing with the same thing at his own family’s clinics. It plugs into your PMS and manages pricing automatically — no spreadsheets, no manual work. He’d love to grab 20 minutes to walk you through how it works. No sales pressure, just a look at the software.”
-
-<strong>Close</strong>
-“Just before we lock something in — you’re in [TIMEZONE], right?”
-“Jack has [DAY] at [TIME their time] or [DAY] at [TIME their time] — which works better for you?”
-
-<strong>Pushbacks</strong>
-“I need to think about it.”
-“Of course — what’s the main thing on your mind? The time commitment, how it works with your system, something else?”
-
-“We already handle pricing fine.”
-“That’s great. Most clinics we talk to feel the same way until they see what they’re spending on it time-wise. Jack’s call is just 20 minutes — if it’s not relevant, no harm done. Is [DAY] or [DAY] any good?”
-
-“We already have a pricing consultant.”
-“That makes sense. This actually works well alongside that. The software handles the execution side automatically so you’re not doing it manually. Jack can show you in 20 minutes whether it’s relevant for your setup.”
-
-“We’re too busy.”
-“Totally get it. Jack keeps it to 20 minutes and it’s all remote — no prep needed. Is [DAY] or [DAY] any quieter?”
-
-“How much does it cost?”
-“Jack walks through all of that on the call. The meeting itself is just to show you how it works first. No cost for the meeting and no obligation after.”
-
-“How does it work?”
-“Honestly the best way to explain it is to show you — that’s exactly what the 20 minutes with Jack is for. Is [DAY] or [DAY] better?”
-
-<strong>Rules</strong>
-• Use the owner’s name on every call.
-• Confirm timezone before booking.
-• Never pitch the receptionist.
-• Never pretend there is a prior relationship.
-• Always get the receptionist’s name.
-• Share vetinc.ca freely.
-• Log every call.
-• You are booking a meeting with Jack — not selling the product.
-• If you can’t answer something: “Jack covers that on the call.”`;}
 function employeeStats(user){
   const leads=state.leads.filter(l=>l.assigned_to===user.id);
   const todayLeads=leads.filter(l=>l.lead_date===today());
   const touched=leads.filter(l=>l.status && l.status!=='new');
-  const wins=leads.filter(l=>['interested','booked','closed'].includes(l.status));
+  const interested=leads.filter(l=>l.status==='interested');
   const booked=leads.filter(l=>['booked','closed'].includes(l.status));
   const callbacks=leads.filter(l=>l.callback_needed);
-  const rate=touched.length?Math.round((wins.length/touched.length)*100):0;
-  return {assigned:leads.length,today:todayLeads.length,touched:touched.length,wins:wins.length,booked:booked.length,callbacks:callbacks.length,rate};
+  const bookRate=touched.length?Math.round((booked.length/touched.length)*100):0;
+  return {assigned:leads.length,today:todayLeads.length,touched:touched.length,interested:interested.length,wins:booked.length,booked:booked.length,callbacks:callbacks.length,rate:bookRate};
 }
 function fmtScheduleInput(v){if(!v)return ''; const d=new Date(v); if(Number.isNaN(d.getTime()))return ''; const pad=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;}
 function callbackFieldsVisible(id){const cb=$('cb-'+id), f=$('cb-fields-'+id); if(cb&&f) f.classList.toggle('hidden',!cb.checked);}
@@ -463,19 +406,19 @@ function renderOwnerCalendar(employees){
 function renderAdmin(){
   const employees=state.users.filter(u=>u.role==='employee');
   const totalTouched=state.leads.filter(l=>l.status&&l.status!=='new').length;
-  const totalWins=state.leads.filter(l=>['interested','booked','closed'].includes(l.status)).length;
+  const totalInterested=state.leads.filter(l=>l.status==='interested').length;
   const totalBooked=state.leads.filter(l=>['booked','closed'].includes(l.status)).length;
   const totalCallbacks=state.leads.filter(l=>l.callback_needed).length;
-  const teamRate=totalTouched?Math.round((totalWins/totalTouched)*100):0;
+  const teamRate=totalTouched?Math.round((totalBooked/totalTouched)*100):0;
   renderOwnerCalendar(employees);
   // KPI row
   $('kpiRow').innerHTML=
     `<div class="kpi-card"><div class="kpi-val">${employees.length}</div><div class="kpi-lbl">Active Reps</div></div>`+
     `<div class="kpi-card kpi-amber"><div class="kpi-val">${totalTouched}</div><div class="kpi-lbl">Calls Touched</div></div>`+
-    `<div class="kpi-card kpi-green"><div class="kpi-val">${totalWins}</div><div class="kpi-lbl">Wins</div></div>`+
+    `<div class="kpi-card kpi-green"><div class="kpi-val">${totalInterested}</div><div class="kpi-lbl">Interested</div></div>`+
     `<div class="kpi-card kpi-blue"><div class="kpi-val">${totalBooked}</div><div class="kpi-lbl">Booked / Closed</div></div>`+
     `<div class="kpi-card kpi-blue"><div class="kpi-val">${totalCallbacks}</div><div class="kpi-lbl">Callbacks</div></div>`+
-    `<div class="kpi-card ${teamRate>=50?'kpi-green':teamRate>=20?'kpi-amber':''}"><div class="kpi-val">${teamRate}%</div><div class="kpi-lbl">Success Rate</div></div>`;
+    `<div class="kpi-card ${teamRate>=50?'kpi-green':teamRate>=20?'kpi-amber':''}"><div class="kpi-val">${teamRate}%</div><div class="kpi-lbl">Book Rate</div></div>`;
   // Rep cards
   $('usersList').innerHTML=employees.length?employees.map(u=>{
     const st=employeeStats(u);
@@ -483,7 +426,7 @@ function renderAdmin(){
     const badgeCls=st.rate>=50?'rc-green':st.rate>=20?'rc-amber':'rc-muted';
     return `<div class="rep-card">`+
       `<div class="rep-card-head"><div class="rep-avatar">${esc(init)}</div><div><div class="rep-name">${esc(u.name)}</div><div class="rep-email">${esc(u.email||'No email')}</div></div><span class="rep-rate-badge ${badgeCls}">${st.rate}%</span></div>`+
-      `<div class="rep-chips"><div class="rep-chip"><span class="rep-chip-val">${st.assigned}</span><span class="rep-chip-lbl">Assigned</span></div><div class="rep-chip"><span class="rep-chip-val">${st.touched}</span><span class="rep-chip-lbl">Touched</span></div><div class="rep-chip rc-wins"><span class="rep-chip-val">${st.wins}</span><span class="rep-chip-lbl">Wins</span></div><div class="rep-chip rc-booked"><span class="rep-chip-val">${st.booked}</span><span class="rep-chip-lbl">Booked</span></div><div class="rep-chip rc-callback"><span class="rep-chip-val">${st.callbacks}</span><span class="rep-chip-lbl">Callbacks</span></div></div>`+
+      `<div class="rep-chips"><div class="rep-chip"><span class="rep-chip-val">${st.assigned}</span><span class="rep-chip-lbl">Assigned</span></div><div class="rep-chip"><span class="rep-chip-val">${st.touched}</span><span class="rep-chip-lbl">Touched</span></div><div class="rep-chip rc-wins"><span class="rep-chip-val">${st.interested}</span><span class="rep-chip-lbl">Interested</span></div><div class="rep-chip rc-booked"><span class="rep-chip-val">${st.booked}</span><span class="rep-chip-lbl">Booked</span></div><div class="rep-chip rc-callback"><span class="rep-chip-val">${st.callbacks}</span><span class="rep-chip-lbl">Callbacks</span></div></div>`+
       `<div class="rep-progress"><div class="rep-progress-bar" style="width:${Math.min(st.rate,100)}%"></div></div>`+
       `<div class="rep-quota-row"><span class="rep-quota-label">Daily leads</span><input id="quota-${u.id}" type="number" min="0" max="50" value="${Math.min(u.daily_call_quota??50,50)}"><button class="btn blue small-btn" onclick="saveQuota('${u.id}')">Save daily leads</button></div>`+
       `</div>`;
@@ -491,8 +434,6 @@ function renderAdmin(){
 }
 async function saveQuota(employeeId){const el=$('quota-'+employeeId); const quota=Math.max(0,Math.min(parseInt(el.value||'0',10)||0,50)); el.value=quota; await rpc('vetinc_team_admin_set_quota',adminParams({p_employee_id:employeeId,p_daily_call_quota:quota})); await loadData(); render(); alert(`Daily leads set to ${quota}. Supabase will auto-fill that rep's dashboard each day, never above 50.`);}
 async function addEmployee(){const name=$('empName').value.trim(), email=$('empEmail').value.trim(), code=$('empCode').value.trim(); if(!name||!email||!code)return alert('Name, email, and password required'); const btn=$('addEmployeeBtn'); const oldText=btn.textContent; btn.disabled=true; btn.textContent='Adding...'; try{await rpc('vetinc_team_admin_upsert_user',adminParams({p_name:name,p_email:email,p_role:'employee',p_access_code:code,p_active:true})); $('empName').value=$('empEmail').value=$('empCode').value=''; await loadData(); render(); alert('Rep added. They can sign in with their email and temporary password.');}catch(e){console.error(e); alert('Could not add rep: '+(e.message||e));}finally{btn.disabled=false; btn.textContent=oldText;}}
-async function addLeads(){const text=$('bulkLeads').value.trim(); if(!text)return; const users=state.users; for(const line of text.split('\\n').filter(Boolean)){const p=line.split('|').map(x=>x.trim()); const assigned=users.find(u=>u.role==='employee'&&(u.name===p[10]||u.email===p[10])); await rpc('vetinc_team_admin_add_lead',params({p_clinic_name:p[0]||'',p_dr_name:p[1]||'',p_contact_name:p[2]||'',p_phone:p[3]||'',p_email:p[4]||'',p_website:p[5]||'',p_city:p[6]||'',p_province:p[7]||'',p_source:p[8]||'',p_notes:'',p_lead_date:p[9]||today(),p_assigned_to:assigned?.id||null}));} $('bulkLeads').value=''; await loadData(); render();}
-async function deleteLead(id){if(!confirm('Delete this lead?'))return; await rpc('vetinc_team_admin_delete_lead',params({p_lead_id:id})); await loadData(); render();}
 function toggleAddRep(){const form=$('addRepForm');const arrow=$('addRepArrow');form.classList.toggle('hidden');arrow.textContent=form.classList.contains('hidden')?'▸':'▾';}
 $('loginBtn').onclick=login; $('adminLoginBtn').onclick=()=>{$('loginName').value='jack@vetinc.ca'; $('loginCode').focus();}; $('logoutBtn').onclick=()=>{sessionStorage.removeItem('vetinc_team_session'); location.reload();}; $('refreshBtn').onclick=async()=>{await loadData(); render();}; $('leadSearch').oninput=e=>{state.search=e.target.value; state.limit=50; renderLeads();}; $('addEmployeeBtn').onclick=addEmployee; document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab)); $('loginCode').addEventListener('keydown',e=>{if(e.key==='Enter')login();}); loadSession(); if(state.session) start();
 </script>
