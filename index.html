@@ -75,7 +75,7 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
 .rep-rate-badge.rc-green{background:var(--greenSoft);color:var(--green)}
 .rep-rate-badge.rc-amber{background:var(--amberSoft);color:var(--amber)}
 .rep-rate-badge.rc-muted{background:#f1f5f9;color:var(--muted)}
-.rep-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.rep-chips{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:12px}
 .rep-chip{background:var(--soft);border-radius:10px;padding:8px 4px;text-align:center}
 .rep-chip-val{font-size:20px;font-weight:950;letter-spacing:-.04em;display:block}
 .rep-chip-lbl{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
@@ -211,7 +211,7 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
         <div><label>Callback reason</label><select id="wrapCallbackReason"></select></div>
       </div>
     </div>
-    <label>Notes</label><textarea id="wrapNotes" placeholder="What happened on the call?"></textarea>
+    <div id="wrapScheduledBox" class="scheduled-field" style="display:none"><label>Scheduled call date/time</label><input id="wrapScheduledAt" type="datetime-local"><p class="small" style="margin-top:6px">When Jack's call with this clinic is booked for. Shows on the calendar.</p></div><label>Notes</label><textarea id="wrapNotes" placeholder="What happened on the call?"></textarea>
     <div class="end-call-actions"><button id="wrapSaveBtn" class="btn green" onclick="saveWrapUp()">Save outcome</button><button class="btn secondary" onclick="closeWrapUp()">Cancel</button></div><div id="wrapSaveStatus" class="save-status"></div>
   </div>
 </div>
@@ -219,7 +219,78 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
 <script>
 const SB_URL='https://rnqhhzatlxmyvccdvqkr.supabase.co';
 const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJucWhoemF0bHhteXZjY2R2cWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMTQ5ODUsImV4cCI6MjA5MDU5MDk4NX0.zokle21pVEPG5bIOFiyZIWYkYIwhkolWNOhJ7Cbub30';
-const today=()=>new Date().toISOString().slice(0,10);
+const today=()=>{const d=new Date();const pad=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`};
+
+// Province/state -> timezone label
+const TZ_MAP={
+  AB:'Mountain',BC:'Pacific',SK:'Central',MB:'Central',ON:'Eastern',QC:'Eastern',
+  NB:'Atlantic',NS:'Atlantic',PE:'Atlantic',NL:'Newfoundland',
+  WA:'Pacific',OR:'Pacific',CA:'Pacific',NV:'Pacific',ID:'Mountain',
+  AZ:'Mountain',UT:'Mountain',CO:'Mountain',NM:'Mountain',MT:'Mountain',
+  WY:'Mountain',ND:'Central',SD:'Central',NE:'Central',KS:'Central',
+  OK:'Central',TX:'Central',MN:'Central',IA:'Central',MO:'Central',
+  AR:'Central',LA:'Central',WI:'Central',IL:'Central',MI:'Eastern',
+  IN:'Eastern',OH:'Eastern',KY:'Eastern',TN:'Central',AL:'Central',
+  MS:'Central',FL:'Eastern',GA:'Eastern',SC:'Eastern',NC:'Eastern',
+  VA:'Eastern',WV:'Eastern',DC:'Eastern',MD:'Eastern',DE:'Eastern',
+  NJ:'Eastern',PA:'Eastern',NY:'Eastern',CT:'Eastern',RI:'Eastern',
+  MA:'Eastern',VT:'Eastern',NH:'Eastern',ME:'Eastern'
+};
+const IANA_MAP={
+  Pacific:'America/Los_Angeles',Mountain:'America/Denver',Central:'America/Chicago',
+  Eastern:'America/New_York',Atlantic:'America/Halifax',Newfoundland:'America/St_Johns'
+};
+function clinicTimezone(l){
+  const prov=(l.province||'').trim().toUpperCase();
+  if(TZ_MAP[prov]) return TZ_MAP[prov];
+  const city=(l.city||'').trim().toLowerCase();
+  const cityTz={
+    'seattle':'Pacific','portland':'Pacific','san francisco':'Pacific',
+    'sacramento':'Pacific','los angeles':'Pacific','san diego':'Pacific',
+    'phoenix':'Mountain','denver':'Mountain','salt lake city':'Mountain',
+    'calgary':'Mountain','edmonton':'Mountain',
+    'chicago':'Central','houston':'Central','dallas':'Central',
+    'minneapolis':'Central','nashville':'Central','memphis':'Central',
+    'new york':'Eastern','boston':'Eastern','miami':'Eastern',
+    'atlanta':'Eastern','charlotte':'Eastern','tampa':'Eastern',
+    'cleveland':'Eastern','columbus':'Eastern','cincinnati':'Eastern',
+    'indianapolis':'Eastern','louisville':'Eastern','pittsburgh':'Eastern'
+  };
+  return cityTz[city]||'';
+}
+function clinicCurrentTime(tzLabel){
+  if(!tzLabel) return '';
+  const iana=IANA_MAP[tzLabel]; if(!iana) return '';
+  try{
+    return new Intl.DateTimeFormat('en-US',{timeZone:iana,hour:'numeric',minute:'2-digit',hour12:true}).format(new Date());
+  }catch(e){ return ''; }
+}
+function isGoodCallTime(tzLabel){
+  const iana=tzLabel?IANA_MAP[tzLabel]:null;
+  if(!iana) return {good:false,label:''};
+  const fmt=new Intl.DateTimeFormat('en-US',{timeZone:iana,hour:'2-digit',minute:'2-digit',hour12:false});
+  const parts=fmt.formatToParts(new Date());
+  let hour24=0;
+  for(const part of parts){ if(part.type==='hour') hour24=parseInt(part.value,10); }
+  const windows=[[7,9],[12,13],[17,18]];
+  const inWindow=windows.some(([a,b])=>hour24>=a&&hour24<b);
+  return {good:inWindow,label:fmt.format(new Date())};
+}
+function clinicTzChip(l){
+  const tz=clinicTimezone(l);
+  const loc=esc(l.city||'')+(l.province?', '+esc(l.province):'');
+  let chips='<span>'+loc+'</span>';
+  if(tz){
+    const cur=clinicCurrentTime(tz);
+    const timing=isGoodCallTime(tz);
+    const color=timing.good?'var(--green)':'var(--amber)';
+    const bg=timing.good?'var(--greenSoft)':'var(--amberSoft)';
+    const icon=timing.good?' ✓':' ⚠';
+    chips+='<span style="background:'+bg+';color:'+color+'">'+cur+' '+tz+icon+'</span>';
+  }
+  return chips;
+}
+
 const statuses=['new','called','no_answer','left_voicemail','emailed','interested','not_interested','follow_up','booked','closed'];
 const statusLabels={new:'New',called:'Called',no_answer:'No answer',left_voicemail:'Left voicemail',emailed:'Emailed',interested:'Interested',not_interested:'Not interested',follow_up:'Follow up',booked:'Booked',closed:'Closed'};
 const callStages=['','no_answer','left_voicemail','receptionist_only','gatekeeper_pushback','owner_unavailable','owner_reached','qualified','pitch_started','meeting_offered','booked','not_a_fit','do_not_call'];
@@ -232,6 +303,7 @@ const JACK_CALENDAR='https://calendly.com/wildejack1010/30min';
 let state={session:null, users:[], leads:[], filter:'all', tab:'leads', search:'', limit:50, activeLeadId:null, wrapLeadId:null};
 const $=id=>document.getElementById(id); const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 async function rpc(fn, body){const r=await fetch(`${SB_URL}/rest/v1/rpc/${fn}`,{method:'POST',headers:{apikey:SB_ANON,Authorization:`Bearer ${SB_ANON}`,'Content-Type':'application/json'},body:JSON.stringify(body)}); const txt=await r.text(); if(!r.ok) throw new Error(txt||r.statusText); return txt?JSON.parse(txt):null;}
+function safeUrl(u){u=String(u||'').trim();if(/^https?:\/\//i.test(u))return u;return ''}
 function saveSession(){sessionStorage.removeItem('vetinc_team_session');} function loadSession(){state.session=null;}
 function params(extra={}){return Object.assign({p_user_id:state.session.id,p_code:state.session.code},extra)}
 function adminParams(extra={}){return Object.assign({p_admin_id:state.session.id,p_admin_code:state.session.code},extra)}
@@ -246,12 +318,12 @@ async function login(){
   finally{btn.disabled=false; btn.textContent=old;}
 }
 async function start(){if(!state.session)return; $('login').classList.add('hidden'); $('app').classList.add('active'); $('sessionName').textContent=state.session.name; $('roleBadge').textContent=state.session.role==='admin'?'Admin':'Employee'; const isAdmin=state.session.role==='admin'; document.querySelectorAll('.admin-tab').forEach(b=>b.classList.toggle('hidden',!isAdmin)); document.querySelectorAll('.employee-tab').forEach(b=>b.classList.toggle('hidden',isAdmin)); switchTab(isAdmin?'calendar':'leads'); await loadData(); render();}
-async function loadData(){state.leads=await rpc('vetinc_team_get_leads',params({p_date:today()})); if(state.session.role==='admin') state.users=await rpc('vetinc_team_get_users',params());}
+async function loadData(){try{state.leads=await rpc('vetinc_team_get_leads',params({p_date:today()}))||[];}catch(e){console.error('loadData leads error:',e);state.leads=[];}try{if(state.session.role==='admin')state.users=await rpc('vetinc_team_get_users',params())||[];}catch(e){console.error('loadData users error:',e);if(!state.users)state.users=[];}}
 function switchTab(tab){state.tab=tab; document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',!b.classList.contains('hidden')&&b.dataset.tab===tab)); ['calendar','leads','script','admin'].forEach(t=>$('tab-'+t).classList.toggle('hidden',t!==tab)); render();}
 function render(){if(state.session.role==='admin'){renderAdmin();}else{renderFilters(); renderLeads(); renderScript();}}
 function renderFilters(){$('filters').innerHTML=['all',...statuses].map(s=>`<button class="chip ${state.filter===s?'active':''}" onclick="setFilter('${s}')">${s==='all'?'All':statusLabels[s]}</button>`).join('');}
 function setFilter(f){state.filter=f; state.limit=50; state.activeLeadId=null; render();}
-function filteredLeads(){let l=state.leads; if(state.filter!=='all') l=l.filter(x=>x.status===state.filter); const q=(state.search||'').toLowerCase().trim(); if(q) l=l.filter(x=>[x.clinic_name,x.dr_name,x.contact_name,x.phone,x.email,x.city,x.province,x.source,x.notes].some(v=>String(v||'').toLowerCase().includes(q))); return l;}
+function filteredLeads(){let l=state.leads||[]; if(state.filter!=='all') l=l.filter(x=>x.status===state.filter); const q=(state.search||'').toLowerCase().trim(); if(q) l=l.filter(x=>[x.clinic_name,x.dr_name,x.contact_name,x.phone,x.email,x.city,x.province,x.source,x.notes].some(v=>String(v||'').toLowerCase().includes(q))); return l;}
 function statusClass(s){return 's-'+(s||'new');}
 function leadName(l){return l.clinic_name||l.dr_name||l.contact_name||'Vet INC lead';}
 function cleanPhone(l){return (l.phone||'').replace(/[^\d+]/g,'');}
@@ -268,7 +340,7 @@ function renderLeads(){
 function showMoreLeads(){state.limit+=50; renderLeads();}
 function queueRow(l){
   const flags=[]; if(l.callback_needed) flags.push('<span class="queue-flag callback">Callback</span>'); if(l.scheduled_call_at||['booked','closed'].includes(l.status)) flags.push('<span class="queue-flag booked">Booked</span>'); if(l.call_stage) flags.push(`<span class="queue-flag">${esc(callStageLabels[l.call_stage]||l.call_stage)}</span>`);
-  return `<div class="queue-row"><div><div class="queue-name">${esc(leadName(l))}</div><div class="queue-sub"><span>${esc(l.dr_name||'No doctor listed')}</span>${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}<span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span><span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status||'New'}</span></div>${flags.length?`<div class="queue-flags">${flags.join('')}</div>`:''}</div><button class="btn blue small-btn" onclick="startCall('${l.id}')">Start call</button></div>`;
+  return `<div class="queue-row"><div><div class="queue-name">${esc(leadName(l))}</div><div class="queue-sub"><span>${esc(l.dr_name||'No doctor listed')}</span>${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}${clinicTzChip(l)}<span class="status ${statusClass(l.status)}">${statusLabels[l.status]||l.status||'New'}</span></div>${flags.length?`<div class="queue-flags">${flags.join('')}</div>`:''}</div><button class="btn blue small-btn" onclick="startCall('${l.id}')">Start call</button></div>`;
 }
 async function startCall(id){
   const lead=state.leads.find(l=>l.id===id);
@@ -325,11 +397,11 @@ function personalize(text,l){
     .replaceAll('[LAST NAME]',esc(owner.replace(/^Dr\.\s*/i,'')))
     .replaceAll('[CLINIC]',esc(clinic))
     .replaceAll('[YOUR NAME]',esc(rep))
-    .replaceAll('[REP]',esc(rep));
+    .replaceAll('[REP]',esc(rep)).replaceAll('[CLINIC_TZ]',esc(clinicTimezone(l)||'your timezone'));
 }
 function callScriptForLead(l){
-  const doctor=doctorDisplay(l);
-  const contact=credibleContactName(l.contact_name);
+  const doctor=esc(doctorDisplay(l));
+  const contact=esc(credibleContactName(l.contact_name));
   const owner=doctor||contact;
   const hasOwner=!!owner;
   const ownerPrep=doctor
@@ -343,15 +415,24 @@ function callScriptForLead(l){
       ? `Hey — quick question for ${contact}, are they around?`
       : `Hey — quick question, who is the owner or practice manager there?`;
   const ownerLine=doctor||contact||'[OWNER NAME]';
-  return personalize(`<strong>LIVE CALL SCRIPT — USE THIS FIRST</strong>\n\n<strong>Before calling</strong>\n${ownerPrep}\nClinic: [CLINIC]\n\n<strong>Reception opener</strong>\n“${opener}”\n\n<strong>If they ask what it’s about</strong>\n“It's about managing the clinic's fee schedule — quick item, just need a couple minutes with ${ownerLine}.”\n\n<strong>If they ask for more / who you are</strong>\n“Yeah — [YOUR NAME] from Vet INC. We make software that helps vet clinics manage pricing automatically. It takes it off the owner's plate. I just want to see if it's worth getting Jack, our founder, on a quick 20-minute call.”\n\n<strong>If they ask if this is a sales call</strong>\n“It's an introduction, honestly. We make software that simplifies how clinics handle pricing. I'm just trying to see if it makes sense to get Jack on a quick call to walk them through it.”\n\n<strong>If ${ownerLine} is unavailable</strong>\n“No worries at all — are they generally easier to reach mornings or afternoons?”\nThen get: receptionist name · best callback time · direct email if possible.\n\n<strong>If they say send an email</strong>\n“Will do — does ${ownerLine} check that inbox personally, or is there a better direct email?”\nSend it, then call back in 48 hours.\n\n<strong>When the owner/doctor gets on</strong>\n“Hi ${ownerLine} — this is [YOUR NAME] with Vet INC. We help clinics keep their fee schedule managed and updated without it living on the owner's plate. I'm not calling to pitch you — I'm calling to see if it makes sense to put you on Jack's calendar so he can show you what we built.”\n\n<strong>Qualify — only ask these 2 questions</strong>\n1. “What practice management system are you on — AVImark, Cornerstone, or something else?”\n2. “Is keeping on top of pricing something that takes much of your time, or is it pretty manageable?”\n\n<strong>Book the meeting</strong>\n“Just before we lock something in — you're in [TIMEZONE], right?”\nThen close:\n“Would [DAY] morning or [DAY] afternoon work better for a quick 20-minute call with Jack?”\n\n<strong>If they ask price / details / how it works</strong>\n“Jack covers that on the call. It's much clearer to show you than for me to explain over the phone. Is [DAY] morning or afternoon better?”\n\n<strong>Rules</strong>\n• One job: book Jack's 20-minute call. Do not sell the product.\n• Never pitch the receptionist. Get to the owner/doctor.\n• Use Dr. LastName only when it is actually a doctor.\n• If no owner/doctor is known, check the website before dialing.\n• Confirm timezone before booking.\n• Always close with two specific time options.\n• Log every call with Call ended.\n\n<strong>Reference pushbacks</strong>\nTHEM: “We're too busy.”\nYOU: “Totally understand. Jack keeps it to 20 minutes and there's no prep needed. Is [DAY] or [DAY] any quieter?”\n\nTHEM: “We handle pricing fine.”\nYOU: “That's good to hear. Most clinics say that before they see it. If it's not relevant, no harm done. Is [DAY] or [DAY] any good?”\n\nTHEM: “We already have someone for pricing.”\nYOU: “Makes sense — this works alongside that. It handles the execution side automatically so you're not doing it manually.”\n\nTHEM: “Never heard of you.”\nYOU: “Totally fair — we're newer. Jack built this out of his own family's vet clinics because he couldn't find anything that did it well.”`,l);
+  return personalize(`<strong>LIVE CALL SCRIPT — USE THIS FIRST</strong>\n\n<strong>Before calling</strong>\n${ownerPrep}\nClinic: [CLINIC]\n\n<strong>Reception opener</strong>\n“${opener}”\n\n<strong>If they ask what it’s about</strong>\n“It's about managing the clinic's fee schedule — quick item, just need a couple minutes with ${ownerLine}.”\n\n<strong>If they ask for more / who you are</strong>\n“Yeah — [YOUR NAME] from Vet INC. We make software that helps vet clinics manage pricing automatically. It takes it off the owner's plate. I just want to see if it's worth getting Jack, our founder, on a quick 20-minute call.”\n\n<strong>If they ask if this is a sales call</strong>\n“It's an introduction, honestly. We make software that simplifies how clinics handle pricing. I'm just trying to see if it makes sense to get Jack on a quick call to walk them through it.”\n\n<strong>If ${ownerLine} is unavailable</strong>\n“No worries at all — are they generally easier to reach mornings or afternoons?”\nThen get: receptionist name · best callback time · direct email if possible.\n\n<strong>If they say send an email</strong>\n“Will do — does ${ownerLine} check that inbox personally, or is there a better direct email?”\nSend it, then call back in 48 hours.\n\n<strong>When the owner/doctor gets on</strong>\n“Hi ${ownerLine} — this is [YOUR NAME] with Vet INC. We help clinics keep their fee schedule managed and updated without it living on the owner's plate. I'm not calling to pitch you — I'm calling to see if it makes sense to put you on Jack's calendar so he can show you what we built.”\n\n<strong>Qualify — only ask these 2 questions</strong>\n1. “What practice management system are you on — AVImark, Cornerstone, or something else?”\n2. “Is keeping on top of pricing something that takes much of your time, or is it pretty manageable?”\n\n<strong>Book the meeting</strong>\n“Just before we lock something in — you're in [CLINIC_TZ], right?”\nThen close:\n“Would [DAY] morning or [DAY] afternoon work better for a quick 20-minute call with Jack?”\n\n<strong>If they ask price / details / how it works</strong>\n“Jack covers that on the call. It's much clearer to show you than for me to explain over the phone. Is [DAY] morning or afternoon better?”\n\n<strong>Rules</strong>\n• One job: book Jack's 20-minute call. Do not sell the product.\n• Never pitch the receptionist. Get to the owner/doctor.\n• Use Dr. LastName only when it is actually a doctor.\n• If no owner/doctor is known, check the website before dialing.\n• Confirm timezone before booking.\n• Always close with two specific time options.\n• Log every call with Call ended.\n\n<strong>Reference pushbacks</strong>\nTHEM: “We're too busy.”\nYOU: “Totally understand. Jack keeps it to 20 minutes and there's no prep needed. Is [DAY] or [DAY] any quieter?”\n\nTHEM: “We handle pricing fine.”\nYOU: “That's good to hear. Most clinics say that before they see it. If it's not relevant, no harm done. Is [DAY] or [DAY] any good?”\n\nTHEM: “We already have someone for pricing.”\nYOU: “Makes sense — this works alongside that. It handles the execution side automatically so you're not doing it manually.”\n\nTHEM: “Never heard of you.”\nYOU: “Totally fair — we're newer. Jack built this out of his own family's vet clinics because he couldn't find anything that did it well.”`,l);
 }
 function renderCallWorkspace(l){
   const phone=cleanPhone(l); const url=calendlyUrlForLead(l);
-  $('callWorkspace').innerHTML=`<button class="btn secondary small-btn call-back" onclick="backToLeads()">← Back to leads</button><div class="call-shell"><div class="call-main"><h2 class="call-title">${esc(leadName(l))}</h2><div class="call-meta">${l.dr_name?`<span>Owner/Dr: ${esc(l.dr_name)}</span>`:''}${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}${l.phone?`<span>Phone: ${esc(l.phone)}</span>`:''}${l.email?`<span>Email: ${esc(l.email)}</span>`:''}${l.website?`<a href="${esc(l.website)}" target="_blank">Website</a>`:''}<span>${esc(l.city||'')}${l.province?', '+esc(l.province):''}</span></div><div class="script-block">${callScriptForLead(l)}</div></div><aside class="call-side"><div class="booking-box"><h3>Book call with Jack</h3><p>Use Jack’s live calendar to book the meeting. When the call is done, click Call ended and log the result.</p><a class="btn blue full" href="${esc(url)}" target="_blank" rel="noopener">Open Calendar</a><button class="btn red full" onclick="openWrapUp('${l.id}')">Call ended</button></div></aside></div>`;
+  $('callWorkspace').innerHTML=`<button class="btn secondary small-btn call-back" onclick="backToLeads()">← Back to leads</button><div class="call-shell"><div class="call-main"><h2 class="call-title">${esc(leadName(l))}</h2><div class="call-meta">${l.dr_name?`<span>Owner/Dr: ${esc(l.dr_name)}</span>`:''}${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}${l.phone?`<span>Phone: ${esc(l.phone)}</span>`:''}${l.email?`<span>Email: ${esc(l.email)}</span>`:''}${safeUrl(l.website)?`<a href="${esc(safeUrl(l.website))}" target="_blank" rel="noopener">Website</a>`:''}${clinicTzChip(l)}</div><div class="script-block">${callScriptForLead(l)}</div></div><aside class="call-side"><div class="booking-box"><h3>Book call with Jack</h3><p>Use Jack’s live calendar to book the meeting. When the call is done, click Call ended and log the result.</p><a class="btn blue full" href="${esc(url)}" target="_blank" rel="noopener">Open Calendar</a><button class="btn red full" onclick="openWrapUp('${l.id}')">Call ended</button></div></aside></div>`;
 }
 function fillSelect(id, items, labels, value){$(id).innerHTML=items.map(x=>`<option value="${x}" ${value===x?'selected':''}>${labels[x]}</option>`).join('');}
-function openWrapUp(id){const l=state.leads.find(x=>x.id===id); if(!l)return; state.wrapLeadId=id; $('wrapLeadName').textContent=leadName(l); fillSelect('wrapStage',callStages,callStageLabels,l.call_stage||''); fillSelect('wrapReason',rejectionReasons,rejectionReasonLabels,l.rejection_reason||''); fillSelect('wrapCallbackReason',callbackReasons,callbackReasonLabels,l.callback_reason||''); $('wrapCallback').checked=!!l.callback_needed; $('wrapCallbackAt').value=fmtScheduleInput(l.callback_at); $('wrapNotes').value=l.notes||''; toggleWrapCallback(); $('wrapModal').classList.add('open');}
+function openWrapUp(id){const l=state.leads.find(x=>x.id===id); if(!l)return; state.wrapLeadId=id; $('wrapLeadName').textContent=leadName(l); fillSelect('wrapStage',callStages,callStageLabels,l.call_stage||''); showScheduledInWrapUp(l.call_stage||''); const _ss=$('wrapStage'); if(_ss) _ss.onchange=()=>showScheduledInWrapUp(_ss.value); fillSelect('wrapReason',rejectionReasons,rejectionReasonLabels,l.rejection_reason||''); fillSelect('wrapCallbackReason',callbackReasons,callbackReasonLabels,l.callback_reason||''); $('wrapCallback').checked=!!l.callback_needed; $('wrapCallbackAt').value=fmtScheduleInput(l.callback_at); $('wrapNotes').value=l.notes||''; toggleWrapCallback(); const _si=$('wrapScheduledAt'); if(_si) _si.value=fmtScheduleInput(l.scheduled_call_at); $('wrapModal').classList.add('open');}
 function closeWrapUp(){state.wrapLeadId=null; $('wrapModal').classList.remove('open');}
+function wrapScheduledValue(){
+  const box=$('wrapScheduledBox'); const inp=$('wrapScheduledAt');
+  if(!box||box.style.display==='none'||!inp||!inp.value) return null;
+  return new Date(inp.value).toISOString();
+}
+function showScheduledInWrapUp(stage){
+  const box=$('wrapScheduledBox'); if(!box) return;
+  box.style.display=(stage==='booked'||stage==='meeting_offered')?'block':'none';
+}
 function toggleWrapCallback(){$('wrapCallbackFields').classList.toggle('hidden',!$('wrapCallback').checked);}
 function wrapStatus(stage, cb){if(stage==='booked')return 'booked'; if(stage==='do_not_call'||stage==='not_a_fit')return 'not_interested'; if(cb)return 'follow_up'; if(['no_answer','left_voicemail'].includes(stage))return stage; if(stage==='owner_reached'||stage==='qualified'||stage==='pitch_started'||stage==='meeting_offered')return 'interested'; return 'called';}
 function wrapPayload(){
@@ -363,7 +444,7 @@ function wrapPayload(){
   const cbreason=$('wrapCallbackReason').value;
   if(cb && !cbtime) throw new Error('Pick a callback date/time before saving.');
   if(cb && !cbreason) throw new Error('Pick a callback reason before saving.');
-  return {p_lead_id:id,p_status:wrapStatus(stage,cb),p_notes:$('wrapNotes').value,p_call_stage:stage,p_rejection_reason:$('wrapReason').value,p_scheduled_call_at:lead?.scheduled_call_at||null,p_callback_needed:cb,p_callback_at:cb&&cbtime?new Date(cbtime).toISOString():null,p_callback_reason:cb?cbreason:''};
+  return {p_lead_id:id,p_status:wrapStatus(stage,cb),p_notes:$('wrapNotes').value,p_call_stage:stage,p_rejection_reason:$('wrapReason').value,p_scheduled_call_at:wrapScheduledValue(),p_callback_needed:cb,p_callback_at:cb&&cbtime?new Date(cbtime).toISOString():null,p_callback_reason:cb?cbreason:''};
 }
 function setWrapStatus(msg,kind=''){
   const el=$('wrapSaveStatus'); if(!el)return;
@@ -381,14 +462,13 @@ async function saveWrapUp(){
   }catch(e){
     console.error(e);
     setWrapStatus(e.message||'Could not save. Try again.','error');
-    alert(e.message||'Could not save. Try again.');
   }finally{
     if(btn){btn.disabled=false; btn.textContent='Save outcome';}
   }
 }
 async function updateLead(id,status){
   const lead=state.leads.find(l=>l.id===id);
-  await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:status,p_notes:lead?.notes||'',p_call_stage:lead?.call_stage||'',p_rejection_reason:lead?.rejection_reason||'',p_scheduled_call_at:lead?.scheduled_call_at||null,p_callback_needed:!!lead?.callback_needed,p_callback_at:lead?.callback_at||null,p_callback_reason:lead?.callback_reason||''}));
+  await rpc('vetinc_team_update_lead',params({p_lead_id:id,p_status:status,p_notes:lead?.notes||'',p_call_stage:lead?.call_stage||'',p_rejection_reason:lead?.rejection_reason||'',p_scheduled_call_at:wrapScheduledValue(),p_callback_needed:!!lead?.callback_needed,p_callback_at:lead?.callback_at||null,p_callback_reason:lead?.callback_reason||''}));
   await loadData();
 }
 function calendlyUrlForLead(l){
@@ -424,9 +504,9 @@ function renderOwnerCalendar(employees){
   $('ownerDateLabel').textContent=now.toLocaleDateString([], {weekday:'long', month:'long', year:'numeric'});
   const scheduled=state.leads.filter(l=>l.scheduled_call_at).sort((a,b)=>new Date(a.scheduled_call_at)-new Date(b.scheduled_call_at));
   const upcoming=scheduled.filter(l=>new Date(l.scheduled_call_at)>=new Date(now.getTime()-60*60*1000));
-  const today=scheduled.filter(l=>String(l.scheduled_call_at).slice(0,10)===todayKey);
+  const todayCalls=scheduled.filter(l=>String(l.scheduled_call_at).slice(0,10)===todayKey);
   const booked=state.leads.filter(l=>['booked','closed'].includes(l.status)).length;
-  const csMap={calStatToday:today.length,calStatUpcoming:upcoming.length,calStatBooked:booked,calStatReps:employees.length};
+  const csMap={calStatToday:todayCalls.length,calStatUpcoming:upcoming.length,calStatBooked:booked,calStatReps:employees.length};
   Object.keys(csMap).forEach(id=>{const el=$(id);if(el)el.textContent=csMap[id];});
   $('agendaCount').textContent=`${upcoming.length} scheduled`;
   $('agendaList').innerHTML=upcoming.length?upcoming.slice(0,25).map(l=>`<div class="agenda-card"><div><div class="agenda-time">${fmtAgendaTime(l.scheduled_call_at)}</div><div class="agenda-date">${fmtAgendaDate(l.scheduled_call_at)}</div></div><div><div class="agenda-title">${esc(l.clinic_name||'Vet INC call')}</div><div class="agenda-meta">${l.dr_name?`<span>${esc(l.dr_name)}</span>`:''}${l.phone?`<span>${esc(l.phone)}</span>`:''}${l.assigned_name?`<span>Rep: ${esc(l.assigned_name)}</span>`:''}${l.rejection_reason?`<span>${esc(rejectionReasonLabels[l.rejection_reason]||l.rejection_reason)}</span>`:''}</div></div><div class="agenda-status">${statusLabels[l.status]||'Booked'}</div></div>`).join(''):`<div class="agenda-empty"><strong>No scheduled calls yet.</strong><br>When reps book a call, they should enter the date/time on the lead card and mark it Booked.</div>`;
