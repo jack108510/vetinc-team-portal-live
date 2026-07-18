@@ -52,11 +52,30 @@ button,input{font:inherit} button{cursor:pointer}
 .step .warn{background:var(--amberSoft);border:1px solid #fed7aa;border-radius:14px;padding:14px 16px;margin:12px 0;font-size:14px;color:#9a3412;line-height:1.5}
 .step .tip{background:var(--greenSoft);border:1px solid #bbf7d0;border-radius:14px;padding:14px 16px;margin:12px 0;font-size:14px;color:#166534;line-height:1.5}
 
+/* Signup form */
+.signup-box{background:var(--blueSoft);border:2px solid var(--blue);border-radius:18px;padding:24px;margin:20px 0}
+.signup-box h3{margin:0 0 6px;font-size:20px;letter-spacing:-.03em}
+.signup-box p.sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+.sf-row{display:grid;gap:12px;margin-bottom:12px}
+.sf-field label{display:block;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:5px}
+.sf-field input{width:100%;border:1px solid #cbd5e1;border-radius:12px;padding:12px 14px;background:white;font-size:15px;transition:border-color .15s}
+.sf-field input:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.sf-btn{width:100%;border:0;border-radius:14px;padding:15px;font-weight:900;font-size:16px;background:var(--navy);color:white;margin-top:6px}
+.sf-btn:hover{filter:brightness(1.1)}
+.sf-btn:disabled{opacity:.6;cursor:wait}
+.sf-err{color:var(--red);font-size:14px;margin-top:10px;display:none;font-weight:600}
+.sf-ok{text-align:center;padding:20px}
+.sf-ok .check{width:56px;height:56px;border-radius:50%;background:var(--green);color:white;display:inline-flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:14px}
+.sf-ok h3{margin:0 0 8px;font-size:22px}
+.sf-ok p{color:var(--muted);font-size:15px;margin:0 0 20px;line-height:1.6}
+.sf-ok a{display:inline-block;background:var(--navy);color:white;text-decoration:none;font-weight:800;padding:14px 32px;border-radius:14px;font-size:16px}
+.sf-ok a:hover{filter:brightness(1.1)}
+
 .pain-box{background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:16px;margin:14px 0}
 .pain-box h3{margin:0 0 8px;font-size:15px;color:#92400e}
 .pain-box ul{margin:0;padding-left:20px;font-size:14px;color:#78350f;line-height:1.7}
 
-.script-preview{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:18px;font-size:14px;line-height:1.7;color:#334155;white-space:pre-wrap;font-family:Inter,sans-serif}
+.script-preview{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:18px;font-size:14px;line-height:1.7;color:#334155;font-family:Inter,sans-serif}
 .script-preview strong{color:#0f172a}
 .script-preview .them{color:var(--red);font-weight:700}
 .script-preview .you{color:var(--green);font-weight:700}
@@ -71,7 +90,7 @@ button,input{font:inherit} button{cursor:pointer}
 .login-cta a:hover{filter:brightness(1.08)}
 .login-cta p{color:var(--muted);font-size:13px;margin-top:12px}
 
-@media(max-width:600px){.hero h1{font-size:26px}}
+@media(max-width:600px){.hero h1{font-size:26px}.sf-row{grid-template-columns:1fr!important}}
 </style>
 </head>
 <body>
@@ -100,9 +119,46 @@ button,input{font:inherit} button{cursor:pointer}
 
   <div class="steps">
 
-    <!-- Step 1 -->
+    <!-- Step 1: Create your account -->
     <div class="step">
       <div class="step-num">1</div>
+      <h2>Create your account</h2>
+      <p>Fill this out and you'll be ready to log in and start calling.</p>
+      <div class="signup-box" id="signupBox">
+        <h3>Set up your login</h3>
+        <p class="sub">Use this to sign in at team.vetinc.ca</p>
+        <div class="sf-row" style="grid-template-columns:1fr 1fr">
+          <div class="sf-field">
+            <label>First name</label>
+            <input id="sfFirst" type="text" placeholder="Jane" autocomplete="given-name">
+          </div>
+          <div class="sf-field">
+            <label>Last name</label>
+            <input id="sfLast" type="text" placeholder="Smith" autocomplete="family-name">
+          </div>
+        </div>
+        <div class="sf-field" style="margin-bottom:12px">
+          <label>Email</label>
+          <input id="sfEmail" type="email" placeholder="you@email.com" autocomplete="email">
+        </div>
+        <div class="sf-field" style="margin-bottom:12px">
+          <label>Password (min 6 characters)</label>
+          <input id="sfPass" type="password" placeholder="Choose a password" autocomplete="new-password">
+        </div>
+        <button class="sf-btn" id="sfBtn">Create my account</button>
+        <div class="sf-err" id="sfErr"></div>
+      </div>
+      <div class="sf-ok hidden" id="sfOk">
+        <div class="check">&#10003;</div>
+        <h3>You're all set!</h3>
+        <p>Your account is ready. Click below to log in and see today's leads.</p>
+        <a href="https://team.vetinc.ca/">Go to team.vetinc.ca &rarr;</a>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <div class="step-num">2</div>
       <h2>What Vet INC does</h2>
       <p>Vet owners have one big problem: <strong>their prices go stale.</strong> They're busy with patients all day. Price updates get pushed back. Nobody notices until revenue is already leaking.</p>
       <div class="pain-box">
@@ -112,67 +168,68 @@ button,input{font:inherit} button{cursor:pointer}
           <li>The clinic down the street quietly raised their fees and nobody noticed</li>
           <li>Changing a price means digging through AVImark/Cornerstone or a spreadsheet</li>
           <li>They're underpriced and losing revenue they don't even know about</li>
-          <li>The "price review" keeps getting pushed because there's always a patient waiting</li>
         </ul>
       </div>
       <div class="callout"><strong>What we built:</strong> An app that lets vet owners see, manage, and update their prices quickly — so it stops being something they have to find time for. Jack built this for his own family's vet clinics first.</div>
       <div class="tip"><strong>You are NOT selling the product.</strong> You're selling a 20-minute conversation with Jack. That's it. Don't explain features, don't quote prices, don't demo anything. Book the call.</div>
     </div>
 
-    <!-- Step 2 -->
+    <!-- Step 3 -->
     <div class="step">
-      <div class="step-num">2</div>
+      <div class="step-num">3</div>
+      <h2>The new call script</h2>
+      <p>The script is built into the portal — when you click <strong>"Start call"</strong> on a lead, it personalizes everything for that clinic. Here's what to know:</p>
+      <div class="script-preview">
+<strong>Before calling</strong>
+Check the clinic website first for names (owner/vet, office manager).
+Confirm timezone before booking anything.
+
+<strong>Call timing matters</strong>
+Best windows: 7:00–8:30 AM, 12:00–1:00 PM, 4:00–4:30 PM (their time).
+Avoid mid-morning (9:30–11:30ish) and last 30 min before close.
+
+<strong>Step 1: Find the pricing decision-maker</strong>
+Target the office/practice manager first — they evaluate tools before the owner.
+
+<strong>Opening (whoever picks up)</strong>
+"Hi, this is [YOUR NAME] calling from VetInc — quick question: when a fee needs updating at the clinic, does that usually go through you, or does [OWNER] handle it directly?"
+
+<strong>If they ARE the pricing-owner (Branch A)</strong>
+"Got it — is now an okay time for a two-minute rundown? Or 10 minutes another time?"
+Pitch: "This isn't about taking pricing off your plate — it's about giving you competitor and margin data so a change takes minutes instead of an afternoon."
+Close: "Worth 20 minutes with Jack directly to see if it's a fit?"
+Get: name, callback time, direct email.
+
+<strong>If they are NOT the pricing-owner (Branch B)</strong>
+Don't pitch. Use them as intel.
+"Is pricing something that's come up much?"
+"Is [OWNER] the one who'd look at this, or someone else?"
+Get: name, callback time, direct email.
+
+<strong>Vet/Owner (when you reach them)</strong>
+"When was the last time you sat down and went through your full price list?"
+"Jack had the same problem at his family's clinics. Worth 20 minutes? [DAY] morning or afternoon?"
+
+<strong>Always get the owner's direct email — no email = not a real lead.</strong>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <div class="step-num">4</div>
       <h2>Your daily workflow</h2>
       <p>Everything happens on the portal at <strong>team.vetinc.ca</strong>. Here's your day:</p>
       <ul>
         <li><strong>Log in</strong> with your email and password</li>
         <li><strong>See today's leads</strong> — automatically loaded for you (up to 50/day)</li>
         <li><strong>Pick a lead</strong> and click <strong>"Start call"</strong></li>
-        <li>The <strong>call script</strong> appears — personalized for that clinic with doctor name, clinic name, and timezone</li>
-        <li>Before dialing: <strong>check the clinic website</strong> if no doctor/owner is listed. Look at About, Team, Doctors, Leadership pages</li>
-        <li>Call the clinic and follow the script</li>
+        <li>The <strong>call script</strong> appears — personalized for that clinic</li>
+        <li>Before dialing: <strong>check the clinic website</strong> if no owner is listed</li>
+        <li>Call and follow the script</li>
         <li>When done, click <strong>"Call ended"</strong> and log the outcome</li>
         <li>Move to the next lead</li>
       </ul>
-      <div class="warn"><strong>Timezone chip:</strong> Each lead shows the clinic's local time. <strong>Green ✓</strong> = good time to call (7–9 AM, 12–1 PM, 5–6 PM their time). <strong>Amber ⚠</strong> = not ideal but still OK. Always confirm their timezone before booking.</div>
-    </div>
-
-    <!-- Step 3 -->
-    <div class="step">
-      <div class="step-num">3</div>
-      <h2>Getting past the receptionist</h2>
-      <p>The receptionist is not your enemy. They're doing their job. Your job is to get past them respectfully to the owner or doctor.</p>
-      <ul>
-        <li><strong>Opener:</strong> "Hey — quick question for Dr. [LastName], is Dr. [LastName] around?"</li>
-        <li><strong>If "what's it about":</strong> "It's about the clinic's pricing — I need two minutes with [Owner]."</li>
-        <li><strong>If "who are you":</strong> "[Your Name] from Vet INC. We built an app that lets vet owners update their prices without digging through their PMS."</li>
-        <li><strong>If "is this a sales call":</strong> "No — it's just a short intro call. Jack handles everything from there."</li>
-        <li><strong>If owner unavailable:</strong> "No problem — are they easier to reach mornings or afternoons?" Get their name, best callback time, and email.</li>
-        <li><strong>If "send an email":</strong> "Happy to — what's the best email for [Owner]?" Then call back in 48 hours.</li>
-      </ul>
-      <div class="warn"><strong>Never pitch the receptionist.</strong> They can't book the call. Be polite, be brief, get to the owner.</div>
-    </div>
-
-    <!-- Step 4 -->
-    <div class="step">
-      <div class="step-num">4</div>
-      <h2>The pitch (when the owner gets on)</h2>
-      <div class="script-preview">
-<strong>Owner opener</strong>
-"Hi [OWNER] — [YOUR NAME], Vet INC. Quick question — when was the last time you actually sat down and went through your full price list? Not squeezed it in between patients, but really looked at whether every fee is where it should be?
-
-Most owners we talk to say it's been months. Prices are sitting stale, you have no idea if the clinic down the street is charging more for the same procedure, and the time to fix it never seems to come.
-
-Jack — our founder — had the same problem at his family's clinics and built an app to solve it. I think it's worth 20 minutes with him. Would [DAY] morning or [DAY] afternoon work?"
-
-<strong>Qualify (only 2 questions)</strong>
-1. "What practice management system are you on — AVImark, Cornerstone, something else?"
-2. "When a price needs to change, who actually makes that happen — and how long does it usually sit before anyone gets to it?"
-
-<strong>Close</strong>
-"One thing before we lock it in — you're in [CLINIC_TZ], correct?"
-"Would [DAY] morning or [DAY] afternoon work for a 20-minute call with Jack?"
-      </div>
+      <div class="warn"><strong>Timezone chip:</strong> Each lead shows the clinic's local time. Always call in their timezone and confirm before booking.</div>
     </div>
 
     <!-- Step 5 -->
@@ -181,79 +238,36 @@ Jack — our founder — had the same problem at his family's clinics and built 
       <h2>Handling pushback</h2>
       <div class="script-preview">
 <span class="them">"We're too busy."</span>
-<span class="you">YOU:</span> "That's exactly the issue — pricing never makes it to the top of the list because you're always with patients. So fees sit where they are for months and nobody notices until revenue is already leaking. Jack built this so it stops being something you have to find time for. Is [DAY] or [DAY] a bit lighter?"
+<span class="you">YOU:</span> "That's exactly the issue — pricing never reaches the top of the list. Jack built this so it stops being something you have to find time for. Is [DAY] or [DAY] a bit lighter?"
 
 <span class="them">"We handle pricing fine."</span>
-<span class="you">YOU:</span> "Good to hear. Most owners say that — and then realize their fees haven't moved in six months while the clinic two miles away quietly raised theirs. If the call confirms you're on top of it, you've only lost 20 minutes. Is [DAY] or [DAY] workable?"
+<span class="you">YOU:</span> "Most owners say that — then realize fees haven't moved in six months while a nearby clinic raised theirs. If the call confirms you're on top of it, you've only lost 20 minutes."
 
-<span class="them">"We already have someone for pricing."</span>
-<span class="you">YOU:</span> "This isn't a consultant — it's a tool so that whoever handles it can make a change in minutes instead of scheduling time around patients. Jack can show you exactly how it works in 20 minutes. Is [DAY] or [DAY] better?"
+<span class="them">"Already have someone for pricing."</span>
+<span class="you">YOU:</span> "This isn't a consultant — it's a tool so whoever handles it can make changes in minutes instead of scheduling time around patients."
 
 <span class="them">"Not interested."</span>
-<span class="you">YOU:</span> "Understood. Jack built this because he watched his own family's clinics go months without a price update and lose revenue nobody even noticed was gone. If [OWNER] can spare 20 minutes it might be worth it — if not, no problem at all. Is [DAY] or [DAY] workable?"
-
-<span class="them">"Never heard of you."</span>
-<span class="you">YOU:</span> "We're small — Jack built this because his family's clinics kept falling behind on pricing and losing revenue they didn't even know was slipping. Worth 20 minutes?"
+<span class="you">YOU:</span> "Understood. Jack built this after his own family's clinics went months without price updates. If there's ever 20 minutes to spare, happy to talk."
 
 <span class="them">"Does this cost money?"</span>
-<span class="you">YOU:</span> "Jack covers everything on the call — no commitment, just a conversation to see if it's a fit. Is [DAY] morning or afternoon better?"
+<span class="you">YOU:</span> "Jack covers all of that on the call — no commitment. [DAY] morning or afternoon?"
       </div>
     </div>
 
     <!-- Step 6 -->
     <div class="step">
       <div class="step-num">6</div>
-      <h2>Timezone rules</h2>
-      <p>You'll be calling clinics across North America. <strong>Always call in the clinic's local timezone.</strong> The portal shows you their current time on every lead.</p>
-      <table class="tz-table">
-        <tr><th>Region</th><th>Best calling windows (their local time)</th></tr>
-        <tr><td>Pacific (WA, OR, CA, BC)</td><td>7–9 AM, 12–1 PM, 5–6 PM</td></tr>
-        <tr><td>Mountain (AZ, CO, UT, AB)</td><td>7–9 AM, 12–1 PM, 5–6 PM</td></tr>
-        <tr><td>Central (TX, IL, MN, TN, ON)</td><td>7–9 AM, 12–1 PM, 5–6 PM</td></tr>
-        <tr><td>Eastern (NY, FL, GA, NC, OH)</td><td>7–9 AM, 12–1 PM, 5–6 PM</td></tr>
-      </table>
-      <div class="callout"><strong>Golden rule:</strong> Never call before 7 AM or after 6 PM in the clinic's timezone. If the portal shows amber ⚠, still call — but be extra respectful of their time.</div>
-    </div>
-
-    <!-- Step 7 -->
-    <div class="step">
-      <div class="step-num">7</div>
-      <h2>Booking & logging calls</h2>
-      <p>When a clinic agrees to talk with Jack:</p>
-      <ul>
-        <li><strong>Open Calendar</strong> — click the blue button to open Jack's Calendly</li>
-        <li>Let the clinic owner pick a time that works for them</li>
-        <li>Click <strong>"Call ended"</strong> and select <strong>"Meeting booked"</strong></li>
-        <li>Enter the <strong>scheduled date/time</strong> so it appears on Jack's calendar</li>
-        <li>Log any notes from the conversation</li>
-        <li>Click <strong>"Save outcome"</strong></li>
-      </ul>
-      <div class="tip"><strong>Every call must be logged.</strong> Even if they didn't answer. Even if they said no. Click "Call ended," pick the outcome, and save. This is how Jack tracks progress and how you get credit for your work.</div>
-    </div>
-
-    <!-- Step 8 -->
-    <div class="step">
-      <div class="step-num">8</div>
       <h2>The rules</h2>
       <ul>
+        <li><strong>Always get direct email — no email = not a real lead</strong></li>
         <li><strong>One job:</strong> book Jack's 20-minute call. Do not sell the product.</li>
-        <li><strong>Never pitch the receptionist.</strong> Get to the owner/doctor.</li>
+        <li><strong>Pricing-owner first, vet second.</strong> Never pitch someone who doesn't handle pricing.</li>
         <li><strong>Use Dr. LastName</strong> only when it's actually a doctor.</li>
-        <li><strong>Check the website</strong> before dialing if no owner/doctor is listed.</li>
         <li><strong>Confirm timezone</strong> before booking any call.</li>
         <li><strong>Always close</strong> with two specific time options (morning or afternoon).</li>
-        <li><strong>Never argue</strong> or push back hard. Graceful, professional, brief.</li>
         <li><strong>If they say no twice</strong> — thank them, log it, move on.</li>
         <li><strong>Log every call</strong> with Call ended. No exceptions.</li>
       </ul>
-    </div>
-
-    <!-- CTA -->
-    <div class="step login-cta">
-      <h2 style="margin-bottom:8px">Ready to start?</h2>
-      <p style="color:var(--muted);margin-bottom:20px">Log in to the portal and start calling.</p>
-      <a href="https://team.vetinc.ca/">Go to team.vetinc.ca →</a>
-      <p>Your login was provided by Jack. If you don't have it, ask him.</p>
     </div>
 
   </div>
@@ -261,6 +275,7 @@ Jack — our founder — had the same problem at his family's clinics and built 
 
 <script>
 const ONBOARD_PASSWORD='VetINC2026';
+const SIGNUP_URL='https://rnqhhzatlxmyvccdvqkr.functions.supabase.co/vetinc-signup';
 const $=id=>document.getElementById(id);
 
 $('gateBtn').onclick=()=>{
@@ -282,6 +297,51 @@ if(sessionStorage.getItem('vetinc_onboard')==='1'){
   $('gate').classList.add('hidden');
   $('onboard').classList.add('active');
 }
+
+// Signup handler
+$('sfBtn').onclick=async()=>{
+  const first=$('sfFirst').value.trim();
+  const last=$('sfLast').value.trim();
+  const email=$('sfEmail').value.trim();
+  const pass=$('sfPass').value;
+  const errEl=$('sfErr');
+  const btn=$('sfBtn');
+
+  errEl.style.display='none';
+
+  if(!first||!last){errEl.textContent='Enter your first and last name.';errEl.style.display='block';return;}
+  if(!email||!email.match(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)){errEl.textContent='Enter a valid email.';errEl.style.display='block';return;}
+  if(!pass||pass.length<6){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';return;}
+
+  btn.disabled=true;
+  btn.textContent='Creating account...';
+
+  try{
+    const res=await fetch(SIGNUP_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name:first+' '+last,email:email,password:pass})
+    });
+    const data=await res.json();
+
+    if(!res.ok){
+      errEl.textContent=data.error||'Could not create account. Try again.';
+      errEl.style.display='block';
+      btn.disabled=false;
+      btn.textContent='Create my account';
+      return;
+    }
+
+    // Success — show confirmation
+    $('signupBox').classList.add('hidden');
+    $('sfOk').classList.remove('hidden');
+  }catch(e){
+    errEl.textContent='Network error. Check your connection and try again.';
+    errEl.style.display='block';
+    btn.disabled=false;
+    btn.textContent='Create my account';
+  }
+};
 </script>
 </body>
 </html>
