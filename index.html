@@ -476,7 +476,7 @@ function calendlyUrlForLead(l){
   return JACK_CALENDAR+(params.toString()?`?${params}`:'');
 }
 function renderScript(){
-  if($('scriptText')) $('scriptText').innerHTML='<strong>VetInc Cold-Calling Script (v2)</strong>\\nOpen a lead and click Start call to see the personalized script for that clinic. The new script prioritizes reaching the pricing decision-maker first (manager before vet), includes call-timing windows, Branch A/B logic, and always captures the owner\\'s direct email.';
+  if($('scriptText')) $('scriptText').innerHTML='<strong>VetInc Cold-Calling Script (v2)</strong> - Open a lead and click Start call to see the personalized script. Prioritizes pricing decision-maker first (manager before vet), includes call-timing windows, Branch A/B logic, and always captures the direct emaildirect email.';
 }
 function employeeStats(user){
   const leads=state.leads.filter(l=>l.assigned_to===user.id);
