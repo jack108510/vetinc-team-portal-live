@@ -126,7 +126,14 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
 /* Rep call workflow */
 .lead-queue{display:grid;gap:10px}.queue-row{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;background:white;border:1px solid var(--line);border-radius:16px;padding:14px 16px;box-shadow:0 8px 22px rgba(15,23,42,.035)}.queue-name{font-size:16px;font-weight:950;letter-spacing:-.03em}.queue-sub{display:flex;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:5px}.queue-flags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.queue-flag{font-size:11px;font-weight:900;border-radius:999px;padding:4px 8px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}.queue-flag.callback{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}.queue-flag.booked{background:#dcfce7;color:#166534;border-color:#bbf7d0}.call-shell{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px}.call-main,.call-side{background:white;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 10px 30px rgba(15,23,42,.04)}.call-side{position:sticky;top:96px;align-self:start}.call-back{margin-bottom:14px}.call-title{font-size:25px;font-weight:950;letter-spacing:-.05em;margin:0}.call-meta{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px}.call-meta span,.call-meta a{font-size:13px;border:1px solid #e2e8f0;background:#f8fafc;color:#334155;border-radius:999px;padding:6px 9px;text-decoration:none}.script-block{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:0;line-height:1.6;color:#334155;font-size:14px;overflow:hidden}.script-block strong{color:#0f172a}.sc-header{background:#0f172a;color:white;padding:12px 16px;font-weight:900;font-size:13px;letter-spacing:.02em}.sc-section{padding:14px 16px;border-bottom:1px solid #e2e8f0}.sc-section:last-child{border-bottom:none}.sc-section h4{margin:0 0 8px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.05em;color:#475569;display:flex;align-items:center;gap:6px}.sc-section h4 .badge{font-size:10px;font-weight:900;padding:2px 7px;border-radius:999px;letter-spacing:.02em;text-transform:none}.sc-section h4 .badge.a{background:#dbeafe;color:#1d4ed8}.sc-section h4 .badge.b{background:#fef3c7;color:#b45309}.sc-section h4 .badge.vet{background:#dcfce7;color:#166534}.sc-quote{background:white;border-left:3px solid #6366f1;border-radius:0 8px 8px 0;padding:10px 14px;margin:6px 0;font-size:14px;color:#1e293b;line-height:1.6}.sc-note{font-size:13px;color:#64748b;margin:6px 0;line-height:1.5}.sc-rules{list-style:none;padding:0;margin:0}.sc-rules li{padding:5px 0;font-size:13px;color:#334155;line-height:1.5;border-bottom:1px solid #f1f5f9}.sc-rules li:last-child{border-bottom:none}.sc-rules li strong{color:#dc2626}.sc-times{display:grid;gap:4px;margin:6px 0}.sc-times .time{display:flex;align-items:center;gap:8px;font-size:13px}.sc-times .time .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}.sc-times .time .dot.good{background:#22c55e}.sc-times .time .dot.bad{background:#ef4444}.sc-pushback{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;margin:6px 0}.sc-pushback .pb-them{font-size:13px;font-weight:700;color:#991b1b;margin-bottom:4px}.sc-pushback .pb-you{font-size:13px;color:#334155;line-height:1.55}.booking-box{display:grid;gap:10px}.booking-box h3{margin:0;font-size:17px}.booking-box p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.booking-box input{padding:11px;border:1px solid #cbd5e1;border-radius:12px}.side-actions{display:grid;gap:8px;margin-top:12px}.end-call-actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap}.wrap-modal{position:fixed;inset:0;background:rgba(15,23,42,.62);display:none;align-items:center;justify-content:center;padding:18px;z-index:60}.wrap-modal.open{display:flex}.wrap-panel{width:min(760px,100%);max-height:92vh;overflow:auto;background:white;border-radius:22px;border:1px solid var(--line);box-shadow:0 30px 90px rgba(2,6,23,.35);padding:20px}.wrap-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.wrap-panel select,.wrap-panel textarea,.wrap-panel input{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:12px;background:white}.wrap-panel textarea{min-height:130px;resize:vertical}.wrap-check{display:flex;align-items:center;gap:8px;font-weight:900;color:#1e3a8a;margin:12px 0}.wrap-check input{width:auto}.wrap-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:14px}.wrap-head h2{margin:0}.wrap-callback{background:#eff6ff;border:1px solid #bfdbfe;border-radius:16px;padding:12px;margin:12px 0}.save-status{font-size:13px;font-weight:800;margin-top:8px;color:var(--muted)}.save-status.error{color:var(--red)}.save-status.ok{color:var(--green)}.wrap-callback.hidden{display:none}@media(max-width:900px){.call-shell{grid-template-columns:1fr}.call-side{position:static}.queue-row{grid-template-columns:1fr}.wrap-grid{grid-template-columns:1fr}}
 
+.dialer{background:#0f172a;border-radius:18px;padding:20px;margin:0 0 14px;text-align:center}
+.dialer.ready{background:#059669}.dialer.connecting{background:#d97706}.dialer.oncall{background:#dc2626}
+.dialer-btn{border:0;border-radius:14px;padding:16px 32px;font-weight:900;font-size:18px;color:white;cursor:pointer;width:100%;transition:all .15s}
+.dialer-btn:disabled{opacity:.5;cursor:wait}
+.dialer-status{color:rgba(255,255,255,.8);font-size:13px;margin-top:8px}
+.dialer-timer{color:white;font-size:28px;font-weight:900;letter-spacing:-.03em;margin-top:6px;font-variant-numeric:tabular-nums}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@twilio/voice-sdk@2.11.0/dist/twilio.min.js"></script>
 </head>
 <body>
 <div class="login" id="login">
@@ -497,8 +504,8 @@ function callScriptForLead(l){
 </div>`,l);
 }function renderCallWorkspace(l){
   const phone=cleanPhone(l); const url=calendlyUrlForLead(l);
-  const phoneDisplay=l.phone?`<a href="tel:${phone}" style="color:var(--blue);text-decoration:none;font-weight:700">📞 ${esc(l.phone)}</a>`:'<span style="color:var(--red)">No phone</span>';
-  $('callWorkspace').innerHTML=`<button class="btn secondary small-btn call-back" onclick="backToLeads()">← Back to leads</button><div class="call-shell"><div class="call-main"><h2 class="call-title">${esc(leadName(l))}</h2><div class="call-meta">${l.dr_name?`<span>Owner/Dr: ${esc(l.dr_name)}</span>`:''}${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}<span>${phoneDisplay}</span>${l.email?`<span>Email: ${esc(l.email)}</span>`:''}${safeUrl(l.website)?`<a href="${esc(safeUrl(l.website))}" target="_blank" rel="noopener">Website</a>`:''}${clinicTzChip(l)}</div>${phone?`<a href="tel:${phone}" class="btn green full" style="margin:0 0 14px;font-size:17px;padding:16px">📞 Call ${esc(l.phone)} now</a>`:''}<div class="script-block">${callScriptForLead(l)}</div></div><aside class="call-side"><div class="booking-box"><h3>Book call with Jack</h3><p>Use Jack's live calendar to book the meeting. When the call is done, click Call ended and log the result.</p><a class="btn blue full" href="${esc(url)}" target="_blank" rel="noopener">Open Calendar</a><button class="btn red full" onclick="openWrapUp('${l.id}')">Call ended</button></div></aside></div>`;
+  const phoneDisplay=l.phone?`<a href="tel:${phone}" style="color:var(--blue);text-decoration:none;font-weight:700">📞 ${esc(l.phone)}</a> <span style="font-size:11px;color:var(--muted)">(or use browser dialer below)</span>`:'<span style="color:var(--red)">No phone</span>';
+  $('callWorkspace').innerHTML=`<button class="btn secondary small-btn call-back" onclick="backToLeads()">← Back to leads</button><div class="call-shell"><div class="call-main"><h2 class="call-title">${esc(leadName(l))}</h2><div class="call-meta">${l.dr_name?`<span>Owner/Dr: ${esc(l.dr_name)}</span>`:''}${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}<span>${phoneDisplay}</span>${l.email?`<span>Email: ${esc(l.email)}</span>`:''}${safeUrl(l.website)?`<a href="${esc(safeUrl(l.website))}" target="_blank" rel="noopener">Website</a>`:''}${clinicTzChip(l)}</div>${phone?`<div class="dialer ready" id="dialer"><button class="dialer-btn" id="dialerBtn" onclick="startBrowserCall('${phone}','${l.id}')">📞 Call ${esc(l.phone)} from browser</button><div class="dialer-status" id="dialerStatus">Click to connect via browser</div></div>`:''}<div class="script-block">${callScriptForLead(l)}</div></div><aside class="call-side"><div class="booking-box"><h3>Book call with Jack</h3><p>Use Jack's live calendar to book the meeting. When the call is done, click Call ended and log the result.</p><a class="btn blue full" href="${esc(url)}" target="_blank" rel="noopener">Open Calendar</a><button class="btn red full" onclick="openWrapUp('${l.id}')">Call ended</button></div></aside></div>`;
 }
 function fillSelect(id, items, labels, value){$(id).innerHTML=items.map(x=>`<option value="${x}" ${value===x?'selected':''}>${labels[x]}</option>`).join('');}
 function openWrapUp(id){const l=state.leads.find(x=>x.id===id); if(!l)return; state.wrapLeadId=id; $('wrapLeadName').textContent=leadName(l); fillSelect('wrapStage',callStages,callStageLabels,l.call_stage||''); showScheduledInWrapUp(l.call_stage||''); const _ss=$('wrapStage'); if(_ss) _ss.onchange=()=>showScheduledInWrapUp(_ss.value); fillSelect('wrapReason',rejectionReasons,rejectionReasonLabels,l.rejection_reason||''); fillSelect('wrapCallbackReason',callbackReasons,callbackReasonLabels,l.callback_reason||''); $('wrapCallback').checked=!!l.callback_needed; $('wrapCallbackAt').value=fmtScheduleInput(l.callback_at); $('wrapNotes').value=l.notes||''; $('wrapOwnerEmail').value=l.owner_email||l.email||''; toggleWrapCallback(); const _si=$('wrapScheduledAt'); if(_si) _si.value=fmtScheduleInput(l.scheduled_call_at); $('wrapModal').classList.add('open');}
@@ -625,6 +632,91 @@ async function saveQuota(employeeId){const el=$('quota-'+employeeId); const quot
 async function addEmployee(){const name=$('empName').value.trim(), email=$('empEmail').value.trim(), code=$('empCode').value.trim(); if(!name||!email||!code)return alert('Name, email, and password required'); const btn=$('addEmployeeBtn'); const oldText=btn.textContent; btn.disabled=true; btn.textContent='Adding...'; try{await rpc('vetinc_team_admin_upsert_user',adminParams({p_name:name,p_email:email,p_role:'employee',p_access_code:code,p_active:true})); $('empName').value=$('empEmail').value=$('empCode').value=''; await loadData(); render(); alert('Rep added. They can sign in with their email and temporary password.');}catch(e){console.error(e); alert('Could not add rep: '+(e.message||e));}finally{btn.disabled=false; btn.textContent=oldText;}}
 function toggleAddRep(){const form=$('addRepForm');const arrow=$('addRepArrow');form.classList.toggle('hidden');arrow.textContent=form.classList.contains('hidden')?'▸':'▾';}
 $('loginBtn').onclick=login; $('adminLoginBtn').onclick=()=>{$('loginName').value='jack@vetinc.ca'; $('loginCode').focus();}; $('logoutBtn').onclick=()=>{sessionStorage.removeItem('vetinc_team_session'); location.reload();}; $('refreshBtn').onclick=async()=>{await loadData(); render();}; $('leadSearch').oninput=e=>{state.search=e.target.value; state.limit=50; renderLeads();}; $('addEmployeeBtn').onclick=addEmployee; document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab)); $('loginCode').addEventListener('keydown',e=>{if(e.key==='Enter')login();}); loadSession(); if(state.session) start();
+// === BROWSER CALLING (Twilio) ===
+let twilioDevice=null, activeCall=null, callTimer=null, callStartTime=0;
+const TOKEN_URL='https://rnqhhzatlxmyvccdvqkr.functions.supabase.co/vetinc-twilio-token';
+
+async function initTwilioDevice(){
+  if(twilioDevice) return twilioDevice;
+  try{
+    const res=await fetch(TOKEN_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({repName:state.session?.name||'rep'})});
+    const data=await res.json();
+    if(!data.token) throw new Error('No token');
+    twilioDevice=new Twilio.Device(data.token,{logLevel:0});
+    twilioDevice.on('error',e=>{console.error('Twilio error:',e);setDialer('error','Connection error');});
+    return twilioDevice;
+  }catch(e){console.error('Token error:',e);return null;}
+}
+
+function setDialer(state,status,timer){
+  const d=$('dialer'); if(!d) return;
+  d.className='dialer '+state;
+  const s=$('dialerStatus'); if(s) s.textContent=status;
+  const t=$('dialerTimer');
+  if(t) t.remove();
+  if(timer){const el=document.createElement('div');el.id='dialerTimer';el.className='dialer-timer';el.textContent=timer;d.appendChild(el);}
+}
+
+async function startBrowserCall(phone,leadId){
+  const btn=$('dialerBtn'); if(!btn) return;
+  btn.disabled=true;
+
+  setDialer('connecting','Connecting... Grant microphone access if asked.');
+
+  try{
+    // Request mic permission first
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    stream.getTracks().forEach(t=>t.stop());
+
+    const device=await initTwilioDevice();
+    if(!device){throw new Error('Could not connect to calling service');}
+
+    // Make sure device is registered
+    if(device.state!=='registered'){
+      await new Promise(r=>{device.on('registered',r);device.register();setTimeout(r,5000);});
+    }
+
+    const cleanPhone=phone.replace(/[^\d+]/g,'');
+    activeCall=await device.connect({params:{To:cleanPhone}});
+
+    activeCall.on('accept',()=>{
+      callStartTime=Date.now();
+      setDialer('oncall','Connected',fmtDuration(0));
+      btn.textContent='🔴 Hang up';
+      btn.onclick=()=>endBrowserCall();
+      btn.disabled=false;
+      callTimer=setInterval(()=>{
+        const el=$('dialerTimer');
+        if(el){const secs=Math.floor((Date.now()-callStartTime)/1000);el.textContent=fmtDuration(secs);}
+      },1000);
+    });
+
+    activeCall.on('disconnect',()=>{endBrowserCall();});
+    activeCall.on('reject',()=>{endBrowserCall();});
+    activeCall.on('error',e=>{console.error('Call error:',e);endBrowserCall();setDialer('ready','Call failed. Try again.');btn.textContent='📞 Call from browser';btn.onclick=()=>startBrowserCall(phone,leadId);btn.disabled=false;});
+
+  }catch(e){
+    console.error('Call error:',e);
+    if(e.name==='NotAllowedError'){setDialer('ready','Microphone access denied. Allow mic access and try again.');}
+    else{setDialer('ready','Connection failed. Try again.');}
+    btn.textContent='📞 Call from browser';
+    btn.onclick=()=>startBrowserCall(phone,leadId);
+    btn.disabled=false;
+  }
+}
+
+function endBrowserCall(){
+  if(activeCall){activeCall.disconnect();activeCall=null;}
+  if(callTimer){clearInterval(callTimer);callTimer=null;}
+  const btn=$('dialerBtn');
+  if(btn){btn.textContent='📞 Call from browser';btn.disabled=false;}
+  setDialer('ready','Call ended');
+}
+
+function fmtDuration(secs){
+  const m=Math.floor(secs/60); const s=secs%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
 </script>
 </body>
 </html>
