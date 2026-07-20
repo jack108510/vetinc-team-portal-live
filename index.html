@@ -211,7 +211,7 @@ input,textarea,select{width:100%;border:1px solid #cbd5e1;border-radius:12px;pad
         <div><label>Callback reason</label><select id="wrapCallbackReason"></select></div>
       </div>
     </div>
-    <div id="wrapScheduledBox" class="scheduled-field" style="display:none"><label>Scheduled call date/time</label><input id="wrapScheduledAt" type="datetime-local"><p class="small" style="margin-top:6px">When Jack's call with this clinic is booked for. Shows on the calendar.</p></div><label>Notes</label><textarea id="wrapNotes" placeholder="What happened on the call?"></textarea>
+    <div id="wrapScheduledBox" class="scheduled-field" style="display:none"><label>Scheduled call date/time</label><input id="wrapScheduledAt" type="datetime-local"><p class="small" style="margin-top:6px">When Jack's call with this clinic is booked for. Shows on the calendar.</p></div><div style="background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:12px 14px;margin:10px 0"><label style="font-weight:900;color:#92400e">📧 Owner's direct email <span style="color:var(--red)">*</span></label><input id="wrapOwnerEmail" type="email" placeholder="owner@email.com" style="border-color:#f59e0b;margin-top:6px"><p class="small" style="margin-top:4px;color:#92400e">No email = not a real lead. Always ask.</p></div><label>Notes</label><textarea id="wrapNotes" placeholder="What happened on the call?"></textarea>
     <div class="end-call-actions"><button id="wrapSaveBtn" class="btn green" onclick="saveWrapUp()">Save outcome</button><button class="btn secondary" onclick="closeWrapUp()">Cancel</button></div><div id="wrapSaveStatus" class="save-status"></div>
   </div>
 </div>
@@ -497,10 +497,11 @@ function callScriptForLead(l){
 </div>`,l);
 }function renderCallWorkspace(l){
   const phone=cleanPhone(l); const url=calendlyUrlForLead(l);
-  $('callWorkspace').innerHTML=`<button class="btn secondary small-btn call-back" onclick="backToLeads()">← Back to leads</button><div class="call-shell"><div class="call-main"><h2 class="call-title">${esc(leadName(l))}</h2><div class="call-meta">${l.dr_name?`<span>Owner/Dr: ${esc(l.dr_name)}</span>`:''}${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}${l.phone?`<span>Phone: ${esc(l.phone)}</span>`:''}${l.email?`<span>Email: ${esc(l.email)}</span>`:''}${safeUrl(l.website)?`<a href="${esc(safeUrl(l.website))}" target="_blank" rel="noopener">Website</a>`:''}${clinicTzChip(l)}</div><div class="script-block">${callScriptForLead(l)}</div></div><aside class="call-side"><div class="booking-box"><h3>Book call with Jack</h3><p>Use Jack’s live calendar to book the meeting. When the call is done, click Call ended and log the result.</p><a class="btn blue full" href="${esc(url)}" target="_blank" rel="noopener">Open Calendar</a><button class="btn red full" onclick="openWrapUp('${l.id}')">Call ended</button></div></aside></div>`;
+  const phoneDisplay=l.phone?`<a href="tel:${phone}" style="color:var(--blue);text-decoration:none;font-weight:700">📞 ${esc(l.phone)}</a>`:'<span style="color:var(--red)">No phone</span>';
+  $('callWorkspace').innerHTML=`<button class="btn secondary small-btn call-back" onclick="backToLeads()">← Back to leads</button><div class="call-shell"><div class="call-main"><h2 class="call-title">${esc(leadName(l))}</h2><div class="call-meta">${l.dr_name?`<span>Owner/Dr: ${esc(l.dr_name)}</span>`:''}${l.contact_name?`<span>Contact: ${esc(l.contact_name)}</span>`:''}<span>${phoneDisplay}</span>${l.email?`<span>Email: ${esc(l.email)}</span>`:''}${safeUrl(l.website)?`<a href="${esc(safeUrl(l.website))}" target="_blank" rel="noopener">Website</a>`:''}${clinicTzChip(l)}</div>${phone?`<a href="tel:${phone}" class="btn green full" style="margin:0 0 14px;font-size:17px;padding:16px">📞 Call ${esc(l.phone)} now</a>`:''}<div class="script-block">${callScriptForLead(l)}</div></div><aside class="call-side"><div class="booking-box"><h3>Book call with Jack</h3><p>Use Jack's live calendar to book the meeting. When the call is done, click Call ended and log the result.</p><a class="btn blue full" href="${esc(url)}" target="_blank" rel="noopener">Open Calendar</a><button class="btn red full" onclick="openWrapUp('${l.id}')">Call ended</button></div></aside></div>`;
 }
 function fillSelect(id, items, labels, value){$(id).innerHTML=items.map(x=>`<option value="${x}" ${value===x?'selected':''}>${labels[x]}</option>`).join('');}
-function openWrapUp(id){const l=state.leads.find(x=>x.id===id); if(!l)return; state.wrapLeadId=id; $('wrapLeadName').textContent=leadName(l); fillSelect('wrapStage',callStages,callStageLabels,l.call_stage||''); showScheduledInWrapUp(l.call_stage||''); const _ss=$('wrapStage'); if(_ss) _ss.onchange=()=>showScheduledInWrapUp(_ss.value); fillSelect('wrapReason',rejectionReasons,rejectionReasonLabels,l.rejection_reason||''); fillSelect('wrapCallbackReason',callbackReasons,callbackReasonLabels,l.callback_reason||''); $('wrapCallback').checked=!!l.callback_needed; $('wrapCallbackAt').value=fmtScheduleInput(l.callback_at); $('wrapNotes').value=l.notes||''; toggleWrapCallback(); const _si=$('wrapScheduledAt'); if(_si) _si.value=fmtScheduleInput(l.scheduled_call_at); $('wrapModal').classList.add('open');}
+function openWrapUp(id){const l=state.leads.find(x=>x.id===id); if(!l)return; state.wrapLeadId=id; $('wrapLeadName').textContent=leadName(l); fillSelect('wrapStage',callStages,callStageLabels,l.call_stage||''); showScheduledInWrapUp(l.call_stage||''); const _ss=$('wrapStage'); if(_ss) _ss.onchange=()=>showScheduledInWrapUp(_ss.value); fillSelect('wrapReason',rejectionReasons,rejectionReasonLabels,l.rejection_reason||''); fillSelect('wrapCallbackReason',callbackReasons,callbackReasonLabels,l.callback_reason||''); $('wrapCallback').checked=!!l.callback_needed; $('wrapCallbackAt').value=fmtScheduleInput(l.callback_at); $('wrapNotes').value=l.notes||''; $('wrapOwnerEmail').value=l.owner_email||l.email||''; toggleWrapCallback(); const _si=$('wrapScheduledAt'); if(_si) _si.value=fmtScheduleInput(l.scheduled_call_at); $('wrapModal').classList.add('open');}
 function closeWrapUp(){state.wrapLeadId=null; $('wrapModal').classList.remove('open');}
 function wrapScheduledValue(){
   const box=$('wrapScheduledBox'); const inp=$('wrapScheduledAt');
@@ -522,7 +523,7 @@ function wrapPayload(){
   const cbreason=$('wrapCallbackReason').value;
   if(cb && !cbtime) throw new Error('Pick a callback date/time before saving.');
   if(cb && !cbreason) throw new Error('Pick a callback reason before saving.');
-  return {p_lead_id:id,p_status:wrapStatus(stage,cb),p_notes:$('wrapNotes').value,p_call_stage:stage,p_rejection_reason:$('wrapReason').value,p_scheduled_call_at:wrapScheduledValue(),p_callback_needed:cb,p_callback_at:cb&&cbtime?new Date(cbtime).toISOString():null,p_callback_reason:cb?cbreason:''};
+  return {p_lead_id:id,p_status:wrapStatus(stage,cb),p_notes:$('wrapNotes').value,p_call_stage:stage,p_rejection_reason:$('wrapReason').value,p_scheduled_call_at:wrapScheduledValue(),p_callback_needed:cb,p_callback_at:cb&&cbtime?new Date(cbtime).toISOString():null,p_callback_reason:cb?cbreason:'',p_owner_email:$('wrapOwnerEmail').value.trim()};
 }
 function setWrapStatus(msg,kind=''){
   const el=$('wrapSaveStatus'); if(!el)return;
@@ -535,6 +536,8 @@ async function saveWrapUp(){
     const payload=wrapPayload();
     if(btn){btn.disabled=true; btn.textContent='Saving...';}
     await rpc('vetinc_team_update_lead',params(payload));
+    const lead=state.leads.find(l=>l.id===state.wrapLeadId);
+    if(lead) lead.owner_email=payload.p_owner_email;
     setWrapStatus('Saved ✓','ok');
     closeWrapUp(); state.activeLeadId=null; await loadData(); render();
   }catch(e){
