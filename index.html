@@ -355,7 +355,6 @@ function render(){
         <span class="lead-status ${sClass}">${statusLabel(l.status)}</span>
       </div>
       <div class="lead-actions">
-        ${phone?`<a class="btn-call" href="tel:${phone}">📞 Call</a>`:''}
         <button class="btn-log" onclick="openWrap('${l.id}')">Log call</button>
       </div>
       ${notes}
