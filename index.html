@@ -104,6 +104,25 @@ button:active{transform:scale(.97)}
 .btn-cancel{background:white;color:var(--navy);border:1px solid var(--line)}
 .save-status{font-size:12px;color:var(--muted);text-align:center;padding:4px}
 
+/* Agreement gate */
+.agreement{display:none;max-width:620px;margin:0 auto;padding:16px 16px 60px}
+.agreement.active{display:block}
+.agreement-card{background:white;border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:16px}
+.agreement-card h2{font-size:20px;margin:0 0 12px}
+.agreement-card h3{font-size:14px;margin:16px 0 6px;color:var(--navy)}
+.agreement-card p,.agreement-card li{font-size:14px;line-height:1.6;color:#334155}
+.agreement-card ul{padding-left:20px;margin:8px 0}
+.agreement-card li{margin-bottom:4px}
+.agreement-meta{font-size:12px;color:var(--muted);margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.sig-box{background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:16px;margin-top:16px}
+.sig-box label{display:block;font-size:12px;font-weight:800;text-transform:uppercase;color:#92400e;letter-spacing:.04em;margin-bottom:8px}
+.sig-input{width:100%;border:1px solid #f59e0b;border-radius:10px;padding:12px;font-size:16px;font-style:italic;background:white;font-family:'Georgia',serif}
+.sig-input:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.sig-note{font-size:12px;color:var(--muted);margin-top:6px}
+.agreement-btn{width:100%;background:var(--navy);color:white;border:0;border-radius:12px;padding:14px;font-size:15px;font-weight:700;margin-top:14px}
+.agreement-btn:disabled{opacity:.5;cursor:not-allowed}
+.agreement-err{color:var(--red);font-size:13px;margin-top:8px;display:none}
+
 /* Admin */
 .admin-tabs{display:flex;gap:4px;margin-bottom:16px}
 .admin-tabs button{background:white;border:1px solid var(--line);font-size:13px;padding:9px 14px;border-radius:10px}
@@ -156,6 +175,62 @@ button:active{transform:scale(.97)}
     <button id="liBtn">Sign in</button>
     <button id="liAdmin" style="width:100%;background:white;color:var(--navy);border:1px solid var(--line);margin-top:10px;padding:13px;font-size:14px;border-radius:12px;font-weight:700">Admin login</button>
     <p style="color:var(--muted);font-size:12px;margin-top:10px;text-align:center">Admin shortcut fills the admin email. Enter your password to continue.</p>
+  </div>
+</div>
+
+<!-- Agreement gate -->
+<div class="agreement" id="agreementGate">
+  <div class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <img src="assets/vetinc-logo.png" alt="VetInc">
+        <div><div class="header-name">Independent Caller Agreement</div></div>
+      </div>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+  <div class="agreement-card">
+    <h2>Independent Caller Agreement</h2>
+    <p>This agreement sets out the terms between <strong>Vet INC</strong> ("the Company") and you, the independent caller ("Caller").</p>
+
+    <h3>1. Relationship</h3>
+    <p>You are an independent contractor, not an employee. You control your own hours, use your own phone, and are responsible for your own taxes and expenses.</p>
+
+    <h3>2. Compensation</h3>
+    <p>You are paid per call completed and per meeting booked with clinic owners, according to the rate schedule provided separately by the Company.</p>
+
+    <h3>3. What you do</h3>
+    <ul>
+      <li>Call assigned veterinary clinic leads using the Vet INC Team Portal</li>
+      <li>Follow the provided call script</li>
+      <li>Log every call outcome in the portal</li>
+      <li>Capture the owner's direct email whenever possible</li>
+      <li>Book qualified clinic owners for a call with Jack</li>
+    </ul>
+
+    <h3>4. Lead data</h3>
+    <p>All lead data, notes, emails, and call outcomes entered into the portal are the property of Vet INC. You may not export, copy, share, or use this data outside the portal for any purpose.</p>
+
+    <h3>5. Confidentiality</h3>
+    <p>Clinic information, pricing data, scripts, and any Vet INC materials are confidential. Do not share them with anyone outside the Company.</p>
+
+    <h3>6. No solicitation</h3>
+    <p>During and for 12 months after your work with Vet INC, you will not contact any lead or clinic introduced through the portal on behalf of a competitor or for your own commercial benefit.</p>
+
+    <h3>7. Termination</h3>
+    <p>Either party may end this arrangement at any time with written notice. Upon termination, your portal access will be revoked.</p>
+
+    <div class="agreement-meta">
+      Agreement version: v1-2026-07 &middot; Vet INC
+    </div>
+
+    <div class="sig-box">
+      <label>Type your full name to sign</label>
+      <input id="sigInput" class="sig-input" type="text" placeholder="Your full legal name" autocomplete="off">
+      <div class="sig-note">By typing your name and clicking below, you sign this agreement electronically. Your signature, timestamp, and IP address will be recorded.</div>
+      <div class="agreement-err" id="agreementErr">Please type your full name to sign.</div>
+      <button class="agreement-btn" id="agreementBtn" onclick="signAgreement()">Sign and continue</button>
+    </div>
   </div>
 </div>
 
@@ -281,6 +356,15 @@ $('liAdmin').onclick=()=>{$('liEmail').value='jack@vetinc.ca';$('liPass').focus(
 
 async function start(){
   $('login').classList.add('hidden');
+
+  // Agreement gate for non-admins
+  if(session.role!=='admin' && !session.agreement_signed){
+    $('agreementGate').classList.add('active');
+    $('app').classList.remove('active');
+    return;
+  }
+
+  $('agreementGate').classList.remove('active');
   $('app').classList.add('active');
   $('hName').textContent=session.name;
   $('hRole').textContent=session.role==='admin'?'Admin':'Caller';
@@ -295,6 +379,25 @@ async function start(){
     await loadLeads();
     render();
   }
+}
+
+async function signAgreement(){
+  const sig=$('sigInput').value.trim();
+  const err=$('agreementErr');
+  err.style.display='none';
+  if(sig.length<3){err.style.display='block';return;}
+  const btn=$('agreementBtn');
+  btn.disabled=true;btn.textContent='Signing...';
+  try{
+    const res=await rpc('vetinc_team_sign_agreement',{p_name:session.email,p_code:session.code,p_signature:sig});
+    if(res?.error){err.textContent='Could not sign. Try again.';err.style.display='block';return;}
+    session.agreement_signed=true;
+    $('agreementGate').classList.remove('active');
+    await start();
+  }catch(e){
+    err.textContent='Error: '+(e.message||'Could not sign');
+    err.style.display='block';
+  }finally{btn.disabled=false;btn.textContent='Sign and continue';}
 }
 
 async function loadLeads(){
@@ -532,7 +635,7 @@ async function setQuota(id, quota){
   }catch(e){console.error(e)}
 }
 
-function logout(){session=null;$('app').classList.remove('active');$('login').classList.remove('hidden');$('liPass').value='';}
+function logout(){session=null;$('app').classList.remove('active');$('agreementGate').classList.remove('active');$('login').classList.remove('hidden');$('liPass').value='';}
 </script>
 </body>
 </html>
