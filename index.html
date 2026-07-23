@@ -106,6 +106,8 @@ button:active{transform:scale(.97)}
     <input id="liPass" type="password" placeholder="Password">
     <div class="login-err" id="liErr">Wrong email or password.</div>
     <button id="liBtn">Sign in</button>
+    <button id="liAdmin" style="width:100%;background:white;color:var(--navy);border:1px solid var(--line);margin-top:10px;padding:13px;font-size:14px;border-radius:12px;font-weight:700">Admin login</button>
+    <p style="color:var(--muted);font-size:12px;margin-top:10px;text-align:center">Admin shortcut fills the admin email. Enter your password to continue.</p>
   </div>
 </div>
 
@@ -170,6 +172,7 @@ $('liBtn').onclick=async()=>{
   }catch(e){$('liErr').style.display='block'}
 };
 $('liPass').addEventListener('keydown',e=>{if(e.key==='Enter')$('liBtn').click()});
+$('liAdmin').onclick=()=>{$('liEmail').value='jack@vetinc.ca';$('liPass').focus();};
 
 async function start(){
   $('login').classList.add('hidden');
