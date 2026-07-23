@@ -76,6 +76,33 @@ button:active{transform:scale(.97)}
 .lead-notes{margin-top:8px}
 .lead-notes input{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;color:var(--navy)}
 .lead-notes input:focus{outline:0;border-color:var(--blue)}
+.lead-email-badge{display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-size:11px;font-weight:800;color:var(--green);background:#dcfce7;padding:3px 8px;border-radius:999px}
+.lead-email-badge.missing{color:var(--amber);background:#fffbeb}
+.btn-log{background:var(--navy);color:white;font-size:13px;padding:9px 16px;border-radius:10px;width:100%;margin-top:8px}
+
+/* Wrap-up modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(12,22,36,.55);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal-overlay.open{display:flex}
+.modal{width:min(460px,100%);background:white;border-radius:20px;box-shadow:0 24px 80px rgba(0,0,0,.25);overflow:hidden;max-height:90vh;overflow-y:auto}
+.modal-head{padding:18px 20px;border-bottom:1px solid var(--line)}
+.modal-head h2{font-size:18px;font-weight:900}
+.modal-head p{font-size:13px;color:var(--muted);margin-top:3px}
+.modal-body{padding:20px}
+.modal-body label{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:14px 0 6px}
+.modal-body label:first-child{margin-top:0}
+.modal-body select,.modal-body input,.modal-body textarea{width:100%;border:1px solid #cbd5e1;border-radius:10px;padding:11px;font-size:14px;background:white}
+.modal-body select:focus,.modal-body input:focus,.modal-body textarea:focus{outline:0;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.modal-body textarea{min-height:70px;resize:vertical;font-family:inherit}
+.email-highlight{background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:14px;margin:6px 0 10px}
+.email-highlight label{color:#92400e}
+.email-highlight input{border-color:#f59e0b}
+.email-highlight input:focus{border-color:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.15)}
+.email-note{font-size:12px;color:#92400e;margin-top:5px}
+.modal-actions{display:flex;gap:8px;padding:16px 20px;border-top:1px solid var(--line);background:#f8fafc}
+.modal-actions button{flex:1;padding:12px;font-size:14px;border-radius:10px}
+.btn-save{background:var(--green);color:white}
+.btn-cancel{background:white;color:var(--navy);border:1px solid var(--line)}
+.save-status{font-size:12px;color:var(--muted);text-align:center;padding:4px}
 
 /* Admin */
 .admin-tabs{display:flex;gap:4px;margin-bottom:16px}
@@ -169,6 +196,54 @@ button:active{transform:scale(.97)}
   </div>
 </div>
 
+<!-- Call wrap-up modal -->
+<div class="modal-overlay" id="wrapModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="wrapTitle">Log call</h2>
+      <p id="wrapSub"></p>
+    </div>
+    <div class="modal-body">
+      <label>Call outcome</label>
+      <select id="wrapStatus">
+        <option value="no_answer">No answer</option>
+        <option value="left_voicemail">Left voicemail</option>
+        <option value="called">Spoke to someone</option>
+        <option value="interested">Interested</option>
+        <option value="booked">Meeting booked</option>
+        <option value="not_interested">Not interested</option>
+        <option value="follow_up">Follow up later</option>
+      </select>
+
+      <label>Who did you reach?</label>
+      <select id="wrapStage">
+        <option value="">Not sure / didn't connect</option>
+        <option value="no_answer">No answer</option>
+        <option value="left_voicemail">Left voicemail</option>
+        <option value="receptionist_only">Receptionist only</option>
+        <option value="gatekeeper_pushback">Gatekeeper blocked me</option>
+        <option value="owner_unavailable">Owner not available</option>
+        <option value="owner_reached">Reached the owner</option>
+        <option value="qualified">Qualified the owner</option>
+      </select>
+
+      <div class="email-highlight">
+        <label>Owner's email</label>
+        <input id="wrapEmail" type="email" placeholder="owner@clinic.com" value="">
+        <div class="email-note">Always ask. No email = dead lead.</div>
+      </div>
+
+      <label>Notes</label>
+      <textarea id="wrapNotes" placeholder="What happened? Any details about the clinic, timing, objections..."></textarea>
+    </div>
+    <div class="save-status" id="wrapStatus2"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeWrap()">Cancel</button>
+      <button class="btn-save" id="wrapSave" onclick="saveWrap()">Save outcome</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const SB_URL='https://rnqhhzatlxmyvccdvqkr.supabase.co';
 const SB_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJucWhoemF0bHhteXZjY2R2cWtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwMTQ5ODUsImV4cCI6MjA5MDU5MDk4NX0.zokle21pVEPG5bIOFiyZIWYkYIwhkolWNOhJ7Cbub30';
@@ -257,9 +332,14 @@ function render(){
   });
 
   $('leadList').innerHTML=sorted.map(l=>{
-    const phone=(l.phone||'').replace(/[^\d+]/g,'');
+    const phone=(l.phone||'').replace(/[^\\d+]/g,'');
     const dr=l.dr_name?esc(l.dr_name):'';
     const sClass=l.status||'new';
+    const hasEmail=l.owner_email&&l.owner_email.trim();
+    const emailBadge=hasEmail
+      ?`<span class="lead-email-badge">✉ ${esc(l.owner_email)}</span>`
+      :`<span class="lead-email-badge missing">✉ No email captured</span>`;
+    const notes=l.notes?`<div class="lead-notes"><input type="text" placeholder="Quick note..." value="${esc(l.notes)}" onchange="saveNotes('${l.id}',this.value)"></div>`:'';
     return `
     <div class="lead">
       <div class="lead-top">
@@ -270,37 +350,70 @@ function render(){
             ${dr?`<span>Dr. ${dr}</span>`:''}
             ${l.city?`<span>${esc(l.city)}, ${esc(l.province||'')}</span>`:''}
           </div>
+          ${emailBadge}
         </div>
         <span class="lead-status ${sClass}">${statusLabel(l.status)}</span>
       </div>
       <div class="lead-actions">
-        ${phone?`<a class="btn-call" href="tel:${phone}">Call</a>`:''}
-        <button class="btn-status booked" onclick="setStatus('${l.id}','booked')">Booked</button>
-        <a class="btn-call btn-book" href="${JACK_CAL}" target="_blank" rel="noopener" onclick="setStatus('${l.id}','booked')">Book Jack</a>
-        <button class="btn-status no" onclick="setStatus('${l.id}','not_interested')">Not interested</button>
-        <button class="btn-status skip" onclick="setStatus('${l.id}','no_answer')">No answer</button>
+        ${phone?`<a class="btn-call" href="tel:${phone}">📞 Call</a>`:''}
+        <button class="btn-log" onclick="openWrap('${l.id}')">Log call</button>
       </div>
-      <div class="lead-notes">
-        <input type="text" placeholder="Notes (email, callback, etc.)" value="${esc(l.notes||'')}" onchange="saveNotes('${l.id}',this.value)">
-      </div>
+      ${notes}
     </div>`;
   }).join('');
 }
 
-async function setStatus(id, status){
+// Call wrap-up modal
+let wrapLeadId=null;
+
+function openWrap(id){
   const lead=leads.find(l=>l.id===id);
   if(!lead) return;
-  lead.status=status;
-  render();
+  wrapLeadId=id;
+  $('wrapTitle').textContent='Log call — '+(lead.clinic_name||'Unknown');
+  $('wrapSub').textContent=lead.phone||'No phone on file';
+  $('wrapStatus').value=lead.status&&lead.status!=='new'?lead.status:'no_answer';
+  $('wrapStage').value=lead.call_stage||'';
+  $('wrapEmail').value=lead.owner_email||'';
+  $('wrapNotes').value=lead.notes||'';
+  $('wrapStatus2').textContent='';
+  $('wrapModal').classList.add('open');
+}
+
+function closeWrap(){
+  wrapLeadId=null;
+  $('wrapModal').classList.remove('open');
+}
+
+async function saveWrap(){
+  if(!wrapLeadId) return;
+  const lead=leads.find(l=>l.id===wrapLeadId);
+  if(!lead) return;
+  const status=$('wrapStatus').value;
+  const stage=$('wrapStage').value;
+  const email=$('wrapEmail').value.trim();
+  const notes=$('wrapNotes').value.trim();
+  const btn=$('wrapSave');
+  const old=btn.textContent;
+  btn.disabled=true;btn.textContent='Saving...';
+  $('wrapStatus2').textContent='';
   try{
     await rpc('vetinc_team_update_lead',{
-      p_user_id:session.id, p_code:session.code, p_lead_id:id,
-      p_status:status, p_notes:lead.notes||'', p_call_stage:status,
-      p_rejection_reason:'', p_scheduled_call_at:null,
-      p_callback_needed:false, p_callback_at:null, p_callback_reason:'',
-      p_owner_email:lead.owner_email||''
+      p_user_id:session.id,p_code:session.code,p_lead_id:wrapLeadId,
+      p_status:status,p_notes:notes,p_call_stage:stage,
+      p_rejection_reason:'',p_scheduled_call_at:null,
+      p_callback_needed:false,p_callback_at:null,p_callback_reason:'',
+      p_owner_email:email
     });
-  }catch(e){console.error(e)}
+    lead.status=status;lead.call_stage=stage;
+    lead.owner_email=email;lead.notes=notes;
+    render();
+    closeWrap();
+  }catch(e){
+    console.error(e);
+    $('wrapStatus2').textContent='Error: '+(e.message||'Could not save');
+    $('wrapStatus2').style.color='var(--red)';
+  }finally{btn.disabled=false;btn.textContent=old;}
 }
 
 async function saveNotes(id, notes){
