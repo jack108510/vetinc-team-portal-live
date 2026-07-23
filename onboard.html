@@ -145,6 +145,23 @@ button,input{font:inherit} button{cursor:pointer}
           <label>Password (min 6 characters)</label>
           <input id="sfPass" type="password" placeholder="Choose a password" autocomplete="new-password">
         </div>
+
+        <div class="agree-box" id="agreeBox" style="background:#fffbeb;border:1px solid #fde68a;border-radius:14px;padding:16px;margin:16px 0">
+          <h3 style="margin:0 0 10px;font-size:16px;color:#92400e">Caller Agreement</h3>
+          <div style="font-size:14px;line-height:1.7;color:#334155">
+            <p style="margin:0 0 8px"><strong>Role:</strong> Independent contractor. You set your own hours, use your own phone, and handle your own taxes.</p>
+            <p style="margin:0 0 8px"><strong>Pay:</strong> $1 per call for your first 100 calls. Then commission: $33 per meeting booked with a clinic owner, bumping to $40 and $50 as you hit conversion milestones. Conversion bonuses on top.</p>
+            <p style="margin:0 0 8px"><strong>Your job:</strong> Call assigned vet clinic leads, follow the script, log every call, capture owner emails, and book qualified clinics for a call with Jack.</p>
+            <p style="margin:0 0 8px"><strong>Lead data:</strong> All leads, notes, and emails belong to Vet INC. Don't export, copy, or share them.</p>
+            <p style="margin:0 0 8px"><strong>Confidentiality:</strong> Clinic info, scripts, and Vet INC materials stay between us.</p>
+            <p style="margin:0 0 8px"><strong>Termination:</strong> Either side can end this anytime. Portal access gets revoked on exit.</p>
+          </div>
+
+          <label style="display:block;font-size:12px;font-weight:800;text-transform:uppercase;color:#92400e;letter-spacing:.04em;margin:14px 0 6px">Type your full name to sign</label>
+          <input id="sfSig" type="text" placeholder="Your full legal name" style="width:100%;border:1px solid #f59e0b;border-radius:10px;padding:12px;font-size:16px;font-style:italic;font-family:Georgia,serif;background:white">
+          <div style="font-size:11px;color:var(--muted);margin-top:5px">By typing your name and creating your account, you agree to these terms. Your signature and timestamp are recorded.</div>
+        </div>
+
         <button class="sf-btn" id="sfBtn">Create my account</button>
         <div class="sf-err" id="sfErr"></div>
       </div>
@@ -304,6 +321,7 @@ $('sfBtn').onclick=async()=>{
   const last=$('sfLast').value.trim();
   const email=$('sfEmail').value.trim();
   const pass=$('sfPass').value;
+  const sig=$('sfSig').value.trim();
   const errEl=$('sfErr');
   const btn=$('sfBtn');
 
@@ -312,6 +330,7 @@ $('sfBtn').onclick=async()=>{
   if(!first||!last){errEl.textContent='Enter your first and last name.';errEl.style.display='block';return;}
   if(!email||!email.match(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)){errEl.textContent='Enter a valid email.';errEl.style.display='block';return;}
   if(!pass||pass.length<6){errEl.textContent='Password must be at least 6 characters.';errEl.style.display='block';return;}
+  if(!sig||sig.length<3){errEl.textContent='Please type your full name to sign the agreement.';errEl.style.display='block';return;}
 
   btn.disabled=true;
   btn.textContent='Creating account...';
@@ -320,7 +339,7 @@ $('sfBtn').onclick=async()=>{
     const res=await fetch(SIGNUP_URL,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name:first+' '+last,email:email,password:pass})
+      body:JSON.stringify({name:first+' '+last,email:email,password:pass,signature:sig})
     });
     const data=await res.json();
 
